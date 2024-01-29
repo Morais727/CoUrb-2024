@@ -39,12 +39,12 @@ for pasta in pastas:
             menor = min(len(atak), len(n_atak))
 
             if menor > 0:
-                atak_undersampled = resample(atak, n_samples=menor, random_state=42)
-                n_atak_undersampled = resample(n_atak, n_samples=menor, random_state=42)
+                atak_undersampled = resample(atak, n_samples=menor)
+                n_atak_undersampled = resample(n_atak, n_samples=menor)
 
                 conjunto_balanceado = pd.concat([atak_undersampled, n_atak_undersampled])
 
-                conjunto_balanceado = conjunto_balanceado.sample(frac=1, random_state=42)
+                conjunto_balanceado = conjunto_balanceado.sample(frac=1)
 
                 conjunto_balanceado.to_csv(f'datasets_brutos/Balanceado_{pasta}.csv', header=None, index=False)
 
