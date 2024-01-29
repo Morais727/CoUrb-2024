@@ -8,11 +8,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import accuracy_score
 
-arquivos = [
-                'NIID/Balanceado_NIID_CIFAR_CNN.csv',
-                'NIID/Balanceado_NIID_MNIST_DNN.csv',
-                'IID/Balanceado_IID_CIFAR_CNN.csv',
-                'IID/Balanceado_IID_MNIST_DNN.csv',
+arquivos =  [
+                'datasets_brutos/Balanceado_cifar_cnn.csv',
+                'datasets_brutos/Balanceado_mnist_dnn.csv'
             ]
 
 erros = []
@@ -29,11 +27,10 @@ for arquivo in arquivos:
         minmax.fit(selected_feature)
         selected_feature_norm = minmax.transform(selected_feature)
 
-        caminho = arquivo.split('/')
-        base = arquivo.split('_')
-        extensao = base[3].split('.')
+        arquivo = arquivo.split('.')
+        base = arquivo[0].split('_')
 
-        nome = (f'{caminho[0]}/MINMAX_{base[1]}_{base[2]}_{extensao[0]}_1D')
+        nome = (f'MODELOS/MINMAX_XGB_{base[2]}_{base[3]}.pkl')
 
         with open(nome, 'wb') as arquivo:
             pickle.dump(minmax, arquivo)
@@ -50,8 +47,8 @@ for arquivo in arquivos:
 
         modelo.fit(X_train, y_train, epochs=2, batch_size=32, validation_split=0.2)
 
-        nome_modelo = (f'{caminho[0]}/MODELO_{base[1]}_{base[2]}_{extensao[0]}_1D.h5')
-        modelo.save(nome_modelo)
+        nome_arquivo = (f'MODELOS/CLASSIFICADOR_XGB_{base[2]}_{base[3]}.h5')
+        modelo.save(nome_arquivo)
 
         y_pred = (modelo.predict(X_test) > 0.5).astype('int32')
         accuracy = accuracy_score(y_test, y_pred)
