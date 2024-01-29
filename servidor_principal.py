@@ -239,7 +239,10 @@ class Timming(fl.server.strategy.FedAvg):
                 normalizado = minmax_selecionado.transform(selected_feature)
 
                 # Acessar o modelo usando o objeto selecionado
-                predict = modelo_selecionado.predict(xgb.DMatrix(normalizado))
+                # predict = modelo_selecionado.predict(xgb.DMatrix(normalizado))
+                # prev = (predict > 0.5).astype('int32')
+
+                predict = self.loaded_model.predict(normalizado, verbose = 0)
                 prev = (predict > 0.5).astype('int32')
                 
                 chaves = {
