@@ -112,7 +112,7 @@ class ClienteFlower(fl.client.NumPyClient):
        
             
 
-        if modo=='ALTERNA_INICIO' and server_round >= self.tamanho: 
+        if modo=='ALTERNA_INICIO' and server_round >= self.tamanho and self.cid >= (2 * self.tamanho): 
             situacao = 1
             self.modelo.set_weights(parameters)
             history = self.modelo.fit(self.x_treino, self.y_treino, epochs=1, verbose=2)
