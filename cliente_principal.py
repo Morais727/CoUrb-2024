@@ -70,11 +70,11 @@ class ClienteFlower(fl.client.NumPyClient):
             y_treino = y_treino[idx_train]
             y_teste  = y_teste[idx_test]
 
-        filename = f'TESTES/{self.iid_niid}/LABELS/{self.modo_ataque}_{self.dataset}_{self.modelo_definido}_{str(self.tamanho)}.csv'
-        os.makedirs(os.path.dirname(filename), exist_ok=True)
-        with open(filename, 'a') as file:
-            for item in y_treino:
-                file.write(f"{self.cid}, {item}\n")
+            filename = f'TESTES/{self.iid_niid}/LABELS/{self.modo_ataque}_{self.dataset}_{self.modelo_definido}_{str(self.tamanho)}.csv'
+            os.makedirs(os.path.dirname(filename), exist_ok=True)
+            with open(filename, 'a') as file:
+                for item in y_treino:
+                    file.write(f"{self.cid}, {item}\n")
 
         return x_treino, y_treino, x_teste, y_teste
     
@@ -194,6 +194,8 @@ class ClienteFlower(fl.client.NumPyClient):
             situacao = 1
             a = self.modelo.get_weights()                
             pesos_invertidos = [np.flipud(peso) for peso in a]
+            accuracy = 99.999
+            loss = 0.001 
             
             return pesos_invertidos, len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'variavel':self.modelo_definido,'camada':camada_alvo}
 

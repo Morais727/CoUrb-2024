@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 tamanho_fonte = 20
 lista = []
 try:
-    niid_iid = ['IID','NIID']
+    niid_iid = ['NIID']
     ataques = ['ALTERNA_INICIO','ATACANTES','EMBARALHA','INVERTE_TREINANDO','INVERTE_SEM_TREINAR','INVERTE_CONVEGENCIA','ZEROS','RUIDO_GAUSSIANO','NORMAL']
     data_set = ['MNIST','CIFAR10']
     modelos = ['DNN','CNN']
