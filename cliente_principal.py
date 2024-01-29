@@ -112,7 +112,7 @@ class ClienteFlower(fl.client.NumPyClient):
        
             
 
-        if modo=='ALTERNA_INICIO' and server_round >= self.tamanho and self.cid >= (2 * self.tamanho): 
+        if modo=='ALTERNA_INICIO' and server_round >= self.tamanho and self.cid >= 20: 
             situacao = 1
             self.modelo.set_weights(parameters)
             history = self.modelo.fit(self.x_treino, self.y_treino, epochs=1, verbose=2)
@@ -130,7 +130,7 @@ class ClienteFlower(fl.client.NumPyClient):
                             
             return a, len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,"variavel":self.modelo_definido,"camada":camada_alvo,"ataque":modo}
             
-        elif modo=='ATACANTES' and self.parametros[self.cid] == 1:
+        elif modo=='ATACANTES' and server_round >= self.tamanho and self.cid >= 20:
             situacao = 1
             self.modelo.set_weights(parameters)
             history = self.modelo.fit(self.x_treino, self.y_treino, epochs=1, verbose=2)
@@ -151,7 +151,7 @@ class ClienteFlower(fl.client.NumPyClient):
             
             return a, len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'variavel':self.modelo_definido,'camada':camada_alvo}               
         
-        elif modo=='EMBARALHA' and self.parametros[self.cid] == 1:
+        elif modo=='EMBARALHA' and server_round >= self.tamanho and self.cid >= 20:
             situacao = 1 
             self.modelo.set_weights(parameters)
 
@@ -190,7 +190,7 @@ class ClienteFlower(fl.client.NumPyClient):
             
             return self.modelo.get_weights(), len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'variavel':self.modelo_definido,'camada':camada_alvo}
         
-        elif modo=='INVERTE_SEM_TREINAR' and self.parametros[self.cid] == 1:            
+        elif modo=='INVERTE_SEM_TREINAR' and server_round >= self.tamanho and self.cid >= 20:       
             situacao = 1
             a = self.modelo.get_weights()                
             pesos_invertidos = [np.flipud(peso) for peso in a]
@@ -199,7 +199,7 @@ class ClienteFlower(fl.client.NumPyClient):
             
             return pesos_invertidos, len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'variavel':self.modelo_definido,'camada':camada_alvo}
 
-        elif modo=='INVERTE_CONVEGENCIA' and self.parametros[self.cid] == 1:
+        elif modo=='INVERTE_CONVEGENCIA' and server_round >= self.tamanho and self.cid >= 20:
             situacao = 1
             pesos_locais = self.modelo.get_weights()
             self.modelo.set_weights(parameters)
@@ -217,7 +217,7 @@ class ClienteFlower(fl.client.NumPyClient):
             loss = 0.001 
             return self.modelo.get_weights(), len(self.x_treino), {"accuracy": accuracy, "loss": loss, "situacao": situacao,"ataque":modo}
 
-        elif modo=='ZEROS' and self.parametros[self.cid] == 1:  
+        elif modo=='ZEROS' and server_round >= self.tamanho and self.cid >= 20:
             situacao = 1       		           
             a = parameters
             
