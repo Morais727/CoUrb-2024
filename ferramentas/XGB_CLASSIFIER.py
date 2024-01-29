@@ -4,6 +4,7 @@ from xgboost import XGBClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
 arquivos =  [
                 'datasets_brutos/Balanceado_cifar_cnn.csv',
@@ -41,16 +42,22 @@ for arquivo in arquivos:
         xgb_classifier.fit(X_train, y_train)
 
         nome_arquivo = (f'MODELOS/CLASSIFICADOR_XGB_{base[2]}_{base[3]}.model')
-        xgb_classifier.save_model(nome_arquivo)
+        xgb_classifier.get_booster().save_model(nome_arquivo)
 
         # Faz previsões no conjunto de teste
         y_pred = xgb_classifier.predict(X_test)
 
         # Calcula a acurácia das previsões
         accuracy = accuracy_score(y_test, y_pred)
+        precision = precision_score(y_test, y_pred)
+        recall = recall_score(y_test, y_pred)
+        f1 = f1_score(y_test, y_pred)
+
+        # Imprime as métricas
         print(f'Acurácia: {accuracy}')
-
-
+        print(f'Precisão: {precision}')
+        print(f'Recall: {recall}')
+        print(f'F1-Score: {f1}')
         
     except Exception as e:
         # Captura e lida com a exceção

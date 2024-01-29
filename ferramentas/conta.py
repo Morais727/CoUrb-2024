@@ -42,7 +42,8 @@ for pasta in pastas:
                 atak_undersampled = resample(atak, n_samples=menor)
                 n_atak_undersampled = resample(n_atak, n_samples=menor)
 
-                conjunto_balanceado = pd.concat([atak_undersampled, n_atak_undersampled])
+
+                conjunto_balanceado = pd.concat([atak_undersampled, n_atak_undersampled], ignore_index=True)
 
                 conjunto_balanceado = conjunto_balanceado.sample(frac=1)
 
