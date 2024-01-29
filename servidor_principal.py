@@ -285,7 +285,7 @@ class Timming(fl.server.strategy.FedAvg):
             if 'atak' in self.classificacao.keys() and server_round:
                 if client.cid in self.classificacao['atak']: 
                     malicious.append((parameters_to_ndarrays(fit_res.parameters), fit_res.num_examples)) 
-                    weights_results.append((self.last_model, 10))
+                    
                 else:       
                     weights_results.append((parameters_to_ndarrays(fit_res.parameters), fit_res.num_examples))                                  
             else:
