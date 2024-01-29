@@ -147,7 +147,10 @@ class Timming(fl.server.strategy.FedAvg):
         clients = client_manager.sample(
             num_clients=sample_size, min_num_clients=min_num_clients
         )
-    
+        
+        if server_round > 2 and 'n_atak' in self.classificacao:
+            selected_clients = [client for client in clients if client.cid in self.classificacao['n_atak']]
+            clients = selected_clients
         # Return client/config pairs
         return [(client, fit_ins) for client in clients]
 

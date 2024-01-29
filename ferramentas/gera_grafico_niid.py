@@ -53,7 +53,7 @@ for file_list in lista:
             fig = plt.gcf()
             fig.set_size_inches(12, 5)
             
-            fig.savefig(f'TESTES/{caminho[1]}/GRAFICOS/{caminho[2]}_{caminho[3]}.png', dpi = 500,bbox_inches = 'tight', pad_inches = 0.05)
+            fig.savefig(f'TESTES/{caminho[1]}/LABELS/GRAFICOS/{caminho[2]}_{caminho[3]}.png', dpi = 500,bbox_inches = 'tight', pad_inches = 0.05)
             plt.close('all')
         except Exception as e:
             print(f"Ocorreu um erro ao processar o arquivo {file}: {str(e)}")
