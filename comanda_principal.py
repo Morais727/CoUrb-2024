@@ -46,7 +46,7 @@ def executar_arquivo(arquivo):
                 print(f'Combinação inválida: Dataset {k} com modelo {l}. Pulando execução.')
                 continue
             
-            comando = f'python3 {arquivo} --iid_niid {i} --modo_ataque {j} --dataset {k} --modelo_definido {l} --variavel {m}'
+            comando = f'python3 {arquivo} --iid_niid {i} --modo_ataque {j} --dataset {k} --modelo_definido {l} --variavel {m} --num_rounds 100'
             subprocess.run(shlex.split(comando), check=True)
 
             print(f'Executou com sucesso: {arquivo}')
@@ -55,6 +55,6 @@ def executar_arquivo(arquivo):
         print(f'Erro: {arquivo}')
 
 max_threads = 1
-
-with concurrent.futures.ThreadPoolExecutor(max_threads) as executor:
-    resultados = list(executor.map(executar_arquivo, arquivos_teste))    
+for i in range(11):
+    with concurrent.futures.ThreadPoolExecutor(max_threads) as executor:
+        resultados = list(executor.map(executar_arquivo, arquivos_teste))    

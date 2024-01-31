@@ -344,7 +344,7 @@ class Timming(fl.server.strategy.FedAvg):
          
         
         for client,eval_res in results: 
-            nome_arquivo = f"TESTES/{eval_res.metrics['iid_niid']}/LOG_EVALUATE/{eval_res.metrics['ataque']}_{eval_res.metrics['dataset']}_{eval_res.metrics['variavel']}_{eval_res.metrics['parametro']}.csv"
+            nome_arquivo = f"TESTES/teste/{eval_res.metrics['iid_niid']}/LOG_EVALUATE/{eval_res.metrics['ataque']}_{eval_res.metrics['dataset']}_{eval_res.metrics['variavel']}_{eval_res.metrics['parametro']}.csv"
             os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)   
             with open(nome_arquivo,'a') as file:          
                 file.write(f"\n{server_round},{client.cid},{eval_res.metrics['accuracy']},{eval_res.metrics['loss']}")
