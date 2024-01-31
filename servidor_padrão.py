@@ -218,7 +218,7 @@ class Timming(fl.server.strategy.FedAvg):
         elif server_round == 1:  # Only log this warning once
             log(WARNING, "No evaluate_metrics_aggregation_fn provided")
         for client,eval_res in results: 
-            nome_arquivo = f"padrao_mnist.csv"
+            nome_arquivo = f"padrao/padrao_mnist.csv"
             os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)   
             with open(nome_arquivo,'a') as file:          
                 file.write(f"\n{server_round},{client.cid},{eval_res.metrics['accuracy']},{eval_res.loss}")
