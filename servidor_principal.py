@@ -354,7 +354,7 @@ class Timming(fl.server.strategy.FedAvg):
                 file.write(f"\n{server_round},{client.cid},{eval_res.metrics['accuracy']},{eval_res.loss}")
         
         arquivo_verifica_acertos = f"TESTES/{eval_res.metrics['iid_niid']}/LOG_ACERTOS/{eval_res.metrics['ataque']}_{eval_res.metrics['dataset']}_{eval_res.metrics['variavel']}_{eval_res.metrics['parametro']}.csv"
-
+        os.makedirs(os.path.dirname(arquivo_verifica_acertos), exist_ok=True)
         with open(arquivo_verifica_acertos, 'a', newline='') as arquivo_csv:
             escritor_csv = csv.writer(arquivo_csv)
             for linha in self.verifica_acertos:
