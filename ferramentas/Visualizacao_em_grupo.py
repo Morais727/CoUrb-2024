@@ -18,7 +18,7 @@ try:
     modelos = ['DNN', 'CNN']
 
     for i, j, k, l in product(niid_iid, ataques, data_set, modelos):
-        file_list = glob.glob(f'TESTES/teste/{i}/LOG_EVALUATE/{j}_{k}_{l}*.csv')
+        file_list = glob.glob(f'TESTES/{i}/LOG_EVALUATE/{j}_{k}_{l}*.csv')
         lista.append(file_list)
 
 except Exception as e:
