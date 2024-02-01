@@ -8,7 +8,6 @@ from xgboost import Booster
 import tensorflow as tf
 from logging import WARNING
 from collections import Counter
-from sklearn.cluster import KMeans
 from typing import Callable, Dict, List, Optional, Tuple, Union
 from collections import Counter
 from flwr.common import (DisconnectRes,
@@ -280,7 +279,7 @@ class Timming(fl.server.strategy.FedAvg):
         print(f'Percentual de acertos atual: {percents_atual:.2f}%')
         print(f'Percentual de acertos geral: {self.percents:.2f}%  {contagem}')        
         print(f'{self.classificacao}\n\n')
-        self.verifica_acertos.append(contagem)
+        self.verifica_acertos.append(self.classificacao)
         if not results:
             return None, {}
         # Do not aggregate if there are failures and failures are not accepted

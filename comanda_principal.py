@@ -10,6 +10,7 @@ padroes =   [
                 'TESTES/IID/LOG_EVALUATE/*.csv', 
                 'TESTES/NIID/LABELS/*.csv', 
                 'TESTES/NIID/LOG_EVALUATE/*.csv'  
+                'TESTES/NIID/LOG_ACERTOS/*.csv'
             ]
 
 for i in padroes:
@@ -36,7 +37,7 @@ def executar_arquivo(arquivo):
         modelos = ['DNN', 'CNN']
         variaveis = [2, 4, 6, 8]
 
-        for i, j, k, l, m in product(niid_iid, ataques, data_set, modelos, variaveis):
+        for i, j, k, l in product(niid_iid, ataques, data_set, modelos):
             print(f'Executando {arquivo}')
             
             if k == 'MNIST' and l == 'CNN':
