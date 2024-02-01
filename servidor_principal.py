@@ -279,7 +279,7 @@ class Timming(fl.server.strategy.FedAvg):
         print(f'Percentual de acertos atual: {percents_atual:.2f}%')
         print(f'Percentual de acertos geral: {self.percents:.2f}%  {contagem}')        
         print(f'{self.classificacao}\n\n')
-        self.verifica_acertos.append(self.classificacao)
+        self.verifica_acertos.append(self.classificacao.values)
         if not results:
             return None, {}
         # Do not aggregate if there are failures and failures are not accepted
