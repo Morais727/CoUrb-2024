@@ -260,8 +260,8 @@ class Timming(fl.server.strategy.FedAvg):
                 else:
                     self.resultados.append('Erros')
                     atual.append('Erros')
-                if self.classificacao:
-                    self.verifica_acertos.append((server_round,iid,situacao,prev[0]))
+            
+                self.verifica_acertos.append((server_round,iid,situacao,prev[0]))
 
         cont_atual = Counter(atual)
         tot = sum(cont_atual.values())
@@ -279,7 +279,8 @@ class Timming(fl.server.strategy.FedAvg):
         print(f'Percentual de acertos atual: {percents_atual:.2f}%')
         print(f'Percentual de acertos geral: {self.percents:.2f}%  {contagem}')        
         print(f'{self.classificacao}\n\n')
-        self.verifica_acertos.append(self.classificacao.values)
+        if self.classificacao:    
+            self.verifica_acertos.append(self.classificacao.values)
         if not results:
             return None, {}
         # Do not aggregate if there are failures and failures are not accepted
