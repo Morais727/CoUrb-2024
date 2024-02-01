@@ -11,6 +11,7 @@ padroes =   [
                 'TESTES/NIID/LABELS/*.csv', 
                 'TESTES/NIID/LOG_EVALUATE/*.csv'  
                 'TESTES/NIID/LOG_ACERTOS/*.csv'
+                'TESTES/IID/LOG_ACERTOS/*.csv'
             ]
 
 for i in padroes:
