@@ -18,7 +18,7 @@ try:
     modelos = ['DNN', 'CNN']
 
     for i, j, k, l in product(niid_iid, ataques, data_set, modelos):
-        file_list = glob.glob(f'TESTES/{i}/LOG_EVALUATE/{j}_{k}_{l}*.csv')
+        file_list = glob.glob(f'TESTES/teste/{i}/LOG_EVALUATE/{j}_{k}_{l}*.csv')
         lista.append(file_list)
 
 except Exception as e:
@@ -46,7 +46,7 @@ for caminhos_arquivos in lista:
 
                 plt.plot(media_round['server_round'], media_round['accuracy'], label=f'{rotulos[i]}', linewidth=3)
 
-            xticks = np.arange(0,21,2)
+            xticks = np.arange(0,101,10)
             plt.xticks(xticks, fontsize=tamanho_fonte)
             plt.xticks(fontsize=tamanho_fonte)
             plt.yticks(fontsize=tamanho_fonte)
@@ -60,7 +60,7 @@ for caminhos_arquivos in lista:
                 title_fontsize=tamanho_fonte
             )
 
-            plt.savefig(f'TESTES/{caminho[1]}/GRAFICOS/{caminho[3]}_accuracy.jpg')
+            plt.savefig(f'TESTES/{caminho[1]}/GRAFICOS/{caminho[4]}_accuracy.jpg')
             plt.close('all')
 
             plt.figure(figsize=(9, 5))
@@ -73,7 +73,7 @@ for caminhos_arquivos in lista:
 
                 plt.plot(media_round['server_round'], media_round['loss'], label=f'{rotulos[i]}', linewidth=3)
 
-            xticks = np.arange(0,21,2)
+            xticks = np.arange(0,101,10)
             plt.xticks(xticks, fontsize=tamanho_fonte)
             plt.xticks(fontsize=tamanho_fonte)
             plt.yticks(fontsize=tamanho_fonte)
@@ -87,7 +87,7 @@ for caminhos_arquivos in lista:
                 title_fontsize=tamanho_fonte
             )
 
-            plt.savefig(f'TESTES/{caminho[1]}/GRAFICOS/{caminho[3]}_loss.jpg')
+            plt.savefig(f'TESTES/{caminho[1]}/GRAFICOS/{caminho[4]}_loss.jpg')
             plt.close('all')
         except Exception as e:
             print(f"Ocorreu um erro ao processar o arquivo {arquivo}: {str(e)}")

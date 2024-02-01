@@ -2,6 +2,7 @@ import pickle
 import flwr as fl
 import numpy as np
 import os
+import csv
 import xgboost as xgb
 from xgboost import Booster
 import tensorflow as tf
@@ -66,7 +67,8 @@ class Timming(fl.server.strategy.FedAvg):
         super().__init__()
         self.percents = None
         self.resultados        = []  
-        self.classificacao = {}            
+        self.classificacao = {} 
+        self.verifica_acertos = []           
         
         minmax_mnist_dnn_path = 'MODELOS/MINMAX_XGB_mnist_dnn.pkl'
         modelo_mnist_dnn_path = 'MODELOS/CLASSIFICADOR_XGB_mnist_dnn.h5'
@@ -260,6 +262,8 @@ class Timming(fl.server.strategy.FedAvg):
                     self.resultados.append('Erros')
                     atual.append('Erros')
 
+                self.verifica_acertos.append((server_round,iid,situacao,prev[0]))
+
         cont_atual = Counter(atual)
         tot = sum(cont_atual.values())
         contagem = Counter(self.resultados)
@@ -344,9 +348,16 @@ class Timming(fl.server.strategy.FedAvg):
          
         
         for client,eval_res in results: 
-            nome_arquivo = f"TESTES/teste/{eval_res.metrics['iid_niid']}/LOG_EVALUATE/{eval_res.metrics['ataque']}_{eval_res.metrics['dataset']}_{eval_res.metrics['variavel']}_{eval_res.metrics['parametro']}.csv"
+            nome_arquivo = f"TESTES/{eval_res.metrics['iid_niid']}/LOG_EVALUATE/{eval_res.metrics['ataque']}_{eval_res.metrics['dataset']}_{eval_res.metrics['variavel']}_{eval_res.metrics['parametro']}.csv"
             os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)   
             with open(nome_arquivo,'a') as file:          
                 file.write(f"\n{server_round},{client.cid},{eval_res.metrics['accuracy']},{eval_res.loss}")
-                
+        
+        arquivo_verifica_acertos = f"TESTES/{eval_res.metrics['iid_niid']}/LOG_ACERTOS/{eval_res.metrics['ataque']}_{eval_res.metrics['dataset']}_{eval_res.metrics['variavel']}_{eval_res.metrics['parametro']}.csv"
+
+        with open(arquivo_verifica_acertos, 'a', newline='') as arquivo_csv:
+            escritor_csv = csv.writer(arquivo_csv)
+            for linha in self.verifica_acertos:
+                escritor_csv.writerow(linha)
+
         return loss_aggregated, metrics_aggregated            
