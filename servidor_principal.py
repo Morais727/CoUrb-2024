@@ -260,8 +260,8 @@ class Timming(fl.server.strategy.FedAvg):
                 else:
                     self.resultados.append('Erros')
                     atual.append('Erros')
-
-                self.verifica_acertos.append((server_round,iid,situacao,prev[0]))
+                if self.classificacao:
+                    self.verifica_acertos.append((server_round,iid,situacao,prev[0]))
 
         cont_atual = Counter(atual)
         tot = sum(cont_atual.values())
