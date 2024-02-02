@@ -49,10 +49,10 @@ def executar_arquivo(arquivo):
                 print(f'Combinação inválida: Dataset {k} com modelo {l}. Pulando execução.')
                 continue
             
-            comando = f'python3 {arquivo} --iid_niid {i} --modo_ataque {j} --dataset {k} --modelo_definido {l} --variavel{m}'
-            print(f'\n\n###########################################################')
+            comando = f'python3 {arquivo} --iid_niid {i} --modo_ataque {j} --dataset {k} --modelo_definido {l} --variavel {m}'
+            print(f'\n\n################################################################################################')
             print(f'\n\n{comando}\n\n')
-            print(f'###############################################################\n\n')
+            print(f'################################################################################################\n\n')
             subprocess.run(shlex.split(comando), check=True)
 
             print(f'Executou com sucesso: {arquivo}')
