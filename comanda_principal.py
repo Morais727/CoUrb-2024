@@ -8,10 +8,11 @@ limpa_arquivos_csv= []
 padroes =   [
                 'TESTES/IID/LABELS/*.csv', 
                 'TESTES/IID/LOG_EVALUATE/*.csv', 
+                'TESTES/IID/LOG_ACERTOS/*.csv',
                 'TESTES/NIID/LABELS/*.csv', 
                 'TESTES/NIID/LOG_EVALUATE/*.csv',  
                 'TESTES/NIID/LOG_ACERTOS/*.csv',
-                'TESTES/IID/LOG_ACERTOS/*.csv'
+                
             ]
 
 for i in padroes:
@@ -38,7 +39,7 @@ def executar_arquivo(arquivo):
         modelos = ['DNN', 'CNN']
         variaveis = [2, 4, 6, 8]
 
-        for i, j, k, l in product(niid_iid, ataques, data_set, modelos):
+        for i, j, k, l, m in product(niid_iid, ataques, data_set, modelos, variaveis):
             print(f'Executando {arquivo}')
             
             if k == 'MNIST' and l == 'CNN':
@@ -48,7 +49,10 @@ def executar_arquivo(arquivo):
                 print(f'Combinação inválida: Dataset {k} com modelo {l}. Pulando execução.')
                 continue
             
-            comando = f'python3 {arquivo} --iid_niid {i} --modo_ataque {j} --dataset {k} --modelo_definido {l}'
+            comando = f'python {arquivo} --iid_niid {i} --modo_ataque {j} --dataset {k} --modelo_definido {l} --variavel{m}'
+            print(f'\n\n###########################################################')
+            print(f'\n\n#########################{comando}#########################\n\n')
+            print(f'###############################################################\n\n')
             subprocess.run(shlex.split(comando), check=True)
 
             print(f'Executou com sucesso: {arquivo}')
