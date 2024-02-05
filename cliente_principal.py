@@ -130,7 +130,7 @@ class ClienteFlower(fl.client.NumPyClient):
                             
             return a, len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,"variavel":self.modelo_definido,"camada":camada_alvo,"ataque":modo}
             
-        elif modo=='ATACANTES' and server_round >= self.tamanho and self.cid >= 20:
+        elif modo=='ATACANTES' and server_round >= self.tamanho and self.cid >= 20: 
             situacao = 1
             self.modelo.set_weights(parameters)
             history = self.modelo.fit(self.x_treino, self.y_treino, epochs=1, verbose=2)
@@ -178,7 +178,7 @@ class ClienteFlower(fl.client.NumPyClient):
             
             return a, len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'variavel':self.modelo_definido,'camada':camada_alvo}
 
-        elif modo=='INVERTE_TREINANDO' and self.parametros[self.cid] == 1:
+        elif modo=='INVERTE_TREINANDO' and server_round >= self.tamanho and self.cid >= 20: 
             situacao = 1
 
             a = parameters                
@@ -229,7 +229,7 @@ class ClienteFlower(fl.client.NumPyClient):
             history = self.modelo.fit(self.x_treino, self.y_treino, epochs=1, verbose=2)
             accuracy = history.history["accuracy"][0]  
             loss = history.history["loss"][0]                           
-            
+            print(a)
             return a, len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'variavel':self.modelo_definido,'camada':camada_alvo}
         
         elif modo=='RUIDO_GAUSSIANO':
