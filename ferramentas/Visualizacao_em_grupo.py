@@ -46,7 +46,7 @@ for caminhos_arquivos in lista:
                 
                 plt.plot(media_round['server_round'], media_round['accuracy'], label=f'{rotulos[i]}', linewidth=3)
 
-            xticks = np.arange(0,21,10)
+            xticks = np.arange(0,21,2)
             plt.xticks(xticks, fontsize=tamanho_fonte)
             plt.xticks(fontsize=tamanho_fonte)
             plt.yticks(fontsize=tamanho_fonte)
@@ -73,7 +73,7 @@ for caminhos_arquivos in lista:
 
                 plt.plot(media_round['server_round'], media_round['loss'], label=f'{rotulos[i]}', linewidth=3)
 
-            xticks = np.arange(0,21,10)
+            xticks = np.arange(0,21,2)
             plt.xticks(xticks, fontsize=tamanho_fonte)
             plt.xticks(fontsize=tamanho_fonte)
             plt.yticks(fontsize=tamanho_fonte)

@@ -217,7 +217,7 @@ class ClienteFlower(fl.client.NumPyClient):
             loss = 0.001 
             return self.modelo.get_weights(), len(self.x_treino), {"accuracy": accuracy, "loss": loss, "situacao": situacao,"ataque":modo}
 
-        elif modo=='ZEROS' and server_round >= self.tamanho and self.cid >= 20:
+        elif modo== 'ZEROS' and server_round >= self.tamanho and self.cid >= 20:
             situacao = 1       		           
             a = parameters
             

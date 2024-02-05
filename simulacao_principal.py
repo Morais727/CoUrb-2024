@@ -13,7 +13,7 @@ def parse_args():
     parser.add_argument("--iid_niid", type=str, default='IID', help="Define se dados IID OU NON-IID")
     parser.add_argument("--modo_ataque", type=str, default='ZEROS', help="Define o modelo de ataque que sera utilizado") # ALTERNA_INICIO, ATACANTES, EMBARALHA, INVERTE_TREINANDO, INVERTE_SEM_TREINAR, INVERTE_CONVEGENCIA, ZEROS, RUIDO_GAUSSIANO, NORMAL
     parser.add_argument("--dataset", type=str, default='MNIST', help="Define o dataset que sera utilizado") # MNIST OU CIFAR10
-    parser.add_argument("--variavel", type=int, default=0, help="Define o alvo do ataque") # Quantidade de atacantes, início do ataque, ruído aplicado (Seu referencial de ruído será dividido por 100)
+    parser.add_argument("--variavel", type=int, default=2, help="Define o alvo do ataque") # Quantidade de atacantes, início do ataque, ruído aplicado (Seu referencial de ruído será dividido por 100)
 
     return parser.parse_args()
 
