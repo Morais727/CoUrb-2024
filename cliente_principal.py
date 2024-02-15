@@ -9,14 +9,18 @@ import tensorflow as tf
 
 
 class ClienteFlower(fl.client.NumPyClient):
-    def __init__(self,cid, parametros, modelo_definido, iid_niid, modo_ataque, dataset, total_clients, tamanho):                    
-        self.parametros= parametros
+    def __init__(self,cid, modelo_definido, iid_niid, modo_ataque, dataset, 
+                 total_clients, alpha_dirichlet,noise_gaussiano, round_inicio, 
+                 per_cents_atacantes):  
         self.modelo_definido = str(modelo_definido)
         self.iid_niid = str(iid_niid)
         self.modo_ataque = str(modo_ataque)
         self.dataset = str(dataset)
         self.total_clients = int(total_clients)
-        self.tamanho = int(tamanho)
+        self.alpha_dirichlet = alpha_dirichlet
+        self.noise_gaussiano = noise_gaussiano
+        self.round_inicio = round_inicio
+        self.per_cents_atacantes = int((int(total_clients) * per_cents_atacantes)/100)
 
         self.cid = int(cid)
         self.modelo = self.cria_modelo()
@@ -54,23 +58,32 @@ class ClienteFlower(fl.client.NumPyClient):
             
         x_treino, x_teste = x_treino/255.0, x_teste/255.0                                            
         
-        if self.iid_niid== 'IID': 
-            x_treino,y_treino,x_teste,y_teste = self.split_dataset(x_treino,y_treino,x_teste,y_teste, n_clients) 
+        
+        x_treino,y_treino,x_teste,y_teste = self.split_dataset(x_treino,y_treino,x_teste,y_teste, n_clients) 
 
-        else:            
-            with open(f'data/{self.dataset}/{n_clients}/idx_train_{self.cid}.pickle', 'rb') as handle:
-                idx_train = pickle.load(handle)
+        if self.iid_niid== 'NIID':             
+            non_iid_data_X = []
+            non_iid_data_y = []
+            num_clusters = n_clients
+            num_samples_mean = 1000  # Número médio de amostras por cluster
+            num_samples_per_cluster = np.random.poisson(num_samples_mean, num_clusters)
 
-            with open(f'data/{self.dataset}/{n_clients}/idx_test_{self.cid}.pickle', 'rb') as handle:
-                idx_test = pickle.load(handle)
+            for cluster_id in range(num_clusters):
+                if len(self.alpha_dirichlet) == 1:
+                    self.alpha_dirichlet+= (self.cid/10)
+         
+                class_proportions = np.random.dirichlet(self.alpha_dirichlet)
+                for class_label, proportion in enumerate(class_proportions):
+                    num_samples = int(num_samples_per_cluster * proportion)
+                    samples = [class_label] * num_samples
+                    non_iid_data_y.extend(samples)
+                non_iid_data_X.extend([cluster_id] * sum(np.bincount(non_iid_data_y, minlength=10)))
 
-            x_treino = x_treino[idx_train]
-            x_teste  = x_teste[idx_test]
+                x_treino =  np.array(non_iid_data_X)
+                y_treino =  np.array(non_iid_data_y)
+            
 
-            y_treino = y_treino[idx_train]
-            y_teste  = y_teste[idx_test]
-
-            filename = f'TESTES/{self.iid_niid}/LABELS/{self.modo_ataque}_{self.dataset}_{self.modelo_definido}_{str(self.tamanho)}.csv'
+            filename = f'TESTES/{self.iid_niid}/LABELS/{self.modo_ataque}_{self.dataset}_{self.modelo_definido}_{str(self.alpha_dirichlet)}.csv'
             os.makedirs(os.path.dirname(filename), exist_ok=True)
             with open(filename, 'a') as file:
                 for item in y_treino:
@@ -94,7 +107,6 @@ class ClienteFlower(fl.client.NumPyClient):
         x_test   = x_test[selected_test]
         y_test   = y_test[selected_test]
 
-
         return x_train, y_train, x_test, y_test
 
     def get_parameters(self, config):
@@ -109,10 +121,8 @@ class ClienteFlower(fl.client.NumPyClient):
             camada_alvo = 8
         elif self.modelo_definido == 'DNN':
             camada_alvo = 5
-       
-            
 
-        if modo=='ALTERNA_INICIO' and server_round >= self.tamanho and self.cid >= 20: 
+        if modo=='ALTERNA_INICIO' and server_round >= self.round_inicio and self.cid >= self.per_cents_atacantes: 
             situacao = 1
             self.modelo.set_weights(parameters)
             history = self.modelo.fit(self.x_treino, self.y_treino, epochs=1, verbose=2)
@@ -130,7 +140,7 @@ class ClienteFlower(fl.client.NumPyClient):
                             
             return a, len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,"variavel":self.modelo_definido,"camada":camada_alvo,"ataque":modo}
             
-        elif modo=='ATACANTES' and server_round >= self.tamanho and self.cid >= 20: 
+        elif modo=='ATACANTES' and server_round >= self.round_inicio and self.cid >= self.per_cents_atacantes: 
             situacao = 1
             self.modelo.set_weights(parameters)
             history = self.modelo.fit(self.x_treino, self.y_treino, epochs=1, verbose=2)
@@ -140,10 +150,8 @@ class ClienteFlower(fl.client.NumPyClient):
             
             camada = random.randint(0,camada_alvo)
 
-            # Obtém o formato da segunda lista
             shape_list = np.shape(a[camada])
         
-            # Calcula o valor mínimo e máximo para a substituição
             min_value = random.random()
             max_value = random.random()
             
@@ -151,7 +159,7 @@ class ClienteFlower(fl.client.NumPyClient):
             
             return a, len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'variavel':self.modelo_definido,'camada':camada_alvo}               
         
-        elif modo=='EMBARALHA' and server_round >= self.tamanho and self.cid >= 20:
+        elif modo=='EMBARALHA' and server_round >= self.round_inicio and self.cid >= self.per_cents_atacantes:
             situacao = 1 
             self.modelo.set_weights(parameters)
 
@@ -164,21 +172,17 @@ class ClienteFlower(fl.client.NumPyClient):
             for i in range(0,camada_alvo):
                 camada = i
 
-                # Obtém o formato da segunda lista
                 shape_list = np.shape(a[camada])
             
-                # Calcula o valor mínimo e máximo para a substituição
                 min_value = np.min(a[camada])
                 max_value = np.max(a[camada])
                 
                 
-                # Introduz o "ataque"
-                # Substituir todos os valores da lista por valores aleatórios
                 a[camada] = min_value + (max_value- min_value) * np.random.rand(*shape_list)
             
             return a, len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'variavel':self.modelo_definido,'camada':camada_alvo}
 
-        elif modo=='INVERTE_TREINANDO' and server_round >= self.tamanho and self.cid >= 20: 
+        elif modo=='INVERTE_TREINANDO' and server_round >= self.round_inicio and self.cid >= self.per_cents_atacantes: 
             situacao = 1
 
             a = parameters                
@@ -190,7 +194,7 @@ class ClienteFlower(fl.client.NumPyClient):
             
             return self.modelo.get_weights(), len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'variavel':self.modelo_definido,'camada':camada_alvo}
         
-        elif modo=='INVERTE_SEM_TREINAR' and server_round >= self.tamanho and self.cid >= 20:       
+        elif modo=='INVERTE_SEM_TREINAR' and server_round >= self.round_inicio and self.cid >= self.per_cents_atacantes:       
             situacao = 1
             a = self.modelo.get_weights()                
             pesos_invertidos = [np.flipud(peso) for peso in a]
@@ -199,7 +203,7 @@ class ClienteFlower(fl.client.NumPyClient):
             
             return pesos_invertidos, len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'variavel':self.modelo_definido,'camada':camada_alvo}
 
-        elif modo=='INVERTE_CONVEGENCIA' and server_round >= self.tamanho and self.cid >= 20:
+        elif modo=='INVERTE_CONVEGENCIA' and server_round >= self.round_inicio and self.cid >= self.per_cents_atacantes:
             situacao = 1
             pesos_locais = self.modelo.get_weights()
             self.modelo.set_weights(parameters)
@@ -207,7 +211,6 @@ class ClienteFlower(fl.client.NumPyClient):
             modelo_corrompido = []
             
             for i in range(camada_alvo):
-                # Realizar a operação de subtração camada a camada
                 camada_corrompida = pesos_globais[i] + (pesos_globais[i] - pesos_locais[i])
                 modelo_corrompido.append(camada_corrompida)
             
@@ -217,7 +220,7 @@ class ClienteFlower(fl.client.NumPyClient):
             loss = 0.001 
             return self.modelo.get_weights(), len(self.x_treino), {"accuracy": accuracy, "loss": loss, "situacao": situacao,"ataque":modo}
 
-        elif modo== 'ZEROS' and server_round >= self.tamanho and self.cid >= 20:
+        elif modo== 'ZEROS' and server_round >= self.round_inicio and self.cid >= self.per_cents_atacantes:
             situacao = 1       		           
             a = parameters
             
@@ -229,7 +232,7 @@ class ClienteFlower(fl.client.NumPyClient):
             history = self.modelo.fit(self.x_treino, self.y_treino, epochs=1, verbose=2)
             accuracy = history.history["accuracy"][0]  
             loss = history.history["loss"][0]                           
-            print(a)
+      
             return a, len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'variavel':self.modelo_definido,'camada':camada_alvo}
         
         elif modo=='RUIDO_GAUSSIANO':
@@ -244,8 +247,7 @@ class ClienteFlower(fl.client.NumPyClient):
             camada = random.randint(0,camada_alvo)
             shape_list = np.shape(a[camada_alvo])
 
-            # Adicionar ruído gaussiano aos pesos
-            noise = self.tamanho / 100
+            noise = self.noise_gaussiano
             loc = float(self.cid) * np.random.uniform(1.5,2)
             a[camada_alvo] += np.random.normal(loc, noise, shape_list)
 
@@ -264,4 +266,4 @@ class ClienteFlower(fl.client.NumPyClient):
         self.modelo.set_weights(parameters)
         loss, accuracy = self.modelo.evaluate(self.x_teste, self.y_teste, verbose=2)
         
-        return loss, len(self.x_teste), {"accuracy": accuracy, 'parametro': (int(self.tamanho)),'variavel':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 'dataset':self.dataset}
+        return loss, len(self.x_teste), {"accuracy": accuracy, 'parametro': (int(self.per_cents_atacantes)),'variavel':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 'dataset':self.dataset}

@@ -6,14 +6,18 @@ import servidor_principal
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Flower Simulation")
-    parser.add_argument("--total_clients", type=int, default=25, help="Total de clients") # SE DADOS NON-IID ==> 10,25,50,100
+    parser.add_argument("--total_clients", type=int, default=25, help="Total de clients") 
     parser.add_argument("--num_rounds", type=int, default=20, help="Quantidade de rounds") 
     parser.add_argument("--fraction_fit", type=float, default=1.0, help="Fração de clientes que serao trienados durante o round")
     parser.add_argument("--modelo_definido", type=str, default='DNN', help="Modelo que sera treinado durante o round") # DNN OU CNN
     parser.add_argument("--iid_niid", type=str, default='IID', help="Define se dados IID OU NON-IID")
     parser.add_argument("--modo_ataque", type=str, default='ZEROS', help="Define o modelo de ataque que sera utilizado") # ALTERNA_INICIO, ATACANTES, EMBARALHA, INVERTE_TREINANDO, INVERTE_SEM_TREINAR, INVERTE_CONVEGENCIA, ZEROS, RUIDO_GAUSSIANO, NORMAL
     parser.add_argument("--dataset", type=str, default='MNIST', help="Define o dataset que sera utilizado") # MNIST OU CIFAR10
-    parser.add_argument("--variavel", type=int, default=2, help="Define o alvo do ataque") # Quantidade de atacantes, início do ataque, ruído aplicado (Seu referencial de ruído será dividido por 100)
+    parser.add_argument("--alpha_dirichlet", type=int, nargs="+", default=[1], help="Define o alpha para NON-IID")
+    parser.add_argument("--noise_gaussiano", type=float, default=0, help="Define o alpha para ruído gaussiano")#Usar números entre 0 e 1
+    parser.add_argument("--round_inicio", type=int, default=0, help="Define o round de inicio do ataque")#Usar números inteiros
+    parser.add_argument("--per_cents_atacantes", type=int, default=0, help="Define o percentual de atacantes")#Usar números inteiros
+
 
     return parser.parse_args()
 
@@ -27,17 +31,19 @@ def main():
     total_clients = args.total_clients 
     num_rounds = args.num_rounds
     fraction_fit = args.fraction_fit
-    variavel= args.variavel
+    alpha_dirichlet = args.alpha_dirichlet
+    noise_gaussiano = args.noise_gaussiano
+    round_inicio = args.round_inicio
+    per_cents_atacantes = args.per_cents_atacantes
 
-    parametros = [0] * total_clients
-    parametros[:variavel] = [1] * variavel
-    tamanho = parametros.count(1)
+  
     
-    def Cliente(cid, parametros, modelo_definido, iid_niid, modo_ataque, dataset, total_clients, tamanho):
-        return ClienteFlower(cid, parametros, modelo_definido, iid_niid, modo_ataque, dataset, total_clients, tamanho)
+    def Cliente(cid, modelo_definido, iid_niid, modo_ataque, dataset, total_clients, alpha_dirichlet, noise_gaussiano,round_inicio, per_cents_atacantes):
+        return ClienteFlower(cid, modelo_definido, iid_niid, modo_ataque, dataset, total_clients, alpha_dirichlet, noise_gaussiano,round_inicio, per_cents_atacantes)
 
-    client_fn = partial(Cliente, parametros=parametros, modelo_definido=modelo_definido, iid_niid=iid_niid,
-                        modo_ataque=modo_ataque, dataset=dataset, total_clients=total_clients, tamanho=tamanho)
+    client_fn = partial(Cliente, modelo_definido=modelo_definido, iid_niid=iid_niid,
+                        modo_ataque=modo_ataque, dataset=dataset, total_clients=total_clients,
+                        alpha_dirichlet=alpha_dirichlet, noise_gaussiano=noise_gaussiano, round_inicio=round_inicio,per_cents_atacantes=per_cents_atacantes)
 
     history = fl.simulation.start_simulation(
         client_fn=client_fn,
