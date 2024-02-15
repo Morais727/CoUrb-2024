@@ -21,6 +21,7 @@ class ClienteFlower(fl.client.NumPyClient):
         self.noise_gaussiano = noise_gaussiano
         self.round_inicio = round_inicio
         self.per_cents_atacantes = int((int(total_clients) * per_cents_atacantes)/100)
+        self.atacantes = per_cents_atacantes
 
         self.cid = int(cid)
         self.modelo = self.cria_modelo()
@@ -266,4 +267,4 @@ class ClienteFlower(fl.client.NumPyClient):
         self.modelo.set_weights(parameters)
         loss, accuracy = self.modelo.evaluate(self.x_teste, self.y_teste, verbose=2)
         
-        return loss, len(self.x_teste), {"accuracy": accuracy, 'parametro': (int(self.per_cents_atacantes)),'variavel':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 'dataset':self.dataset}
+        return loss, len(self.x_teste), {"accuracy": accuracy, 'parametro': int(self.atacantes),'variavel':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 'dataset':self.dataset}
