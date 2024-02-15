@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 def calcular_media(lista):
     return round(sum(lista) / len(lista), 2)
 
-def criar_tabela(media_geral_acuracia, titulo):
+def criar_tabela(media_geral_acuracia, titulo, caminho_destino):
     fig, ax = plt.subplots()
     ax.axis('off')
 
@@ -24,7 +24,12 @@ def criar_tabela(media_geral_acuracia, titulo):
         table.scale(1.2, 1.2)
 
         plt.title(titulo)
-        plt.show()
+        
+        # Verificar se o diretório de destino existe, se não, criá-lo
+        if not os.path.exists(caminho_destino):
+            os.makedirs(caminho_destino)
+        
+        plt.savefig(f'{caminho_destino}/{titulo}_accuracy.png', dpi=300)
     else:
         print("Nenhum dado encontrado para criar a tabela.")
 
@@ -106,7 +111,7 @@ media_geral_acuracia_iid_cnn = {ataque: calcular_media(media_acuracias) for ataq
 media_geral_acuracia_niid_cnn = {ataque: calcular_media(media_acuracias) for ataque, media_acuracias in media_acuracia_por_modelo_niid_cnn.items()}
 
 # Criar tabelas individuais para cada combinação de tipo (IID/NIID) e modelo (DNN/CNN)
-criar_tabela(media_geral_acuracia_iid_dnn, 'IID - DNN')
-criar_tabela(media_geral_acuracia_niid_dnn, 'NIID - DNN')
-criar_tabela(media_geral_acuracia_iid_cnn, 'IID - CNN')
-criar_tabela(media_geral_acuracia_niid_cnn, 'NIID - CNN')
+criar_tabela(media_geral_acuracia_iid_dnn, 'IID - DNN', 'TESTES/IID/GRAFICOS')
+criar_tabela(media_geral_acuracia_niid_dnn, 'NIID - DNN', 'TESTES/NIID/GRAFICOS')
+criar_tabela(media_geral_acuracia_iid_cnn, 'IID - CNN', 'TESTES/IID/GRAFICOS')
+criar_tabela(media_geral_acuracia_niid_cnn, 'NIID - CNN', 'TESTES/NIID/GRAFICOS')
