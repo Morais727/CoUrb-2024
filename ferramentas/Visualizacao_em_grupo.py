@@ -60,7 +60,7 @@ for caminhos_arquivos in lista:
                 title_fontsize=tamanho_fonte
             )
 
-            plt.savefig(f'TESTES/{caminho[1]}/GRAFICOS/{caminho[3]}_accuracy.png')
+            plt.savefig(f'TESTES/{caminho[1]}/GRAFICOS/{base[0]}_{base[1]}_{base[2]}_accuracy.png', dpi=300)
             plt.close('all')
 
             plt.figure(figsize=(9, 5))
@@ -83,11 +83,11 @@ for caminhos_arquivos in lista:
                 loc='best',
                 fontsize=tamanho_fonte,
                 ncol=1,
-                title='Round',
+                title='# Round',
                 title_fontsize=tamanho_fonte
             )
 
-            plt.savefig(f'TESTES/{caminho[1]}/GRAFICOS/{caminho[3]}_loss.png')
+            plt.savefig(f'TESTES/{caminho[1]}/GRAFICOS/{base[0]}_{base[1]}_{base[2]}_loss.png', dpi=300)
             plt.close('all')
         except Exception as e:
             print(f"Ocorreu um erro ao processar o arquivo {arquivo}: {str(e)}")
