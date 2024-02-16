@@ -68,7 +68,7 @@ class ClienteFlower(fl.client.NumPyClient):
             num_clusters = n_clients
             num_samples_per_cluster_mean = 1000  # Número médio de amostras por cluster
             num_samples_per_cluster = int(np.random.poisson(num_samples_per_cluster_mean, 1))
-
+            print(num_samples_per_cluster)
 
             for cluster_id in range(num_clusters):
                 if len(self.alpha_dirichlet) == 1:
