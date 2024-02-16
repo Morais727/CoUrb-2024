@@ -77,8 +77,8 @@ class ClienteFlower(fl.client.NumPyClient):
                     non_iid_data_y.extend(samples)
                 non_iid_data_X.extend([cluster_id] * sum(np.bincount(non_iid_data_y, minlength=10)))
 
-                x_treino =  np.array(non_iid_data_X)
-                y_treino =  np.array(non_iid_data_y)
+            x_treino = np.array(non_iid_data_X)
+            y_treino = np.array(non_iid_data_y)
             
 
             filename = f'TESTES/{self.iid_niid}/LABELS/{self.modo_ataque}_{self.dataset}_{self.modelo_definido}_{str(self.alpha_dirichlet)}.csv'
