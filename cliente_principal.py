@@ -71,7 +71,7 @@ class ClienteFlower(fl.client.NumPyClient):
 
             for cluster_id in range(num_clusters):
                 if len(self.alpha_dirichlet) == 1:
-                    self.alpha_dirichlet+= (self.cid/10)
+                    self.alpha_dirichlet = [x * (self.cid/10) for x in self.alpha_dirichlet]
          
                 class_proportions = np.random.dirichlet(self.alpha_dirichlet)
                 for class_label, proportion in enumerate(class_proportions):
@@ -267,4 +267,9 @@ class ClienteFlower(fl.client.NumPyClient):
         self.modelo.set_weights(parameters)
         loss, accuracy = self.modelo.evaluate(self.x_teste, self.y_teste, verbose=2)
         
-        return loss, len(self.x_teste), {"accuracy": accuracy, 'parametro': int(self.atacantes),'variavel':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 'dataset':self.dataset}
+        return loss, len(self.x_teste), {
+                                            "accuracy": accuracy, 'porcentagem_ataque': int(self.atacantes),'modelo':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 
+                                            'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet,'noise_gaussiano':self.noise_gaussiano, 'round_inicio':self.round_inicio
+                                         }
+    
+
