@@ -68,43 +68,37 @@ class ClienteFlower(fl.client.NumPyClient):
 
         return x_treino, y_treino, x_teste, y_teste
 
-    def split_dataset_dirichlet(self, x_train, y_train, x_test, y_test, n_clients, alpha_dirichlet):
+    def split_dataset_dirichlet(x_train, y_train, x_test, y_test, n_clients, alpha_dirichlet):
         n_train_samples = len(x_train)
         n_test_samples = len(x_test)
-
+        
+        # Gerar proporções de classes para cada cliente usando a distribuição de Dirichlet
         class_proportions = np.random.dirichlet(alpha_dirichlet, n_clients)
-
+        
         x_train_clients = []
         y_train_clients = []
         x_test_clients = []
         y_test_clients = []
-
-        train_idx = 0
-        test_idx = 0
-
-        for i in range(n_clients):
-            # Calcular o número de amostras para este cliente
-            train_samples = int(class_proportions[i] * n_train_samples)
-            test_samples = int(class_proportions[i] * n_test_samples)
-
-            # Selecionar os dados de treinamento para este cliente
-            x_train_client = x_train[train_idx:train_idx + train_samples]
-            y_train_client = y_train[train_idx:train_idx + train_samples]
-
-            # Selecionar os dados de teste para este cliente
-            x_test_client = x_test[test_idx:test_idx + test_samples]
-            y_test_client = y_test[test_idx:test_idx + test_samples]
-
-            # Adicionar os dados aos respectivos conjuntos de clientes
-            x_train_clients.append(x_train_client)
-            y_train_clients.append(y_train_client)
-            x_test_clients.append(x_test_client)
-            y_test_clients.append(y_test_client)
-
-            # Atualizar os índices para o próximo cliente
-            train_idx += train_samples
-            test_idx += test_samples
-
+        
+        train_start_idx = 0
+        test_start_idx = 0
+        
+        # Para cada cliente, selecionar as amostras de treinamento e teste de acordo com as proporções geradas
+        for proportions in class_proportions:
+            train_samples = int(proportions.sum() * n_train_samples)
+            test_samples = int(proportions.sum() * n_test_samples)
+            
+            train_end_idx = train_start_idx + train_samples
+            test_end_idx = test_start_idx + test_samples
+            
+            x_train_clients.append(x_train[train_start_idx:train_end_idx])
+            y_train_clients.append(y_train[train_start_idx:train_end_idx])
+            x_test_clients.append(x_test[test_start_idx:test_end_idx])
+            y_test_clients.append(y_test[test_start_idx:test_end_idx])
+            
+            train_start_idx = train_end_idx
+            test_start_idx = test_end_idx
+        
         return x_train_clients, y_train_clients, x_test_clients, y_test_clients
 
     
