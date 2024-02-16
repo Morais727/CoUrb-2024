@@ -52,6 +52,10 @@ def executar_arquivo(arquivo):
             elif k == 'CIFAR10' and l == 'DNN':
                 print(f'Combinação inválida: Dataset {k} com modelo {l}. Pulando execução.')
                 continue
+            elif i == 'IID' and p:
+                print(f'Combinação inválida: Dados {i} com distribuicao Dirichlet {o}. Pulando execução.')
+                continue
+                
             
             comando = f'python3 {arquivo} --iid_niid {i} --modo_ataque {j} --dataset {k} --modelo_definido {l} --round_inicio {m} --per_cents_atacantes {n} --noise_gaussiano {o} --alpha_dirichlet {p}'
             print(f'\n\n################################################################################################')
