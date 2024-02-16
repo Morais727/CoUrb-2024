@@ -67,7 +67,7 @@ class ClienteFlower(fl.client.NumPyClient):
 
         return x_treino, y_treino, x_teste, y_teste
 
-    def split_dataset_dirichlet(x_train, y_train, x_test, y_test, n_clients, alpha_dirichlet):
+    def split_dataset_dirichlet(self,x_train, y_train, x_test, y_test, n_clients, alpha_dirichlet):
         n_train_samples = len(x_train)
         n_test_samples = len(x_test)
         
