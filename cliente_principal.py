@@ -79,15 +79,31 @@ class ClienteFlower(fl.client.NumPyClient):
         x_test_clients = []
         y_test_clients = []
 
+        train_idx = 0
+        test_idx = 0
+
         for i in range(n_clients):
-            train_samples_idx = np.random.choice(n_train_samples, size=int(class_proportions[i] * n_train_samples), replace=False)
-            test_samples_idx = np.random.choice(n_test_samples, size=int(class_proportions[i] * n_test_samples), replace=False)
+            # Calcular o número de amostras para este cliente
+            train_samples = int(class_proportions[i] * n_train_samples)
+            test_samples = int(class_proportions[i] * n_test_samples)
 
-            x_train_clients.append(x_train[train_samples_idx])
-            y_train_clients.append(y_train[train_samples_idx])
+            # Selecionar os dados de treinamento para este cliente
+            x_train_client = x_train[train_idx:train_idx + train_samples]
+            y_train_client = y_train[train_idx:train_idx + train_samples]
 
-            x_test_clients.append(x_test[test_samples_idx])
-            y_test_clients.append(y_test[test_samples_idx])
+            # Selecionar os dados de teste para este cliente
+            x_test_client = x_test[test_idx:test_idx + test_samples]
+            y_test_client = y_test[test_idx:test_idx + test_samples]
+
+            # Adicionar os dados aos respectivos conjuntos de clientes
+            x_train_clients.append(x_train_client)
+            y_train_clients.append(y_train_client)
+            x_test_clients.append(x_test_client)
+            y_test_clients.append(y_test_client)
+
+            # Atualizar os índices para o próximo cliente
+            train_idx += train_samples
+            test_idx += test_samples
 
         return x_train_clients, y_train_clients, x_test_clients, y_test_clients
 
