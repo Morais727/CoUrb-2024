@@ -69,10 +69,7 @@ class ClienteFlower(fl.client.NumPyClient):
             num_samples_per_cluster = int(np.random.poisson(num_samples_per_cluster_mean, 1))
             print(num_samples_per_cluster)
 
-            for cluster_id in range(num_clusters):
-                if len(self.alpha_dirichlet) == 1:
-                    self.alpha_dirichlet = [x * (self.cid / 10) for x in self.alpha_dirichlet]
-        
+            for cluster_id in range(num_clusters):                   
                 class_proportions = np.random.dirichlet(self.alpha_dirichlet)
                 for class_label, proportion in enumerate(class_proportions):
                     num_samples = int(num_samples_per_cluster * proportion)
