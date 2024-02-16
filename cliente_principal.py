@@ -62,33 +62,41 @@ class ClienteFlower(fl.client.NumPyClient):
         x_treino,y_treino,x_teste,y_teste = self.split_dataset(x_treino,y_treino,x_teste,y_teste, n_clients) 
 
         if self.iid_niid== 'NIID':             
-            non_iid_data_X = []
-            non_iid_data_y = []
-            num_clusters = n_clients
-            num_samples_per_cluster_mean = 1000  # Número médio de amostras por cluster
-            num_samples_per_cluster = int(np.random.poisson(num_samples_per_cluster_mean, 1))
-            print(num_samples_per_cluster)
-
-            for cluster_id in range(num_clusters):                
-                class_proportions = np.random.dirichlet(self.alpha_dirichlet)
-                for class_label, proportion in enumerate(class_proportions):
-                    num_samples = int(num_samples_per_cluster * proportion)
-                    samples = [class_label] * num_samples
-                    non_iid_data_y.extend(samples)
-                non_iid_data_X.extend([cluster_id] * sum(np.bincount(non_iid_data_y, minlength=10)))
-
-            x_treino = np.array(non_iid_data_X)
-            y_treino = np.array(non_iid_data_y)
-            
-
-            filename = f'TESTES/{self.iid_niid}/LABELS/{self.modo_ataque}_{self.dataset}_{self.modelo_definido}_{str(self.alpha_dirichlet)}.csv'
-            os.makedirs(os.path.dirname(filename), exist_ok=True)
-            with open(filename, 'a') as file:
-                for item in y_treino:
-                    file.write(f"{self.cid}, {item}\n")
+           x_treino,y_treino,x_teste,y_teste = self.split_dataset(x_treino,y_treino,x_teste,y_teste, n_clients, self.alpha_dirichlet)
 
         return x_treino, y_treino, x_teste, y_teste
 
+    def split_dataset_dirichlet(x_train, y_train, x_test, y_test, n_clients, alpha_dirichlet):
+        n_train_samples = len(x_train)
+        n_test_samples = len(x_test)
+        
+        class_proportions = np.random.dirichlet(alpha_dirichlet, n_clients)
+        
+        train_samples_per_client = (class_proportions * n_train_samples).astype(int)
+        test_samples_per_client = (class_proportions * n_test_samples).astype(int)
+        
+        x_train_clients = []
+        y_train_clients = []
+        x_test_clients = []
+        y_test_clients = []
+        
+        start_train_idx = 0
+        start_test_idx = 0
+        
+        for i in range(n_clients):
+            end_train_idx = start_train_idx + train_samples_per_client[i]
+            end_test_idx = start_test_idx + test_samples_per_client[i]
+            
+            x_train_clients.append(x_train[start_train_idx:end_train_idx])
+            y_train_clients.append(y_train[start_train_idx:end_train_idx])
+            
+            x_test_clients.append(x_test[start_test_idx:end_test_idx])
+            y_test_clients.append(y_test[start_test_idx:end_test_idx])
+            
+            start_train_idx = end_train_idx
+            start_test_idx = end_test_idx
+        
+        return x_train_clients, y_train_clients, x_test_clients, y_test_clients
     
     def split_dataset(self, x_train, y_train, x_test, y_test, n_clients):
         p_train = int(len(x_train)/n_clients)
