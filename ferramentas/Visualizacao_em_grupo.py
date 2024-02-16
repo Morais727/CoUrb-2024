@@ -35,7 +35,7 @@ for caminhos_arquivos in lista:
             base = caminho[3].split('_')
             rotulo = f'{base[-1]}'
             rotulos.append(rotulo)
-
+            
             plt.figure(figsize=(9, 5))
             for i, arquivo_atual in enumerate(caminhos_arquivos):
                 data = pd.read_csv(arquivo_atual, header=None)
@@ -45,7 +45,7 @@ for caminhos_arquivos in lista:
                 }).reset_index()
                 
                 plt.plot(media_round['server_round'], media_round['accuracy'], label=f'{rotulos[i]}', linewidth=3)
-
+                
             xticks = np.arange(0,21,2)
             plt.xticks(xticks, fontsize=tamanho_fonte)
             plt.xticks(fontsize=tamanho_fonte)
