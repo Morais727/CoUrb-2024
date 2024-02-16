@@ -57,11 +57,12 @@ class ClienteFlower(fl.client.NumPyClient):
         else:
             (x_treino, y_treino), (x_teste, y_teste) = tf.keras.datasets.cifar10.load_data()
             
-        x_treino, x_teste = x_treino / 255.0, x_teste / 255.0                                            
+        x_treino, x_teste = x_treino/255.0, x_teste/255.0                                            
         
-        x_treino, y_treino, x_teste, y_teste = self.split_dataset(x_treino, y_treino, x_teste, y_teste, n_clients) 
+        if self.iid_niid== 'IID': 
+            x_treino,y_treino,x_teste,y_teste = self.split_dataset(x_treino,y_treino,x_teste,y_teste, n_clients) 
 
-        if self.iid_niid == 'NIID':             
+        elif self.iid_niid== 'NIID':             
             non_iid_data_X = []
             non_iid_data_y = []
             num_clusters = n_clients
@@ -71,8 +72,8 @@ class ClienteFlower(fl.client.NumPyClient):
 
             for cluster_id in range(num_clusters):
                 if len(self.alpha_dirichlet) == 1:
-                    self.alpha_dirichlet = [x + (self.cid / 10) for x in self.alpha_dirichlet]
-        
+                    self.alpha_dirichlet = [x * (self.cid/10) for x in self.alpha_dirichlet]
+         
                 class_proportions = np.random.dirichlet(self.alpha_dirichlet)
                 for class_label, proportion in enumerate(class_proportions):
                     num_samples = int(num_samples_per_cluster * proportion)
@@ -80,17 +81,16 @@ class ClienteFlower(fl.client.NumPyClient):
                     non_iid_data_y.extend(samples)
                 non_iid_data_X.extend([cluster_id] * sum(np.bincount(non_iid_data_y, minlength=10)))
 
-            non_iid_x_treino = np.array(non_iid_data_X)
-            non_iid_y_treino = np.array(non_iid_data_y)
+                x_treino =  np.array(non_iid_data_X)
+                y_treino =  np.array(non_iid_data_y)
+            
 
             filename = f'TESTES/{self.iid_niid}/LABELS/{self.modo_ataque}_{self.dataset}_{self.modelo_definido}_{str(self.alpha_dirichlet)}.csv'
             os.makedirs(os.path.dirname(filename), exist_ok=True)
             with open(filename, 'a') as file:
-                for item in non_iid_y_treino:
+                for item in y_treino:
                     file.write(f"{self.cid}, {item}\n")
 
-            return non_iid_x_treino, non_iid_y_treino, x_teste, y_teste
-        
         return x_treino, y_treino, x_teste, y_teste
 
     
