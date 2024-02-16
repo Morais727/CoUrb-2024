@@ -59,10 +59,11 @@ class ClienteFlower(fl.client.NumPyClient):
             (x_treino, y_treino), (x_teste, y_teste) = tf.keras.datasets.cifar10.load_data()
             
         x_treino, x_teste = x_treino/255.0, x_teste/255.0                                            
-                
-        x_treino,y_treino,x_teste,y_teste = self.split_dataset(x_treino,y_treino,x_teste,y_teste, n_clients) 
+        
+        if self.iid_niid== 'IID':        
+            x_treino,y_treino,x_teste,y_teste = self.split_dataset(x_treino,y_treino,x_teste,y_teste, n_clients) 
 
-        if self.iid_niid== 'NIID':             
+        elif self.iid_niid== 'NIID':             
            x_treino,y_treino,x_teste,y_teste = self.split_dataset_dirichlet(x_treino,y_treino,x_teste,y_teste, n_clients, alpha_dirichlet)
 
         return x_treino, y_treino, x_teste, y_teste
