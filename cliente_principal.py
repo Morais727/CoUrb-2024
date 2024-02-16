@@ -58,11 +58,10 @@ class ClienteFlower(fl.client.NumPyClient):
             (x_treino, y_treino), (x_teste, y_teste) = tf.keras.datasets.cifar10.load_data()
             
         x_treino, x_teste = x_treino/255.0, x_teste/255.0                                            
-        
-        if self.iid_niid== 'IID': 
-            x_treino,y_treino,x_teste,y_teste = self.split_dataset(x_treino,y_treino,x_teste,y_teste, n_clients) 
+                
+        x_treino,y_treino,x_teste,y_teste = self.split_dataset(x_treino,y_treino,x_teste,y_teste, n_clients) 
 
-        elif self.iid_niid== 'NIID':             
+        if self.iid_niid== 'NIID':             
             non_iid_data_X = []
             non_iid_data_y = []
             num_clusters = n_clients
@@ -70,10 +69,7 @@ class ClienteFlower(fl.client.NumPyClient):
             num_samples_per_cluster = int(np.random.poisson(num_samples_per_cluster_mean, 1))
             print(num_samples_per_cluster)
 
-            for cluster_id in range(num_clusters):
-                if len(self.alpha_dirichlet) == 1:
-                    self.alpha_dirichlet = [x * (self.cid/10) for x in self.alpha_dirichlet]
-         
+            for cluster_id in range(num_clusters):                
                 class_proportions = np.random.dirichlet(self.alpha_dirichlet)
                 for class_label, proportion in enumerate(class_proportions):
                     num_samples = int(num_samples_per_cluster * proportion)
