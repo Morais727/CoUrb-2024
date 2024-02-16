@@ -34,7 +34,7 @@ def executar_arquivo(arquivo):
 
     try:
         modelos = ['DNN', 'CNN']
-        niid_iid = ['IID', 'NIID']        
+        niid_iid = ['NIID','IID']        
         ataques = ['ALTERNA_INICIO', 'ATACANTES', 'EMBARALHA', 'INVERTE_TREINANDO', 'INVERTE_SEM_TREINAR', 'INVERTE_CONVEGENCIA', 'ZEROS', 'RUIDO_GAUSSIANO', 'NORMAL']
         data_set = ['MNIST', 'CIFAR10']                        
         alpha_dirichlet = [0.1,0.5,2,5,10]
@@ -42,19 +42,21 @@ def executar_arquivo(arquivo):
         round_inicio = [2, 4, 6, 8]
         per_cents_atacantes = [30,60,90]
         
+        
 
         for i, j, k, l, m, n, o, p in product(niid_iid, ataques, data_set, modelos, round_inicio, per_cents_atacantes, noise_gaussiano, alpha_dirichlet):
             print(f'Executando {arquivo}')
             
             if k == 'MNIST' and l == 'CNN':
                 print(f'Combinação inválida: Dataset {k} com modelo {l}. Pulando execução.')
-                continue
+                
             elif k == 'CIFAR10' and l == 'DNN':
                 print(f'Combinação inválida: Dataset {k} com modelo {l}. Pulando execução.')
-                continue
-            elif i == 'IID' and p:
-                print(f'Combinação inválida: Dados {i} com distribuicao Dirichlet {o}. Pulando execução.')
-                continue
+            if i == 'IID':
+                alpha_dirichlet = [0]     
+            
+                
+                
                 
             
             comando = f'python3 {arquivo} --iid_niid {i} --modo_ataque {j} --dataset {k} --modelo_definido {l} --round_inicio {m} --per_cents_atacantes {n} --noise_gaussiano {o} --alpha_dirichlet {p}'
