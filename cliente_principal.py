@@ -51,6 +51,7 @@ class ClienteFlower(fl.client.NumPyClient):
     
     def load_data(self):
         n_clients = self.total_clients
+        alpha_dirichlet = self.alpha_dirichlet
         
         if self.dataset == 'MNIST':  
             (x_treino, y_treino), (x_teste, y_teste) = tf.keras.datasets.mnist.load_data()
@@ -62,7 +63,7 @@ class ClienteFlower(fl.client.NumPyClient):
         x_treino,y_treino,x_teste,y_teste = self.split_dataset(x_treino,y_treino,x_teste,y_teste, n_clients) 
 
         if self.iid_niid== 'NIID':             
-           x_treino,y_treino,x_teste,y_teste = self.split_dataset_dirichlet(x_treino,y_treino,x_teste,y_teste, n_clients, self.alpha_dirichlet)
+           x_treino,y_treino,x_teste,y_teste = self.split_dataset_dirichlet(x_treino,y_treino,x_teste,y_teste, n_clients, alpha_dirichlet)
 
         return x_treino, y_treino, x_teste, y_teste
 
