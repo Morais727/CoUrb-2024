@@ -68,46 +68,35 @@ class ClienteFlower(fl.client.NumPyClient):
 
         return x_treino, y_treino, x_teste, y_teste
 
-    def split_dataset_dirichlet(self,x_train, y_train, x_test, y_test, n_clients, alpha_dirichlet):
+    def split_dataset_dirichlet(self, x_train, y_train, x_test, y_test, n_clients, alpha_dirichlet):
         n_train_samples = len(x_train)
         n_test_samples = len(x_test)
-        
+
         class_proportions = np.random.dirichlet(alpha_dirichlet, n_clients)
-        
-        train_samples_per_client = (class_proportions * n_train_samples).astype(int)
-        test_samples_per_client = (class_proportions * n_test_samples).astype(int)
-        
+
         x_train_clients = []
         y_train_clients = []
         x_test_clients = []
         y_test_clients = []
-        
-        start_train_idx = 0
-        start_test_idx = 0
-        
+
         for i in range(n_clients):
-            end_train_idx = start_train_idx + train_samples_per_client[i]
-            end_test_idx = start_test_idx + test_samples_per_client[i]
-            
-            x_train_clients.append(x_train[start_train_idx:end_train_idx])
-            y_train_clients.append(y_train[start_train_idx:end_train_idx])
-            
-            x_test_clients.append(x_test[start_test_idx:end_test_idx])
-            y_test_clients.append(y_test[start_test_idx:end_test_idx])
-            
-            start_train_idx = end_train_idx
-            start_test_idx = end_test_idx
-        
+            train_samples_idx = np.random.choice(n_train_samples, size=int(class_proportions[i] * n_train_samples), replace=False)
+            test_samples_idx = np.random.choice(n_test_samples, size=int(class_proportions[i] * n_test_samples), replace=False)
+
+            x_train_clients.append(x_train[train_samples_idx])
+            y_train_clients.append(y_train[train_samples_idx])
+
+            x_test_clients.append(x_test[test_samples_idx])
+            y_test_clients.append(y_test[test_samples_idx])
+
         return x_train_clients, y_train_clients, x_test_clients, y_test_clients
+
     
     def split_dataset(self, x_train, y_train, x_test, y_test, n_clients):
         p_train = int(len(x_train)/n_clients)
         p_test  = int(len(x_test)/n_clients)
 
-        random.seed(self.cid)
-        selected_train = random.sample(range(len(x_train)), p_train)
-
-        random.seed(self.cid)
+        selected_train = random.sample(range(len(x_train)), p_train)        
         selected_test  = random.sample(range(len(x_test)), p_test)
         
         x_train  = x_train[selected_train]
