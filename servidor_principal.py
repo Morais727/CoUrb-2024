@@ -151,9 +151,6 @@ class Timming(fl.server.strategy.FedAvg):
             num_clients=sample_size, min_num_clients=min_num_clients
         )
         
-        if server_round > 2 and 'n_atak' in self.classificacao:
-            selected_clients = [client for client in clients if client.cid in self.classificacao['n_atak']]
-            clients = selected_clients
         # Return client/config pairs
         return [(client, fit_ins) for client in clients]
 
@@ -348,12 +345,14 @@ class Timming(fl.server.strategy.FedAvg):
          
         
         for client,eval_res in results: 
-            nome_arquivo = f"TESTES/{eval_res.metrics['iid_niid']}/LOG_EVALUATE/{eval_res.metrics['ataque']}_{eval_res.metrics['dataset']}_{eval_res.metrics['variavel']}_{eval_res.metrics['parametro']}.csv"
+            nome_arquivo = f"TESTES/{eval_res.metrics['iid_niid']}/LOG_EVALUATE/{eval_res.metrics['ataque']}_{eval_res.metrics['dataset']}_{eval_res.metrics['modelo']}_{eval_res.metrics['porcentagem_ataque']}_{eval_res.metrics['alpha_dirichlet']}_{eval_res.metrics['noise_gaussiano']}_{eval_res.metrics['round_inicio']}.csv"
             os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)   
             with open(nome_arquivo,'a') as file:          
                 file.write(f"\n{server_round},{client.cid},{eval_res.metrics['accuracy']},{eval_res.loss}")
         
-        arquivo_verifica_acertos = f"TESTES/{eval_res.metrics['iid_niid']}/LOG_ACERTOS/{eval_res.metrics['ataque']}_{eval_res.metrics['dataset']}_{eval_res.metrics['variavel']}_{eval_res.metrics['parametro']}.csv"
+        arquivo_verifica_acertos = f"TESTES/{eval_res.metrics['iid_niid']}/LOG_ACERTOS/{eval_res.metrics['ataque']}_{eval_res.metrics['dataset']}_{eval_res.metrics['modelo']}_{eval_res.metrics['porcentagem_ataque']}_{eval_res.metrics['alpha_dirichlet']}_{eval_res.metrics['noise_gaussiano']}_{eval_res.metrics['round_inicio']}.csv"
+
+        
         os.makedirs(os.path.dirname(arquivo_verifica_acertos), exist_ok=True)
         with open(arquivo_verifica_acertos, 'a', newline='') as arquivo_csv:
             escritor_csv = csv.writer(arquivo_csv)
@@ -361,3 +360,4 @@ class Timming(fl.server.strategy.FedAvg):
                 escritor_csv.writerow(linha)
 
         return loss_aggregated, metrics_aggregated            
+    

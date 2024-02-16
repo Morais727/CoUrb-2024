@@ -6,7 +6,7 @@ import servidor_principal
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Flower Simulation")
-    parser.add_argument("--total_clients", type=int, default=25, help="Total de clients") 
+    parser.add_argument("--total_clients", type=int, default=20, help="Total de clients") 
     parser.add_argument("--num_rounds", type=int, default=20, help="Quantidade de rounds") 
     parser.add_argument("--fraction_fit", type=float, default=1.0, help="Fração de clientes que serao trienados durante o round")
     parser.add_argument("--modelo_definido", type=str, default='DNN', help="Modelo que sera treinado durante o round") # DNN OU CNN
