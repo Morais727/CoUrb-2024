@@ -50,9 +50,6 @@ class ClienteFlower(fl.client.NumPyClient):
         return modelo
     
     def load_data(self):
-        n_clients = self.total_clients
-        alpha_dirichlet = self.alpha_dirichlet
-        
         if self.dataset == 'MNIST':  
             (x_treino, y_treino), (x_teste, y_teste) = tf.keras.datasets.mnist.load_data()
         else:
@@ -60,46 +57,30 @@ class ClienteFlower(fl.client.NumPyClient):
             
         x_treino, x_teste = x_treino/255.0, x_teste/255.0                                            
         
-        if self.iid_niid== 'IID':        
-            x_treino,y_treino,x_teste,y_teste = self.split_dataset(x_treino,y_treino,x_teste,y_teste, n_clients) 
-
-        elif self.iid_niid== 'NIID':             
-           x_treino,y_treino,x_teste,y_teste = self.split_dataset_dirichlet(x_treino,y_treino,x_teste,y_teste, n_clients, alpha_dirichlet)
+        if self.iid_niid == 'IID':        
+            x_treino, y_treino, x_teste, y_teste = self.split_dataset(x_treino, y_treino, x_teste, y_teste) 
+        elif self.iid_niid == 'NIID':             
+            x_treino, y_treino, x_teste, y_teste = self.split_dataset_dirichlet(x_treino, y_treino, x_teste, y_teste)
 
         return x_treino, y_treino, x_teste, y_teste
 
-    def split_dataset_dirichlet(self,x_train, y_train, x_test, y_test, n_clients, alpha_dirichlet):
-        n_train_samples = int(len(x_train)/n_clients)
-        n_test_samples = int(len(x_test)/n_clients)
-        
-        # Gerar proporções de classes para cada cliente usando a distribuição de Dirichlet
-        class_proportions = np.random.dirichlet(alpha_dirichlet, 10)
-        
-        x_train_clients = []
-        y_train_clients = []
-        x_test_clients = []
-        y_test_clients = []
-        
-        train_start_idx = 0
-        test_start_idx = 0
-        
-        # Para cada cliente, selecionar as amostras de treinamento e teste de acordo com as proporções geradas
-        for proportions in class_proportions:
-            train_samples = int(proportions)
-            test_samples = int(proportions)
-            
-            train_end_idx = train_start_idx + train_samples
-            test_end_idx = test_start_idx + test_samples
-            
-            x_train_clients.append(x_train[train_start_idx:train_end_idx])
-            y_train_clients.append(y_train[train_start_idx:train_end_idx])
-            x_test_clients.append(x_test[test_start_idx:test_end_idx])
-            y_test_clients.append(y_test[test_start_idx:test_end_idx])
-            
-            train_start_idx = train_end_idx
-            test_start_idx = test_end_idx
-        
-        return x_train_clients, y_train_clients, x_test_clients, y_test_clients
+    def split_dataset_dirichlet(self, x_train, y_train, x_test, y_test):
+        unique_classes, counts = np.unique(y_train, return_counts=True)
+
+        alpha = [0.1] * len(unique_classes)
+
+        sample = np.random.dirichlet(alpha)
+
+        num_images_per_class = (counts * sample).astype(int)
+
+        selected_data_per_class = {}
+
+        for class_label, num_images in zip(unique_classes, num_images_per_class):
+            class_indices = np.where(y_train == class_label)[0]
+            selected_indices = np.random.choice(class_indices, size=num_images, replace=False)
+            selected_data_per_class[class_label] = (x_train[selected_indices], y_train[selected_indices])
+
+        return selected_data_per_class
 
     
     def split_dataset(self, x_train, y_train, x_test, y_test, n_clients):
