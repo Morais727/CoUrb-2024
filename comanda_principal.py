@@ -34,7 +34,7 @@ def executar_arquivo(arquivo):
 
     try:
         modelos = ['DNN', 'CNN']
-        niid_iid = ['NIID','IID']        
+        niid_iid = ['IID','NIID']        
         ataques = ['ALTERNA_INICIO', 'ATACANTES', 'EMBARALHA', 'INVERTE_TREINANDO', 'INVERTE_SEM_TREINAR', 'INVERTE_CONVEGENCIA', 'ZEROS', 'RUIDO_GAUSSIANO', 'NORMAL']
         data_set = ['MNIST', 'CIFAR10']                        
         alpha_dirichlet = [0.1,0.5,2,5,10]

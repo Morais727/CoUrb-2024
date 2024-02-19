@@ -73,7 +73,7 @@ class ClienteFlower(fl.client.NumPyClient):
         n_test_samples = int(len(x_test)/n_clients)
         
         # Gerar proporções de classes para cada cliente usando a distribuição de Dirichlet
-        class_proportions = np.random.dirichlet(alpha_dirichlet, n_clients)
+        class_proportions = np.random.dirichlet(alpha_dirichlet, 10)
         
         x_train_clients = []
         y_train_clients = []
@@ -85,8 +85,8 @@ class ClienteFlower(fl.client.NumPyClient):
         
         # Para cada cliente, selecionar as amostras de treinamento e teste de acordo com as proporções geradas
         for proportions in class_proportions:
-            train_samples = int(proportions.sum() * n_train_samples)
-            test_samples = int(proportions.sum() * n_test_samples)
+            train_samples = int(proportions)
+            test_samples = int(proportions)
             
             train_end_idx = train_start_idx + train_samples
             test_end_idx = test_start_idx + test_samples
