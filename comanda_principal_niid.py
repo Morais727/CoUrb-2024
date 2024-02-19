@@ -6,9 +6,9 @@ from itertools import product
 
 limpa_arquivos_csv= []
 padroes =   [
-                'TESTES/IID/LABELS/*.csv', 
-                'TESTES/IID/LOG_EVALUATE/*.csv', 
-                'TESTES/IID/LOG_ACERTOS/*.csv',
+                # 'TESTES/IID/LABELS/*.csv', 
+                # 'TESTES/IID/LOG_EVALUATE/*.csv', 
+                # 'TESTES/IID/LOG_ACERTOS/*.csv',
                 'TESTES/NIID/LABELS/*.csv', 
                 'TESTES/NIID/LOG_EVALUATE/*.csv',  
                 'TESTES/NIID/LOG_ACERTOS/*.csv',
@@ -34,7 +34,7 @@ def executar_arquivo(arquivo):
 
     try:
         modelos = ['DNN', 'CNN']
-        niid_iid = ['NIID','IID']        
+        niid_iid = ['NIID']        
         ataques = ['ALTERNA_INICIO', 'ATACANTES', 'EMBARALHA', 'INVERTE_TREINANDO', 'INVERTE_SEM_TREINAR', 'INVERTE_CONVEGENCIA', 'ZEROS', 'RUIDO_GAUSSIANO', 'NORMAL']
         data_set = ['MNIST', 'CIFAR10']                        
         alpha_dirichlet = [0.1,0.5,2,5,10]
