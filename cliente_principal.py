@@ -79,8 +79,11 @@ class ClienteFlower(fl.client.NumPyClient):
             class_indices = np.where(y_train == class_label)[0]
             selected_indices = np.random.choice(class_indices, size=num_images, replace=False)
             selected_data_per_class[class_label] = (x_train[selected_indices], y_train[selected_indices])
+        
+        x_train_selected = np.concatenate([data[0] for data in selected_data_per_class.values()])
+        y_train_selected = np.concatenate([data[1] for data in selected_data_per_class.values()])
 
-        return selected_data_per_class
+        return x_train_selected, y_train_selected, x_test, y_test
 
     
     def split_dataset(self, x_train, y_train, x_test, y_test, n_clients):
