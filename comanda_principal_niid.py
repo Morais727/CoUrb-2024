@@ -42,9 +42,14 @@ def executar_arquivo(arquivo):
         round_inicio = [2, 4, 6, 8]
         per_cents_atacantes = [30,60,90,95]
         
-        
+        combinacoes_unicas = set() 
 
         for i, j, k, l, m, n, o, p in product(niid_iid, ataques, data_set, modelos, round_inicio, per_cents_atacantes, noise_gaussiano, alpha_dirichlet):
+            combinacao = (i, j, k, l, m, n, o, p)  
+            if combinacao not in combinacoes_unicas:                  
+                combinacoes_unicas.add(combinacao)
+           
+           
             print(f'Executando {arquivo}')                                    
                 
             comando = f'python3 {arquivo} --iid_niid {i} --modo_ataque {j} --dataset {k} --modelo_definido {l} --round_inicio {m} --per_cents_atacantes {n} --noise_gaussiano {o} --alpha_dirichlet {p}'
