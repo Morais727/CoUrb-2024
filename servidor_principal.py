@@ -67,7 +67,7 @@ class Timming(fl.server.strategy.FedAvg):
         self.percents = None
         self.resultados        = []  
         self.classificacao = {} 
-        self.verifica_acertos = []           
+                   
         
         minmax_mnist_dnn_path = 'MODELOS/MINMAX_XGB_mnist_dnn.pkl'
         modelo_mnist_dnn_path = 'MODELOS/CLASSIFICADOR_XGB_mnist_dnn.h5'
@@ -193,7 +193,7 @@ class Timming(fl.server.strategy.FedAvg):
         atual = [] 
         self.classificacao = {} 
         percents_atual = 0.0  
-         
+        self.verifica_acertos = [] 
         if server_round > 1:
             for client, fit_res in results:
                 result   = parameters_to_ndarrays(fit_res.parameters)
