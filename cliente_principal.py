@@ -22,8 +22,8 @@ class ClienteFlower(fl.client.NumPyClient):
         self.round_inicio = round_inicio
         self.per_cents_atacantes = int((int(total_clients) * per_cents_atacantes)/100)
         self.atacantes = per_cents_atacantes
-        
-        if self.iid_niid == 'IID' and self.alpha_dirichlet > 0:
+        print(self.alpha_dirichlet)
+        if self.iid_niid == 'IID' and all(value > 0 for value in self.alpha_dirichlet):
             sys.exit(f'Combinação inválida. Pulando execução.')
         if self.modo_ataque != 'RUIDO_GAUSSIANO' and self.noise_gaussiano > 0:
             sys.exit(f'Combinação inválida. Pulando execução.')
