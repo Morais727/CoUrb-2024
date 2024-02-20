@@ -273,7 +273,7 @@ class ClienteFlower(fl.client.NumPyClient):
         
         return loss, len(self.x_teste), {
                                             "accuracy": accuracy, 'porcentagem_ataque': int(self.atacantes),'modelo':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 
-                                            'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet[0],'noise_gaussiano':self.noise_gaussiano, 'round_inicio':self.round_inicio
+                                            'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet,'noise_gaussiano':self.noise_gaussiano, 'round_inicio':self.round_inicio
                                          }
     
 
