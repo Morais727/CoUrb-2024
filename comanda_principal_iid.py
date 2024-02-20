@@ -44,16 +44,22 @@ def executar_arquivo(arquivo):
         
         
 
-        for i, j, k, l, m, n, o, p in product(niid_iid, ataques, data_set, modelos, round_inicio, per_cents_atacantes, noise_gaussiano, alpha_dirichlet):
-            print(f'Executando {arquivo}')
-            
-            comando = f'python3 {arquivo} --iid_niid {i} --modo_ataque {j} --dataset {k} --modelo_definido {l} --round_inicio {m} --per_cents_atacantes {n} --noise_gaussiano {o} --alpha_dirichlet {p}'
-            print(f'\n\n################################################################################################')
-            print(f'\n\n{comando}\n\n')
-            print(f'################################################################################################\n\n')
-            subprocess.run(shlex.split(comando), check=True)
+        combinacoes_unicas = set() 
 
-            print(f'Executou com sucesso: {arquivo}')
+        for i, j, k, l, m, n, o, p in product(niid_iid, ataques, data_set, modelos, round_inicio, per_cents_atacantes, noise_gaussiano, alpha_dirichlet):
+            combinacao = (i, j, k, l, m, n, o, p)  
+            if combinacao not in combinacoes_unicas:                  
+                combinacoes_unicas.add(combinacao)
+                
+                print(f'Executando {arquivo}')
+                
+                comando = f'python3 {arquivo} --iid_niid {i} --modo_ataque {j} --dataset {k} --modelo_definido {l} --round_inicio {m} --per_cents_atacantes {n} --noise_gaussiano {o} --alpha_dirichlet {p}'
+                print(f'\n\n################################################################################################')
+                print(f'\n\n{comando}\n\n')
+                print(f'################################################################################################\n\n')
+                subprocess.run(shlex.split(comando), check=True)
+
+                print(f'Executou com sucesso: {arquivo}')
 
     except subprocess.CalledProcessError as e:
         print(f'Erro: {arquivo}')
