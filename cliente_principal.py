@@ -22,6 +22,13 @@ class ClienteFlower(fl.client.NumPyClient):
         self.round_inicio = round_inicio
         self.per_cents_atacantes = int((int(total_clients) * per_cents_atacantes)/100)
         self.atacantes = per_cents_atacantes
+        
+        if self.iid_niid == 'IID':
+            self.alpha_dirichlet = 0
+        if self.modo_ataque != 'RUIDO_GAUSSIANO':
+            self.noise_gaussiano = 0
+        if self.dataset == 'MNIST' and self.modelo_definido == 'CNN' or self.dataset == 'CIFAR10' and self.modelo_definido == 'DNN':
+            sys.exit(f'Combinação inválida: Dataset {self.dataset} com modelo {self.modelo_definido}. Pulando execução.')        
 
         self.cid = int(cid)
         self.modelo = self.cria_modelo()
@@ -62,7 +69,12 @@ class ClienteFlower(fl.client.NumPyClient):
             x_treino, y_treino, x_teste, y_teste = self.split_dataset(x_treino, y_treino, x_teste, y_teste, n_clients) 
         elif self.iid_niid == 'NIID':             
             x_treino, y_treino, x_teste, y_teste = self.split_dataset_dirichlet(x_treino, y_treino, x_teste, y_teste)
-
+            nome_arquivo = f"TESTES/{self.iid_niid}/LABELS/{self.modo_ataque}_{self.dataset}_{self.modelo_definido}_{self.atacantes}_{self.alpha_dirichlet[0]}_{self.noise_gaussiano}_{self.round_inicio}.csv"
+            for item in y_treino:                 
+                os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)   
+                with open(nome_arquivo,'a') as file:          
+                    file.write(f"{self.cid}, {item}\n")
+                    
         return x_treino, y_treino, x_teste, y_teste
 
     def split_dataset_dirichlet(self, x_train, y_train, x_test, y_test):
@@ -241,8 +253,8 @@ class ClienteFlower(fl.client.NumPyClient):
             shape_list = np.shape(a[camada_alvo])
 
             noise = self.noise_gaussiano
-            loc = float(self.cid) * np.random.uniform(1.5,2)
-            a[camada_alvo] += np.random.normal(loc, noise, shape_list)
+            # loc = float(self.cid) * np.random.uniform(1.5,2)
+            a[camada_alvo] += np.random.normal(0, noise, shape_list)
 
             return a, len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'variavel':self.modelo_definido,'camada':camada_alvo}
             
@@ -261,7 +273,7 @@ class ClienteFlower(fl.client.NumPyClient):
         
         return loss, len(self.x_teste), {
                                             "accuracy": accuracy, 'porcentagem_ataque': int(self.atacantes),'modelo':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 
-                                            'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet,'noise_gaussiano':self.noise_gaussiano, 'round_inicio':self.round_inicio
+                                            'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet[0],'noise_gaussiano':self.noise_gaussiano, 'round_inicio':self.round_inicio
                                          }
     
 

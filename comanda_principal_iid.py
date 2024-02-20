@@ -54,7 +54,7 @@ def executar_arquivo(arquivo):
                 print(f'Combinação inválida: Dataset {k} com modelo {l}. Pulando execução.')
 
             if i == 'IID':
-                alpha_dirichlet = [0]     
+                p = 0 
             
                 
             comando = f'python3 {arquivo} --iid_niid {i} --modo_ataque {j} --dataset {k} --modelo_definido {l} --round_inicio {m} --per_cents_atacantes {n} --noise_gaussiano {o} --alpha_dirichlet {p}'

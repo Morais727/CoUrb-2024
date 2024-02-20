@@ -8,13 +8,19 @@ import matplotlib.pyplot as plt
 tamanho_fonte = 20
 lista = []
 try:
-    niid_iid = ['NIID']
-    ataques = ['ALTERNA_INICIO','ATACANTES','EMBARALHA','INVERTE_TREINANDO','INVERTE_SEM_TREINAR','INVERTE_CONVEGENCIA','ZEROS','RUIDO_GAUSSIANO','NORMAL']
-    data_set = ['MNIST','CIFAR10']
-    modelos = ['DNN','CNN']
+    modelos = ['DNN', 'CNN']
+    niid_iid = ['NIID']        
+    ataques = ['ALTERNA_INICIO', 'ATACANTES', 'EMBARALHA', 'INVERTE_TREINANDO', 'INVERTE_SEM_TREINAR', 'INVERTE_CONVEGENCIA', 'ZEROS', 'RUIDO_GAUSSIANO', 'NORMAL']
+    data_set = ['MNIST', 'CIFAR10']                        
+    alpha_dirichlet = [0.1,0.5,2,5,10]
+    noise_gaussiano = [0.1,0.5,0.8]
+    round_inicio = [2, 4, 6, 8]
+    per_cents_atacantes = [30,60,90,95]
     
-    for i, j, k, l in product(niid_iid, ataques, data_set, modelos):
+    for i, j, k, l, m, n, o, p in product(niid_iid, ataques, data_set, modelos, round_inicio, per_cents_atacantes, noise_gaussiano, alpha_dirichlet):
         list_prima = glob.glob(f'TESTES/{i}/LABELS/{j}_{k}_{l}*.csv')
+        if list_prima not in lista:      
+            lista.append(list_prima)
         lista.append(list_prima)
     
 except Exception as e:

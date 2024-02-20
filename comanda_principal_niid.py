@@ -45,17 +45,7 @@ def executar_arquivo(arquivo):
         
 
         for i, j, k, l, m, n, o, p in product(niid_iid, ataques, data_set, modelos, round_inicio, per_cents_atacantes, noise_gaussiano, alpha_dirichlet):
-            print(f'Executando {arquivo}')
-            
-            if k == 'MNIST' and l == 'CNN':
-                print(f'Combinação inválida: Dataset {k} com modelo {l}. Pulando execução.')
-                
-            elif k == 'CIFAR10' and l == 'DNN':
-                print(f'Combinação inválida: Dataset {k} com modelo {l}. Pulando execução.')
-
-            if i == 'IID':
-                alpha_dirichlet = [0]     
-            
+            print(f'Executando {arquivo}')                                    
                 
             comando = f'python3 {arquivo} --iid_niid {i} --modo_ataque {j} --dataset {k} --modelo_definido {l} --round_inicio {m} --per_cents_atacantes {n} --noise_gaussiano {o} --alpha_dirichlet {p}'
             print(f'\n\n################################################################################################')
