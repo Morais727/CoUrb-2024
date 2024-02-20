@@ -23,12 +23,12 @@ class ClienteFlower(fl.client.NumPyClient):
         self.per_cents_atacantes = int((int(total_clients) * per_cents_atacantes)/100)
         self.atacantes = per_cents_atacantes
         
-        if self.iid_niid == 'IID':
-            self.alpha_dirichlet = 0
-        if self.modo_ataque != 'RUIDO_GAUSSIANO':
-            self.noise_gaussiano = 0
+        if self.iid_niid == 'IID' and self.alpha_dirichlet > 0:
+            sys.exit(f'Combinação inválida. Pulando execução.')
+        if self.modo_ataque != 'RUIDO_GAUSSIANO' and self.noise_gaussiano > 0:
+            sys.exit(f'Combinação inválida. Pulando execução.')
         if self.dataset == 'MNIST' and self.modelo_definido == 'CNN' or self.dataset == 'CIFAR10' and self.modelo_definido == 'DNN':
-            sys.exit(f'Combinação inválida: Dataset {self.dataset} com modelo {self.modelo_definido}. Pulando execução.')        
+            sys.exit(f'Combinação inválida. Pulando execução.')        
 
         self.cid = int(cid)
         self.modelo = self.cria_modelo()
