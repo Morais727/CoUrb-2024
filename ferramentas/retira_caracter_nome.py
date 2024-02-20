@@ -2,9 +2,11 @@ import os
 import glob
 file_list = set()
 modos = ['IID','NIID']
+locais = ['LOG_EVALUATE','LOG_ACERTOS','LOG_ACERTOS','LABELS' ]
 for i in modos:
-    list = glob.glob(f'TESTES/{i}/LOG_EVALUATE/*.csv')
-    file_list.update(list)
+    for j in locais:
+        list = glob.glob(f'TESTES/{i}/{j}/*.csv')
+        file_list.update(list)
 for arquivo in file_list:
         try:
             novo_nome = arquivo.replace('[', '').replace(']', '')
