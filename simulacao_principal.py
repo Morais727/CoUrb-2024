@@ -37,20 +37,21 @@ def main():
     per_cents_atacantes = args.per_cents_atacantes
 
   
-    
-    def Cliente(cid, modelo_definido, iid_niid, modo_ataque, dataset, total_clients, alpha_dirichlet, noise_gaussiano,round_inicio, per_cents_atacantes):
-        return ClienteFlower(cid, modelo_definido, iid_niid, modo_ataque, dataset, total_clients, alpha_dirichlet, noise_gaussiano,round_inicio, per_cents_atacantes)
+    try:
+        def Cliente(cid, modelo_definido, iid_niid, modo_ataque, dataset, total_clients, alpha_dirichlet, noise_gaussiano,round_inicio, per_cents_atacantes):
+            return ClienteFlower(cid, modelo_definido, iid_niid, modo_ataque, dataset, total_clients, alpha_dirichlet, noise_gaussiano,round_inicio, per_cents_atacantes)
 
-    client_fn = partial(Cliente, modelo_definido=modelo_definido, iid_niid=iid_niid,
-                        modo_ataque=modo_ataque, dataset=dataset, total_clients=total_clients,
-                        alpha_dirichlet=alpha_dirichlet, noise_gaussiano=noise_gaussiano, round_inicio=round_inicio,per_cents_atacantes=per_cents_atacantes)
+        client_fn = partial(Cliente, modelo_definido=modelo_definido, iid_niid=iid_niid,
+                            modo_ataque=modo_ataque, dataset=dataset, total_clients=total_clients,
+                            alpha_dirichlet=alpha_dirichlet, noise_gaussiano=noise_gaussiano, round_inicio=round_inicio,per_cents_atacantes=per_cents_atacantes)
 
-    history = fl.simulation.start_simulation(
-        client_fn=client_fn,
-        num_clients=total_clients,
-        strategy=servidor_principal.Timming(fraction_fit=fraction_fit),
-        config=fl.server.ServerConfig(num_rounds=num_rounds)
-    )
-
+        history = fl.simulation.start_simulation(
+            client_fn=client_fn,
+            num_clients=total_clients,
+            strategy=servidor_principal.Timming(fraction_fit=fraction_fit),
+            config=fl.server.ServerConfig(num_rounds=num_rounds)
+        )
+    except ValueError as e:
+            print(f"Erro na inicialização do cliente federado: {e}")
 if __name__ == "__main__":
     main()
