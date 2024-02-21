@@ -105,7 +105,7 @@ for caminhos_arquivos in lista:
                 loc='best',
                 fontsize=tamanho_fonte,
                 ncol=1,
-                # title='# Round',
+                title='# Round',
                 title_fontsize=tamanho_fonte
             )
 
