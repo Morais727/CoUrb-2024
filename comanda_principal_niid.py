@@ -46,6 +46,20 @@ def executar_arquivo(arquivo):
 
         for i, j, k, l, m, n, o, p in product(niid_iid, ataques, data_set, modelos, round_inicio, per_cents_atacantes, noise_gaussiano, alpha_dirichlet):
             combinacao = (i, j, k, l, m, n, o, p)  
+            
+            if i == 'IID' and p > 0:
+                print('Combinação inválida. A execução será interrompida.')
+                continue
+
+            if j != 'RUIDO_GAUSSIANO' and o > 0:
+                print('Combinação inválida. A execução será interrompida.')
+                continue
+
+            if (k == 'MNIST' and l == 'CNN') or (k == 'CIFAR10' and l == 'DNN'):
+                print('Combinação inválida. A execução será interrompida.')
+                continue
+
+
             if combinacao not in combinacoes_unicas:                  
                 combinacoes_unicas.add(combinacao)
            
