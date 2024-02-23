@@ -23,14 +23,6 @@ class ClienteFlower(fl.client.NumPyClient):
         self.per_cents_atacantes = int((int(total_clients) * per_cents_atacantes)/100)
         self.atacantes = per_cents_atacantes
        
-        if self.iid_niid == 'IID' and all(value > 0 for value in self.alpha_dirichlet):
-            raise ValueError('Combinação inválida. A execução será interrompida.')
-        if self.modo_ataque != 'RUIDO_GAUSSIANO' and self.noise_gaussiano > 0:
-            raise ValueError('Combinação inválida. A execução será interrompida.')
-        if (self.dataset == 'MNIST' and self.modelo_definido == 'CNN') or (self.dataset == 'CIFAR10' and self.modelo_definido == 'DNN'):
-            raise ValueError('Combinação inválida. A execução será interrompida.')
-       
-
         self.cid = int(cid)
         self.modelo = self.cria_modelo()
         self.x_treino, self.y_treino, self.x_teste, self.y_teste = self.load_data()
