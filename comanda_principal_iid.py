@@ -4,16 +4,14 @@ import subprocess
 import concurrent.futures
 from itertools import product
 
-limpa_arquivos_csv= []
-padroes =   [
-                'TESTES/IID/LABELS/*.csv', 
-                'TESTES/IID/LOG_EVALUATE/*.csv', 
-                'TESTES/IID/LOG_ACERTOS/*.csv',
-                # 'TESTES/NIID/LABELS/*.csv', 
-                # 'TESTES/NIID/LOG_EVALUATE/*.csv',  
-                # 'TESTES/NIID/LOG_ACERTOS/*.csv',
-                
-            ]
+limpa_arquivos_csv = []
+padroes = ['TESTES/IID/LABELS/*.csv', 
+           'TESTES/IID/LOG_EVALUATE/*.csv', 
+           'TESTES/IID/LOG_ACERTOS/*.csv',
+           # 'TESTES/NIID/LABELS/*.csv', 
+           # 'TESTES/NIID/LOG_EVALUATE/*.csv',  
+           # 'TESTES/NIID/LOG_ACERTOS/*.csv',
+          ]
 
 for i in padroes:
     limpa_arquivos_csv.extend(glob.glob(i))
@@ -22,32 +20,40 @@ try:
     for arquivo in limpa_arquivos_csv:
         with open(arquivo, 'w') as file:
             pass
-except subprocess.CalledProcessError as e:
-    print(f'Erro: {e}')
+        
+except OSError as e:
+    print(f'Erro ao limpar arquivo: {e}')
 
-arquivos_teste= [
-                    'simulacao_principal.py'
-                ]
-
+arquivos_teste = ['simulacao_principal.py']
 
 def executar_arquivo(arquivo):
-
     try:
         modelos = ['DNN', 'CNN']
         niid_iid = ['IID']        
         ataques = ['ALTERNA_INICIO', 'ATACANTES', 'EMBARALHA', 'INVERTE_TREINANDO', 'INVERTE_SEM_TREINAR', 'INVERTE_CONVEGENCIA', 'ZEROS', 'RUIDO_GAUSSIANO', 'NORMAL']
         data_set = ['MNIST', 'CIFAR10']                        
-        alpha_dirichlet = [0,0.1,0.5,2,5,10]
-        noise_gaussiano = [0,0.1,0.5,0.8]
+        alpha_dirichlet = [0, 0.1, 0.5, 2, 5, 10]
+        noise_gaussiano = [0, 0.1, 0.5, 0.8]
         round_inicio = [2, 4, 6, 8]
-        per_cents_atacantes = [30,60,80,85,88,90,95]
+        per_cents_atacantes = [30, 60, 80, 85, 88, 90, 95]
         
-        
-
         combinacoes_unicas = set() 
 
         for i, j, k, l, m, n, o, p in product(niid_iid, ataques, data_set, modelos, round_inicio, per_cents_atacantes, noise_gaussiano, alpha_dirichlet):
-            combinacao = (i, j, k, l, m, n, o, p)  
+            combinacao = (i, j, k, l, m, n, o, p) 
+            
+            if i == 'IID' and all(value > 0 for value in p):
+                print('Combinação inválida. A execução será interrompida.')
+                continue
+
+            if j != 'RUIDO_GAUSSIANO' and o > 0:
+                print('Combinação inválida. A execução será interrompida.')
+                continue
+
+            if (k == 'MNIST' and l == 'CNN') or (k == 'CIFAR10' and l == 'DNN'):
+                print('Combinação inválida. A execução será interrompida.')
+                continue
+
             if combinacao not in combinacoes_unicas:                  
                 combinacoes_unicas.add(combinacao)
                 
@@ -62,9 +68,11 @@ def executar_arquivo(arquivo):
                 print(f'Executou com sucesso: {arquivo}')
 
     except subprocess.CalledProcessError as e:
-        print(f'Erro: {arquivo}')
+        print(f'Erro ao executar o arquivo: {e}')
+    except Exception as e:
+        print(f'Erro inesperado: {e}')
 
 max_threads = 1
 
 with concurrent.futures.ThreadPoolExecutor(max_threads) as executor:
-    resultados = list(executor.map(executar_arquivo, arquivos_teste))    
+    resultados = list(executor.map(executar_arquivo, arquivos_teste))
