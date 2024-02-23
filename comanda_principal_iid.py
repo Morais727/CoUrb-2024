@@ -42,7 +42,7 @@ def executar_arquivo(arquivo):
         for i, j, k, l, m, n, o, p in product(niid_iid, ataques, data_set, modelos, round_inicio, per_cents_atacantes, noise_gaussiano, alpha_dirichlet):
             combinacao = (i, j, k, l, m, n, o, p) 
             
-            if i == 'IID' and all(value > 0 for value in p):
+            if i == 'IID' and p > 0:
                 print('Combinação inválida. A execução será interrompida.')
                 continue
 
