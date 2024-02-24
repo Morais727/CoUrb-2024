@@ -114,7 +114,7 @@ class ClienteFlower(fl.client.NumPyClient):
         with open(nome_arquivo,'a') as csvfile:          
             writer = csv.writer(csvfile)
             for valor, contagem in zip(uniq, count):
-                writer.writerow([valor, contagem])
+                writer.writerow([valor, contagem, self.cid])
 
         return x_train, y_train, x_test, y_test
 
