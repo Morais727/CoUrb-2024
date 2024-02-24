@@ -66,7 +66,7 @@ class ClienteFlower(fl.client.NumPyClient):
         if self.iid_niid == 'IID':        
             x_treino, y_treino, x_teste, y_teste = self.split_dataset(x_treino, y_treino, x_teste, y_teste, n_clients) 
         elif self.iid_niid == 'NIID':             
-            x_treino, y_treino, x_teste, y_teste = self.split_dataset_dirichlet( dataset_size,alpha,test_size)
+            x_treino, y_treino, x_teste, y_teste = self.split_dataset_dirichlet(x_treino, y_treino, x_teste, y_teste,dataset_size,alpha,test_size)
             nome_arquivo = f"TESTES/{self.iid_niid}/LABELS/{self.modo_ataque}_{self.dataset}_{self.modelo_definido}_{self.atacantes}_{self.alpha_dirichlet}_{self.noise_gaussiano}_{self.round_inicio}.csv"
             for item in y_treino:                 
                 os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)   
@@ -75,7 +75,7 @@ class ClienteFlower(fl.client.NumPyClient):
                     
         return x_treino, y_treino, x_teste, y_teste
 
-    def split_dataset_dirichlet(self,dataset_size,alpha,test_size): 
+    def split_dataset_dirichlet(self,x_train, y_train, x_test, y_test,dataset_size,alpha,test_size): 
         
         n_classes = len(np.unique(y_train)) #number of classes in dataset
 
