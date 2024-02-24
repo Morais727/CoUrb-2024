@@ -1,4 +1,5 @@
 import os
+import csv
 import sys
 import time
 import random
@@ -67,12 +68,7 @@ class ClienteFlower(fl.client.NumPyClient):
             x_treino, y_treino, x_teste, y_teste = self.split_dataset(x_treino, y_treino, x_teste, y_teste, n_clients) 
         elif self.iid_niid == 'NIID':             
             x_treino, y_treino, x_teste, y_teste = self.split_dataset_dirichlet(x_treino, y_treino, x_teste, y_teste,dataset_size,alpha,test_size)
-            nome_arquivo = f"TESTES/{self.iid_niid}/LABELS/{self.modo_ataque}_{self.dataset}_{self.modelo_definido}_{self.atacantes}_{self.alpha_dirichlet}_{self.noise_gaussiano}_{self.round_inicio}.csv"
-            for item in y_treino:                 
-                os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)   
-                with open(nome_arquivo,'a') as file:          
-                    file.write(f"{self.cid}, {item}\n")
-                    
+                                
         return x_treino, y_treino, x_teste, y_teste
 
     def split_dataset_dirichlet(self,x_train, y_train, x_test, y_test,dataset_size,alpha,test_size): 
@@ -111,6 +107,15 @@ class ClienteFlower(fl.client.NumPyClient):
         x_test = x_test[index_test]
         y_test = y_test[index_test]
 
+        nome_arquivo = f"TESTES/{self.iid_niid}/LABELS/{self.modo_ataque}_{self.dataset}_{self.modelo_definido}_{self.atacantes}_{self.alpha_dirichlet}_{self.noise_gaussiano}_{self.round_inicio}.csv"
+        uniq, count = np.unique(y_train, return_counts=True)                 
+        
+        os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)   
+        with open(nome_arquivo,'a') as csvfile:          
+            writer = csv.writer(csvfile)
+            writer.writerow(['Valor', 'Contagem'])  # Escreve o cabeçalho
+            for valor, contagem in zip(uniq, count):
+                writer.writerow([valor, contagem])
 
         return x_train, y_train, x_test, y_test
 

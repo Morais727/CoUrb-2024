@@ -1,3 +1,4 @@
+import os
 import glob
 import shlex
 import subprocess 
@@ -11,6 +12,11 @@ padroes = ['TESTES/IID/LABELS/*.csv',
            # 'TESTES/NIID/LABELS/*.csv', 
            # 'TESTES/NIID/LOG_EVALUATE/*.csv',  
            # 'TESTES/NIID/LOG_ACERTOS/*.csv',
+
+           'TESTES/IID/LOG_ACERTOS/GRAFICOS/*.png',
+           'TESTES/IID/GRAFICOS/*.png',
+
+
           ]
 
 for i in padroes:
@@ -18,8 +24,7 @@ for i in padroes:
 
 try:
     for arquivo in limpa_arquivos_csv:
-        with open(arquivo, 'w') as file:
-            pass
+        os.remove(arquivo)
 
 except OSError as e:
     print(f'Erro ao limpar arquivo: {e}')

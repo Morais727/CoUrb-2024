@@ -33,7 +33,7 @@ try:
     per_cents_atacantes = [30,60,90,95]
             
     for i, j, k, l, m, n, o, p in product(niid_iid, ataques, data_set, modelos, per_cents_atacantes, alpha_dirichlet, noise_gaussiano, round_inicio):     
-       
+        
         if condição_para_evitar_combinação(i, j, k, l, m, n, o, p):
             continue   
         
