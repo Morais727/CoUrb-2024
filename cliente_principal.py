@@ -80,7 +80,7 @@ class ClienteFlower(fl.client.NumPyClient):
         n_classes = len(np.unique(y_train)) #number of classes in dataset
 
         alpha_vector = alpha * np.ones(n_classes)
-        print(alpha_vector)
+        
         client_proportions = dirichlet.rvs(alpha_vector, size = 1)
         client_quantities = []
 
