@@ -6,6 +6,7 @@ import pickle
 import flwr as fl
 import numpy as np
 import tensorflow as tf
+from scipy.stats import dirichlet, multinomial, beta
 
 
 class ClienteFlower(fl.client.NumPyClient):
@@ -51,6 +52,10 @@ class ClienteFlower(fl.client.NumPyClient):
     
     def load_data(self):
         n_clients = self.total_clients
+        alpha = self.alpha_dirichlet
+        test_size = 0.2
+        dataset_size = 1000
+
         if self.dataset == 'MNIST':  
             (x_treino, y_treino), (x_teste, y_teste) = tf.keras.datasets.mnist.load_data()
         else:
@@ -61,7 +66,7 @@ class ClienteFlower(fl.client.NumPyClient):
         if self.iid_niid == 'IID':        
             x_treino, y_treino, x_teste, y_teste = self.split_dataset(x_treino, y_treino, x_teste, y_teste, n_clients) 
         elif self.iid_niid == 'NIID':             
-            x_treino, y_treino, x_teste, y_teste = self.split_dataset_dirichlet(x_treino, y_treino, x_teste, y_teste)
+            x_treino, y_treino, x_teste, y_teste = self.split_dataset_dirichlet( dataset_size,alpha,test_size)
             nome_arquivo = f"TESTES/{self.iid_niid}/LABELS/{self.modo_ataque}_{self.dataset}_{self.modelo_definido}_{self.atacantes}_{self.alpha_dirichlet}_{self.noise_gaussiano}_{self.round_inicio}.csv"
             for item in y_treino:                 
                 os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)   
@@ -70,26 +75,44 @@ class ClienteFlower(fl.client.NumPyClient):
                     
         return x_treino, y_treino, x_teste, y_teste
 
-    def split_dataset_dirichlet(self, x_train, y_train, x_test, y_test):
-        unique_classes, counts = np.unique(y_train, return_counts=True)
-
-        alpha = [0.1] * len(unique_classes)
-
-        sample = np.random.dirichlet(alpha)
-
-        num_images_per_class = (counts * sample).astype(int)
-
-        selected_data_per_class = {}
-
-        for class_label, num_images in zip(unique_classes, num_images_per_class):
-            class_indices = np.where(y_train == class_label)[0]
-            selected_indices = np.random.choice(class_indices, size=num_images, replace=False)
-            selected_data_per_class[class_label] = (x_train[selected_indices], y_train[selected_indices])
+    def split_dataset_dirichlet(self,dataset_size,alpha,test_size): 
         
-        x_train_selected = np.concatenate([data[0] for data in selected_data_per_class.values()])
-        y_train_selected = np.concatenate([data[1] for data in selected_data_per_class.values()])
+        n_classes = len(np.unique(y_train)) #number of classes in dataset
 
-        return x_train_selected, y_train_selected, x_test, y_test
+        alpha_vector = alpha * np.ones(n_classes)
+
+        client_proportions = dirichlet.rvs(alpha_vector, size = 1)
+        client_quantities = []
+
+        client_quantities = multinomial.rvs(n = dataset_size, p = client_proportions[0]) #quantity of each class
+
+        index_train = []
+        index_test = []
+        for i, n in enumerate(client_quantities): #pass for all classes
+
+            try:
+                index_train = np.append(index_train,
+                                    np.random.choice(np.where(y_train == i)[0], int(n * (1 - test_size)))) #choose the exact quantity of each class, randomly
+            except ValueError: #the client may not have a label
+                pass
+
+            try:
+                index_test = np.append(index_test,
+                                np.random.choice(np.where(y_test == i)[0], int(n * test_size)))
+            except ValueError:
+                pass
+
+        index_train = index_train.astype(int)
+        index_test = index_test.astype(int)
+
+        x_train = x_train[index_train]
+        y_train = y_train[index_train]
+
+        x_test = x_test[index_test]
+        y_test = y_test[index_test]
+
+
+        return x_train, y_train, x_test, y_test
 
     
     def split_dataset(self, x_train, y_train, x_test, y_test, n_clients):
