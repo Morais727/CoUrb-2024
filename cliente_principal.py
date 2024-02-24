@@ -113,7 +113,6 @@ class ClienteFlower(fl.client.NumPyClient):
         os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)   
         with open(nome_arquivo,'a') as csvfile:          
             writer = csv.writer(csvfile)
-            writer.writerow(['Valor', 'Contagem'])  # Escreve o cabeçalho
             for valor, contagem in zip(uniq, count):
                 writer.writerow([valor, contagem])
 
