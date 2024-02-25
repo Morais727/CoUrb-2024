@@ -46,12 +46,11 @@ try:
     modelos = ['DNN', 'CNN']
 
     for i, j, k, l in product(niid_iid, ataques, data_set, modelos):
-        file_list = glob.glob(f'TESTES/{i}/LOG_EVALUATE/{j}_{k}_{l}*.csv')
+        file_list = glob.glob(f'TESTES/{i}/LOG_EVALUATE/*.csv')
         if i == 'IID' and  l == 'DNN':        
             lista_iid_dnn.append((j, l, file_list))
         elif i == 'IID' and l == 'CNN':
-            lista_iid_cnn.append((j, l, file_list))
-        
+            lista_iid_cnn.append((j, l, file_list))        
         elif i == 'NIID' and l == 'DNN':
             lista_niid_dnn.append((j, l, file_list))
         elif i == 'NIID' and l == 'CNN':
@@ -68,13 +67,17 @@ media_acuracia_por_modelo_niid_cnn = {}
 
 # Processar os dados e calcular média de acurácia para cada modelo de ataque
 
+# Processar os dados e calcular média de acurácia para cada modelo de ataque
 def processar_arquivos(lista, media_acuracia_por_modelo):
     for ataque, modelo, arquivos in lista:
+        chave = f'{ataque}_{modelo}'  # Usar uma chave única que leve em consideração o ataque e o modelo
+        if chave not in media_acuracia_por_modelo:
+            media_acuracia_por_modelo[chave] = []
         for arquivo in arquivos:
             try:
                 arquivo = arquivo.replace('\\', '/')
                 extensao = arquivo.split('.')
-                caminho = extensao[0].split('/')
+                caminho = '.'.join(extensao[:-1]).split('/')
                 base = caminho[3].split('_')
                 rotulo = f'{base[-1]}'
 
@@ -82,15 +85,11 @@ def processar_arquivos(lista, media_acuracia_por_modelo):
                 data.columns = ['server_round', 'cid', 'accuracy', 'loss']
                 media_round = calcular_media(data['accuracy'])
                 
-                # Adicionar a média de acurácia ao dicionário
-                if modelo == 'DNN' or modelo == 'CNN':
-                    if ataque not in media_acuracia_por_modelo:
-                        media_acuracia_por_modelo[ataque] = []
-                    media_acuracia_por_modelo[ataque].append(media_round)
-
+                media_acuracia_por_modelo[chave].append(media_round)
 
             except Exception as e:
                 print(f"Ocorreu um erro ao processar o arquivo {arquivo}: {str(e)}")
+
 
 # Processar os arquivos IID para DNN
 processar_arquivos(lista_iid_dnn, media_acuracia_por_modelo_iid_dnn)

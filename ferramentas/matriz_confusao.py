@@ -5,17 +5,15 @@ from itertools import product
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
 
-
-
 try:
     modelos = ['DNN', 'CNN']
-    niid_iid = ['IID','NIID']        
+    niid_iid = ['IID', 'NIID']        
     ataques = ['ALTERNA_INICIO', 'ATACANTES', 'EMBARALHA', 'INVERTE_TREINANDO', 'INVERTE_SEM_TREINAR', 'INVERTE_CONVEGENCIA', 'ZEROS', 'RUIDO_GAUSSIANO', 'NORMAL']
     data_set = ['MNIST', 'CIFAR10']                        
-    alpha_dirichlet = [0,0.1,0.5,2,5,10]
-    noise_gaussiano = [0,0.1,0.5,0.8]
+    alpha_dirichlet = [0, 0.1, 0.5, 2, 5, 10]
+    noise_gaussiano = [0, 0.1, 0.5, 0.8]
     round_inicio = [2, 4, 6, 8]
-    per_cents_atacantes = [30,60,90,95]
+    per_cents_atacantes = [30, 60, 90, 95]
 
     lista = set()
     combinacoes_unicas = set()        
@@ -33,7 +31,6 @@ try:
         if (k == 'MNIST' and l == 'CNN') or (k == 'CIFAR10' and l == 'DNN'):            
             continue
 
-
         if combinacao not in combinacoes_unicas:                  
             combinacoes_unicas.add(combinacao)        
             lista.update(file_list)
@@ -42,17 +39,15 @@ except Exception as e:
     print(f"Ocorreu um erro ao processar: {str(e)}")
 
 for arquivo in lista:
-    
-    rotulos = []
     try:
+        plt.figure()  # Criar uma nova figura para cada iteração do loop
+        
         arquivo = arquivo.replace('\\', '/')
-          
         extensao = arquivo.split('.')
         caminho = '.'.join(extensao[:-1]).split('/')        
         base = caminho[3].split('_')
        
         data = pd.read_csv(arquivo, header=None)        
-        
 
         situacao = data[2].astype(int)
         prev = data[3].apply(lambda x: int(x.strip('[]'))) 
@@ -78,7 +73,7 @@ for arquivo in lista:
         plt.ylabel('Classe Real')
         plt.xlabel('Classe Prevista')
         plt.tight_layout()
-        plt.savefig(f'TESTES/{caminho[1]}/LOG_ACERTOS/GRAFICOS/{base[0]}_{base[1]}_{base[2]}_{base[3]}_{base[4]}_{base[5]}_{base[6]}_{base[7]}_TABELA_CONFUSAO.png', dpi=300)
+        plt.savefig(f'TESTES/{caminho[1]}/LOG_ACERTOS/GRAFICOS/{base[0]}_{base[1]}_{base[2]}_{base[3]}_{base[4]}_{base[5]}_{base[6]}_{base[7]}_MATRIZ_CONFUSAO.png', dpi=300)
         plt.close()
     except Exception as e:
         print(f"Ocorreu um erro ao processar: {str(e)}")

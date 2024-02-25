@@ -8,14 +8,7 @@ import matplotlib.pyplot as plt
 def calcular_media(lista):
     return sum(lista) / len(lista)
 
-def condição_para_evitar_combinação(i, j, k, l, m, n, o, p):
-    if k == 'MNIST' and l == 'CNN':
-        return True
-    if k == 'CIFAR10' and l == 'DNN':
-        return True
-    if i == 'IID' and n > 0:
-        return True
-    return False
+
 
 
 tamanho_fonte = 25
@@ -32,15 +25,25 @@ try:
     round_inicio = [2, 4, 6, 8]
     per_cents_atacantes = [30,60,90,95]
             
-    for i, j, k, l, m, n, o, p in product(niid_iid, ataques, data_set, modelos, per_cents_atacantes, alpha_dirichlet, noise_gaussiano, round_inicio):     
-        
-        if condição_para_evitar_combinação(i, j, k, l, m, n, o, p):
-            continue   
-        
-        file_list = glob.glob(f'TESTES/{i}/LOG_EVALUATE/{j}_{k}_{l}_{m}_{n}_{o}*.csv')  
-        
-        if file_list not in lista:      
-            lista.append(file_list)
+    lista = set()
+    combinacoes_unicas = set()        
+
+    for i, j, k, l, m, n, o, p in product(niid_iid, ataques, data_set, modelos, per_cents_atacantes, alpha_dirichlet, noise_gaussiano, round_inicio):                    
+        file_list = glob.glob(f'TESTES/{i}/LOG_ACERTOS/*.csv') 
+        combinacao = (i, j, k, l, m, n, o, p)  
+            
+        if i == 'IID' and n > 0:           
+            continue
+
+        if j != 'RUIDO_GAUSSIANO' and o > 0:        
+            continue
+
+        if (k == 'MNIST' and l == 'CNN') or (k == 'CIFAR10' and l == 'DNN'):            
+            continue
+
+        if combinacao not in combinacoes_unicas:                  
+            combinacoes_unicas.add(combinacao)        
+            lista.update(file_list)
         
 except Exception as e:
     print(f"Ocorreu um erro ao processar: {str(e)}")
@@ -51,13 +54,10 @@ for caminhos_arquivos in lista:
     for arquivo in caminhos_arquivos:
         try:
             arquivo = arquivo.replace('\\', '/')
-            
             extensao = arquivo.split('.')
-            caminho = '.'.join(extensao[:3]).split('/')
+            caminho = '.'.join(extensao[:-1]).split('/')        
             base = caminho[3].split('_')
-            rotulo = f'{base[-1]}'
-            rotulos.append(rotulo)
-            
+                
             plt.figure(figsize=(9, 5))
             for i, arquivo_atual in enumerate(caminhos_arquivos):
                 data = pd.read_csv(arquivo_atual, header=None)
