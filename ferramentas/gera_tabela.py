@@ -78,7 +78,7 @@ def processar_arquivos(lista, media_acuracia_por_modelo):
                 arquivo = arquivo.replace('\\', '/')
                 extensao = arquivo.split('.')
                 caminho = '.'.join(extensao[:-1]).split('/')
-                base = caminho[3].split('_')
+                base = caminho[-1].split('_')
                 rotulo = f'{base[-1]}'
 
                 data = pd.read_csv(arquivo, header=None)

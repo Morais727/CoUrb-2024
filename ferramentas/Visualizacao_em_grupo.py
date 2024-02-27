@@ -5,19 +5,16 @@ import numpy as np
 from itertools import product
 import matplotlib.pyplot as plt
 
-def calcular_media(lista):
-    return sum(lista) / len(lista)
-
-
-
+def calcular_media(arquivos):
+    return round(sum(arquivos) / len(arquivos), 2)
 
 tamanho_fonte = 25
 lista = []
-combinacoes_unicas = set()
+combinacoes_unicas = []
 
 try:
     modelos = ['DNN', 'CNN']
-    niid_iid = ['NIID', 'IID']        
+    niid_iid = ['IID' ,'NIID']        
     ataques = ['ALTERNA_INICIO', 'ATACANTES', 'EMBARALHA', 'INVERTE_TREINANDO', 'INVERTE_SEM_TREINAR', 'INVERTE_CONVEGENCIA', 'ZEROS', 'RUIDO_GAUSSIANO', 'NORMAL']
     data_set = ['MNIST', 'CIFAR10']                        
     alpha_dirichlet = [0,0.1,0.5,2,5,10]
@@ -25,11 +22,11 @@ try:
     round_inicio = [2, 4, 6, 8]
     per_cents_atacantes = [30,60,90,95]
             
-    lista = set()
-    combinacoes_unicas = set()        
+   
+         
 
     for i, j, k, l, m, n, o, p in product(niid_iid, ataques, data_set, modelos, per_cents_atacantes, alpha_dirichlet, noise_gaussiano, round_inicio):                    
-        file_list = glob.glob(f'TESTES/{i}/LOG_ACERTOS/*.csv') 
+        file_list = glob.glob(f'TESTES/{i}/LOG_EVALUATE//{j}_{k}_{l}_{m}_{n}_{o}*.csv') 
         combinacao = (i, j, k, l, m, n, o, p)  
             
         if i == 'IID' and n > 0:           
@@ -42,31 +39,35 @@ try:
             continue
 
         if combinacao not in combinacoes_unicas:                  
-            combinacoes_unicas.add(combinacao)        
-            lista.update(file_list)
+            combinacoes_unicas.append(combinacao)        
+            lista.append(file_list)
         
 except Exception as e:
     print(f"Ocorreu um erro ao processar: {str(e)}")
 
-for caminhos_arquivos in lista:
-    rotulos = []
-    
-    for arquivo in caminhos_arquivos:
+for arquivos in lista:
+    rotulos = [] 
+    for arquivo in arquivos:     
         try:
             arquivo = arquivo.replace('\\', '/')
             extensao = arquivo.split('.')
-            caminho = '.'.join(extensao[:-1]).split('/')        
-            base = caminho[3].split('_')
-                
+            caminho = '.'.join(extensao[:-1]).split('/')  
+            
+            base = caminho[-1].split('_')
+            rotulos.append(base[-1])
+            
             plt.figure(figsize=(9, 5))
-            for i, arquivo_atual in enumerate(caminhos_arquivos):
+            for i, arquivo_atual in enumerate(arquivos):
                 data = pd.read_csv(arquivo_atual, header=None)
                 data.columns = ['server_round', 'cid', 'accuracy', 'loss']
                 media_round = data.groupby('server_round').agg({
                     'accuracy': calcular_media,
                 }).reset_index()
                 
-                plt.plot(media_round['server_round'], media_round['accuracy'], label=f'{rotulos[i]}', linewidth=3)
+                if i < len(rotulos):
+                    plt.plot(media_round['server_round'], media_round['accuracy'], label=f'{rotulos[i]}', linewidth=3)
+                else:
+                    print(f"Índice {i} fora dos limites da lista rotulos")
                 
             xticks = np.arange(0,21,2)
             plt.xticks(xticks, fontsize=tamanho_fonte)
@@ -82,11 +83,11 @@ for caminhos_arquivos in lista:
                 title_fontsize=tamanho_fonte
             )
 
-            plt.savefig(f'TESTES/{caminho[1]}/GRAFICOS/{base[0]}_{base[1]}_{base[2]}_{base[3]}_{base[4]}_{base[5]}_{base[6]}_accuracy.png', dpi=300)
-            plt.close('all')
+            plt.savefig(f'TESTES/{caminho[1]}/GRAFICOS/{caminho[3]}_accuracy.png', dpi=100)
+            plt.close()
 
             plt.figure(figsize=(9, 5))
-            for i, arquivo in enumerate(caminhos_arquivos):
+            for i, arquivo in enumerate(arquivos):
                 data = pd.read_csv(arquivo, header=None)
                 data.columns = ['server_round', 'cid', 'accuracy', 'loss']
                 media_round = data.groupby('server_round').agg({
@@ -109,7 +110,9 @@ for caminhos_arquivos in lista:
                 title_fontsize=tamanho_fonte
             )
 
-            plt.savefig(f'TESTES/{caminho[1]}/GRAFICOS/{base[0]}_{base[1]}_{base[2]}_{base[3]}_{base[4]}_{base[5]}_{base[6]}_loss.png', dpi=300)
-            plt.close('all')
+            plt.savefig(f'TESTES/{caminho[1]}/GRAFICOS/{caminho[3]}_loss.png', dpi=100)
+            plt.close()
         except Exception as e:
             print(f"Ocorreu um erro ao processar o arquivo {arquivo}: {str(e)}")
+            a=e
+       
