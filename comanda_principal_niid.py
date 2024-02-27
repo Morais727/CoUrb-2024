@@ -45,7 +45,7 @@ def executar_arquivo(arquivo):
         alpha_dirichlet = [0.1, 0.5, 1]
         noise_gaussiano = [0.1,0.5,0.8]
         round_inicio = [2, 4, 6, 8]
-        per_cents_atacantes = [30,60,80,85,88,90,95]
+        per_cents_atacantes = [40,60]
         
         combinacoes_unicas = set() 
 
