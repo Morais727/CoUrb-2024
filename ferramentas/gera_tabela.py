@@ -46,7 +46,7 @@ try:
     modelos = ['DNN', 'CNN']
 
     for i, j, k, l in product(niid_iid, ataques, data_set, modelos):
-        file_list = glob.glob(f'TESTES/{i}/LOG_EVALUATE/*.csv')
+        file_list = glob.glob(f'TESTES/{i}/LOG_EVALUATE/{j}_{k}_{l}_*.csv')
         if i == 'IID' and  l == 'DNN':        
             lista_iid_dnn.append((j, l, file_list))
         elif i == 'IID' and l == 'CNN':

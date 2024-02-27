@@ -343,8 +343,7 @@ class Timming(fl.server.strategy.FedAvg):
             log(WARNING, "No evaluate_metrics_aggregation_fn provided")
          
         
-        for client,eval_res in results: 
-            alpha_dirichlet_str = str(eval_res.metrics['alpha_dirichlet'])           
+        for client,eval_res in results:            
             nome_arquivo = f"TESTES/{eval_res.metrics['iid_niid']}/LOG_EVALUATE/{eval_res.metrics['ataque']}_{eval_res.metrics['dataset']}_{eval_res.metrics['modelo']}_{eval_res.metrics['porcentagem_ataque']}_{eval_res.metrics['alpha_dirichlet']}_{eval_res.metrics['noise_gaussiano']}_{eval_res.metrics['round_inicio']}.csv"
             os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)   
             with open(nome_arquivo,'a') as file:          
