@@ -61,16 +61,17 @@ def executar_arquivo(arquivo):
 
             if combinacao not in combinacoes_unicas:                  
                 combinacoes_unicas.add(combinacao)
-                
-                print(f'Executando {arquivo}')
-                
-                comando = f'python3 {arquivo} --iid_niid {i} --modo_ataque {j} --dataset {k} --modelo_definido {l} --round_inicio {m} --per_cents_atacantes {n} --noise_gaussiano {o} --alpha_dirichlet {p}'
-                print(f'\n\n################################################################################################')
-                print(f'\n\n{comando}\n\n')
-                print(f'################################################################################################\n\n')
-                subprocess.run(shlex.split(comando), check=True)
+            else:
+                continue 
 
-                print(f'Executou com sucesso: {arquivo}')
+            print(f'Executando {arquivo}')                
+            comando = f'python3 {arquivo} --iid_niid {i} --modo_ataque {j} --dataset {k} --modelo_definido {l} --round_inicio {m} --per_cents_atacantes {n} --noise_gaussiano {o} --alpha_dirichlet {p}'
+            print(f'\n\n################################################################################################')
+            print(f'\n\n{comando}\n\n')
+            print(f'################################################################################################\n\n')
+            subprocess.run(shlex.split(comando), check=True)
+
+            print(f'Executou com sucesso: {arquivo}')
 
     except subprocess.CalledProcessError as e:
         print(f'Erro ao executar o arquivo: {e}')

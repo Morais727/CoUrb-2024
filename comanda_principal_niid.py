@@ -66,9 +66,10 @@ def executar_arquivo(arquivo):
 
 
             if combinacao not in combinacoes_unicas:                  
-                combinacoes_unicas.add(combinacao)
-           
-           
+                combinacoes_unicas.add(combinacao)           
+            else:
+                continue
+
             print(f'Executando {arquivo}')                                    
                 
             comando = f'python3 {arquivo} --iid_niid {i} --modo_ataque {j} --dataset {k} --modelo_definido {l} --round_inicio {m} --per_cents_atacantes {n} --noise_gaussiano {o} --alpha_dirichlet {p}'

@@ -7,11 +7,11 @@ from sklearn.metrics import confusion_matrix
 
 try:
     modelos = ['DNN', 'CNN']
-    niid_iid = ['IID', 'NIID']        
+    niid_iid = ['IID','NIID']        
     ataques = ['ALTERNA_INICIO', 'ATACANTES', 'EMBARALHA', 'INVERTE_TREINANDO', 'INVERTE_SEM_TREINAR', 'INVERTE_CONVEGENCIA', 'ZEROS', 'RUIDO_GAUSSIANO', 'NORMAL']
     data_set = ['MNIST', 'CIFAR10']                        
-    alpha_dirichlet = [0, 0.1, 0.5, 2, 5, 10]
-    noise_gaussiano = [0, 0.1, 0.5, 0.8]
+    alpha_dirichlet = [0.0, 0.1, 0.5, 2, 5, 10]
+    noise_gaussiano = [0.0, 0.1, 0.5, 0.8]
     round_inicio = [2, 4, 6, 8]
     per_cents_atacantes = [30, 60, 90, 95]
 
@@ -19,22 +19,25 @@ try:
     combinacoes_unicas = set()        
 
     for i, j, k, l, m, n, o, p in product(niid_iid, ataques, data_set, modelos, per_cents_atacantes, alpha_dirichlet, noise_gaussiano, round_inicio):                    
-        file_list = glob.glob(f'TESTES/{i}/LOG_ACERTOS/*.csv') 
+        file_list = glob.glob(f'TESTES/{i}/LOG_ACERTOS/{j}_{k}_{l}_{m}_{n}_{o}*.csv') 
         combinacao = (i, j, k, l, m, n, o, p)  
-            
-        if i == 'IID' and n > 0:           
+           
+        if i == 'IID' and n > 0: 
+                   
             continue
-
+             
         if j != 'RUIDO_GAUSSIANO' and o > 0:        
             continue
 
         if (k == 'MNIST' and l == 'CNN') or (k == 'CIFAR10' and l == 'DNN'):            
             continue
-
-        if combinacao not in combinacoes_unicas:                  
+        
+        if combinacao not in combinacoes_unicas:                            
             combinacoes_unicas.add(combinacao)        
             lista.update(file_list)
-      
+        else:
+                continue
+             
 except Exception as e:
     print(f"Ocorreu um erro ao processar: {str(e)}")
 
@@ -45,7 +48,7 @@ for arquivo in lista:
         arquivo = arquivo.replace('\\', '/')
         extensao = arquivo.split('.')
         caminho = '.'.join(extensao[:-1]).split('/')        
-        base = caminho[3].split('_')
+        base = caminho[-1].split('_')
        
         data = pd.read_csv(arquivo, header=None)        
 

@@ -14,11 +14,11 @@ combinacoes_unicas = []
 
 try:
     modelos = ['DNN', 'CNN']
-    niid_iid = ['IID' ,'NIID']        
+    niid_iid = ['IID','NIID']        
     ataques = ['ALTERNA_INICIO', 'ATACANTES', 'EMBARALHA', 'INVERTE_TREINANDO', 'INVERTE_SEM_TREINAR', 'INVERTE_CONVEGENCIA', 'ZEROS', 'RUIDO_GAUSSIANO', 'NORMAL']
     data_set = ['MNIST', 'CIFAR10']                        
-    alpha_dirichlet = [0,0.1,0.5,2,5,10]
-    noise_gaussiano = [0,0.1,0.5,0.8]
+    alpha_dirichlet = [0.0,0.1,0.5,2,5,10]
+    noise_gaussiano = [0.0,0.1,0.5,0.8]
     round_inicio = [2, 4, 6, 8]
     per_cents_atacantes = [30,60,90,95]
             
@@ -26,7 +26,7 @@ try:
          
 
     for i, j, k, l, m, n, o, p in product(niid_iid, ataques, data_set, modelos, per_cents_atacantes, alpha_dirichlet, noise_gaussiano, round_inicio):                    
-        file_list = glob.glob(f'TESTES/{i}/LOG_EVALUATE//{j}_{k}_{l}_{m}_{n}_{o}*.csv') 
+        file_list = glob.glob(f'TESTES/{i}/LOG_EVALUATE/{j}_{k}_{l}_{m}_{n}_{o}*.csv') 
         combinacao = (i, j, k, l, m, n, o, p)  
             
         if i == 'IID' and n > 0:           
@@ -41,7 +41,8 @@ try:
         if combinacao not in combinacoes_unicas:                  
             combinacoes_unicas.append(combinacao)        
             lista.append(file_list)
-        
+        else:
+                continue
 except Exception as e:
     print(f"Ocorreu um erro ao processar: {str(e)}")
 
@@ -51,8 +52,8 @@ for arquivos in lista:
         try:
             arquivo = arquivo.replace('\\', '/')
             extensao = arquivo.split('.')
-            caminho = '.'.join(extensao[:-1]).split('/')  
-            
+            caminho = '.'.join(extensao[:-1]).split('/') 
+            nome_arquivo = caminho[3][:-1]             
             base = caminho[-1].split('_')
             rotulos.append(base[-1])
             
@@ -64,10 +65,9 @@ for arquivos in lista:
                     'accuracy': calcular_media,
                 }).reset_index()
                 
-                if i < len(rotulos):
-                    plt.plot(media_round['server_round'], media_round['accuracy'], label=f'{rotulos[i]}', linewidth=3)
-                else:
-                    print(f"Índice {i} fora dos limites da lista rotulos")
+                
+                plt.plot(media_round['server_round'], media_round['accuracy'], label=f'{rotulos[i]}', linewidth=3)
+                
                 
             xticks = np.arange(0,21,2)
             plt.xticks(xticks, fontsize=tamanho_fonte)
@@ -83,7 +83,7 @@ for arquivos in lista:
                 title_fontsize=tamanho_fonte
             )
 
-            plt.savefig(f'TESTES/{caminho[1]}/GRAFICOS/{caminho[3]}_accuracy.png', dpi=100)
+            plt.savefig(f'TESTES/{caminho[1]}/GRAFICOS/{nome_arquivo}_accuracy.png', dpi=100)
             plt.close()
 
             plt.figure(figsize=(9, 5))
@@ -93,7 +93,7 @@ for arquivos in lista:
                 media_round = data.groupby('server_round').agg({
                     'loss': calcular_media,
                 }).reset_index()
-
+                
                 plt.plot(media_round['server_round'], media_round['loss'], label=f'{rotulos[i]}', linewidth=3)
 
             xticks = np.arange(0,21,2)
@@ -110,7 +110,7 @@ for arquivos in lista:
                 title_fontsize=tamanho_fonte
             )
 
-            plt.savefig(f'TESTES/{caminho[1]}/GRAFICOS/{caminho[3]}_loss.png', dpi=100)
+            plt.savefig(f'TESTES/{caminho[1]}/GRAFICOS/{nome_arquivo}_loss.png', dpi=100)
             plt.close()
         except Exception as e:
             print(f"Ocorreu um erro ao processar o arquivo {arquivo}: {str(e)}")
