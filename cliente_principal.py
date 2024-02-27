@@ -68,7 +68,7 @@ class ClienteFlower(fl.client.NumPyClient):
         if self.iid_niid == 'IID':        
             x_treino, y_treino, x_teste, y_teste = self.split_dataset(x_treino, y_treino, x_teste, y_teste, n_clients) 
         elif self.iid_niid == 'NIID':             
-            x_treino, y_treino, x_teste, y_teste = self.split_dataset_dirichlet(x_treino, y_treino, x_teste, y_teste,test_size)
+
 
             x_treino, y_treino, x_teste, y_teste = ManageDatasets(self.cid, dataset_name=self.dataset).select_dataset(alpha = alpha, dataset_size = dataset_size)
             
