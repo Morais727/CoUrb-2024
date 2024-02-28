@@ -174,35 +174,35 @@ class Timming(fl.server.strategy.FedAvg):
         """Aggregate fit results using weighted average."""
 
         ####################################################        
-        with open(nome_arquivo, 'a') as file:
-            if server_round > 1:
-                for _, fit_res in results:
-                    result   = parameters_to_ndarrays(fit_res.parameters)
-                    situação = fit_res.metrics["situação"]
-                    camadas = fit_res.metrics['camada']
-                                                
-                    for i in range(camadas+1):       
-                        camda_antiga = self.modelo_anterior[i]
+        
+        if server_round > 1:
+            for _, fit_res in results:
+                result   = parameters_to_ndarrays(fit_res.parameters)
+                situação = fit_res.metrics["situação"]
+                camadas = fit_res.metrics['camada']
+                                            
+                for i in range(camadas+1):       
+                    camda_antiga = self.modelo_anterior[i]
 
-                        norma_l= result[i]
+                    norma_l= result[i]
 
-                        norma_l = norma_l.flatten()
-                        camda_antiga = camda_antiga.flatten()
+                    norma_l = norma_l.flatten()
+                    camda_antiga = camda_antiga.flatten()
 
-                        norm1 = np.linalg.norm(norma_l, ord=1)
-                        norm2 = np.linalg.norm(norma_l, ord=2)
-                        norm3 = np.power(np.sum(np.abs(norma_l) ** 3), 1/3)
+                    norm1 = np.linalg.norm(norma_l, ord=1)
+                    norm2 = np.linalg.norm(norma_l, ord=2)
+                    norm3 = np.power(np.sum(np.abs(norma_l) ** 3), 1/3)
 
-                        delta_l1 = norm1 - np.linalg.norm(camda_antiga, ord=1)
-                        delta_l2 = norm2 - np.linalg.norm(camda_antiga, ord=2)
-                        delta_l3 = norm3 - np.power(np.sum(np.abs(camda_antiga) ** 3), 1/3)
+                    delta_l1 = norm1 - np.linalg.norm(camda_antiga, ord=1)
+                    delta_l2 = norm2 - np.linalg.norm(camda_antiga, ord=2)
+                    delta_l3 = norm3 - np.power(np.sum(np.abs(camda_antiga) ** 3), 1/3)
 
-                        nome_arquivo = f"DADOS_BRUTOS/{fit_res.metrics['iid_niid']}/{fit_res.metrics['modelo']}.csv"
-                        os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)   
-                        with open(nome_arquivo,'a') as file:
-                            file.write(f"{norm1},{delta_l1},{norm2},{delta_l2},{norm3},{delta_l3},{situação}")                    
-                    
-                    file.write(f"{situação}\n")                       
+                    nome_arquivo = f"DADOS_BRUTOS/{fit_res.metrics['iid_niid']}/{fit_res.metrics['modelo']}.csv"
+                    os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)   
+                    with open(nome_arquivo,'a') as file:
+                        file.write(f"{norm1},{delta_l1},{norm2},{delta_l2},{norm3},{delta_l3},")                    
+                
+                file.write(f"{situação}\n")                       
         ####################################################  
         #  
         if not results:
