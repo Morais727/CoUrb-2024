@@ -197,7 +197,7 @@ class Timming(fl.server.strategy.FedAvg):
                     delta_l2 = norm2 - np.linalg.norm(camda_antiga, ord=2)
                     delta_l3 = norm3 - np.power(np.sum(np.abs(camda_antiga) ** 3), 1/3)
 
-                    nome_arquivo = f"DADOS_BRUTOS/{fit_res.metrics['iid_niid']}/{fit_res.metrics['modelo']}.csv"
+                    nome_arquivo = f"DADOS_BRUTOS/{fit_res.metrics['iid_niid']}/{fit_res.metrics['variavel']}.csv"
                     os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)   
                     with open(nome_arquivo,'a') as file:
                         file.write(f"{norm1},{delta_l1},{norm2},{delta_l2},{norm3},{delta_l3},")                    
