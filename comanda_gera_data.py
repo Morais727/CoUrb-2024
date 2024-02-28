@@ -24,16 +24,13 @@ def executar_arquivo(arquivo):
         for i, j, k, l, m, n, o, p, q in product(niid_iid, ataques, data_set, modelos, round_inicio, per_cents_atacantes, noise_gaussiano, alpha_dirichlet, num_round):
             combinacao = (i, j, k, l, m, n, o, p, q) 
             
-            if i == 'IID' and p > 0:
-                print('Combinação inválida - IID + DIRICHLET. A execução será interrompida.')
+            if i == 'IID' and p > 0:                
                 continue
 
             if j != 'RUIDO_GAUSSIANO' and o > 0:
-                print('Combinação inválida - GAUSSIANO. A execução será interrompida.')
                 continue
 
             if (k == 'MNIST' and l == 'CNN') or (k == 'CIFAR10' and l == 'DNN'):
-                print('Combinação inválida - MNIST CNN / CIFAR10 DNN. A execução será interrompida.')
                 continue
 
             if combinacao not in combinacoes_unicas:                  
