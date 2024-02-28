@@ -39,7 +39,7 @@ def executar_arquivo(arquivo):
                 continue 
 
             print(f'Executando {arquivo}')                
-            comando = f'python3 {arquivo} --iid_niid {i} --modo_ataque {j} --dataset {k} --modelo_definido {l} --round_inicio {m} --per_cents_atacantes {n} --noise_gaussiano {o} --alpha_dirichlet {p} --num_rounds{q}'
+            comando = f'python3 {arquivo} --iid_niid {i} --modo_ataque {j} --dataset {k} --modelo_definido {l} --round_inicio {m} --per_cents_atacantes {n} --noise_gaussiano {o} --alpha_dirichlet {p} --num_rounds {q}'
             print(f'\n\n################################################################################################')
             print(f'\n\n{comando}\n\n')
             print(f'################################################################################################\n\n')
