@@ -201,8 +201,8 @@ class Timming(fl.server.strategy.FedAvg):
                     os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)   
                     with open(nome_arquivo,'a') as file:
                         file.write(f"{norm1},{delta_l1},{norm2},{delta_l2},{norm3},{delta_l3},")                    
-                
-                file.write(f"{situacao}\n")                       
+                with open(nome_arquivo,'a') as file:
+                    file.write(f"{situacao}\n")                       
         ####################################################  
         #  
         if not results:
