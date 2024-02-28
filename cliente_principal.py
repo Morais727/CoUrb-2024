@@ -73,14 +73,14 @@ class ClienteFlower(fl.client.NumPyClient):
             x_treino, y_treino, x_teste, y_teste = ManageDatasets(self.cid, dataset_name=self.dataset).select_dataset(alpha = alpha, dataset_size = dataset_size)
             
             
-            nome_arquivo = f"TESTES/{self.iid_niid}/LABELS/{self.modo_ataque}_{self.dataset}_{self.modelo_definido}_{self.atacantes}_{self.alpha_dirichlet}_{self.noise_gaussiano}_{self.round_inicio}.csv"
-            uniq, count = np.unique(y_treino, return_counts=True)                 
+            # nome_arquivo = f"TESTES/{self.iid_niid}/LABELS/{self.modo_ataque}_{self.dataset}_{self.modelo_definido}_{self.atacantes}_{self.alpha_dirichlet}_{self.noise_gaussiano}_{self.round_inicio}.csv"
+            # uniq, count = np.unique(y_treino, return_counts=True)                 
             
-            os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)   
-            with open(nome_arquivo,'a') as csvfile:          
-                writer = csv.writer(csvfile)
-                for valor, contagem in zip(uniq, count):
-                    writer.writerow([valor, contagem, self.cid])
+            # os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)   
+            # with open(nome_arquivo,'a') as csvfile:          
+            #     writer = csv.writer(csvfile)
+            #     for valor, contagem in zip(uniq, count):
+            #         writer.writerow([valor, contagem, self.cid])
 
         return x_treino, y_treino, x_teste, y_teste
     
@@ -92,46 +92,6 @@ class ClienteFlower(fl.client.NumPyClient):
         with open(filename, "a") as f:
             for classe, count in zip(classes, counts): 
                 f.write(f"{self.cid}, {classe}, {count}\n")
-
-    # def split_dataset_dirichlet(self,x_train, y_train, x_test, y_test,dataset_size,alpha,test_size): 
-        
-    #     n_classes = len(np.unique(y_train)) #number of classes in dataset
-
-    #     alpha_vector = alpha * np.ones(n_classes)
-        
-    #     client_proportions = dirichlet.rvs(alpha_vector, size = 1)
-    #     client_quantities = []
-
-    #     client_quantities = multinomial.rvs(n = dataset_size, p = client_proportions[0]) #quantity of each class
-
-    #     index_train = []
-    #     index_test = []
-    #     for i, n in enumerate(client_quantities): #pass for all classes
-
-    #         try:
-    #             index_train = np.append(index_train,
-    #                                 np.random.choice(np.where(y_train == i)[0], int(n * (1 - test_size)))) #choose the exact quantity of each class, randomly
-    #         except ValueError: #the client may not have a label
-    #             pass
-
-    #         try:
-    #             index_test = np.append(index_test,
-    #                             np.random.choice(np.where(y_test == i)[0], int(n * test_size)))
-    #         except ValueError:
-    #             pass
-
-    #     index_train = index_train.astype(int)
-    #     index_test = index_test.astype(int)
-
-    #     x_train = x_train[index_train]
-    #     y_train = y_train[index_train]
-
-    #     x_test = x_test[index_test]
-    #     y_test = y_test[index_test]
-
-        
-
-    #     return x_train, y_train, x_test, y_test
 
     
     def split_dataset(self, x_train, y_train, x_test, y_test, n_clients):
