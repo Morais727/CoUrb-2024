@@ -2,7 +2,7 @@ import argparse
 import flwr as fl
 from functools import partial
 from cliente_principal import ClienteFlower
-import servidor_principal
+import servidor_gera_data
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Flower Simulation")
@@ -48,7 +48,7 @@ def main():
         history = fl.simulation.start_simulation(
             client_fn=client_fn,
             num_clients=total_clients,
-            strategy=servidor_principal.Timming(fraction_fit=fraction_fit),
+            strategy=servidor_gera_data.Timming(fraction_fit=fraction_fit),
             config=fl.server.ServerConfig(num_rounds=num_rounds)
         )
     except ValueError as e:

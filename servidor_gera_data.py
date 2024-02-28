@@ -173,12 +173,7 @@ class Timming(fl.server.strategy.FedAvg):
     ) -> Tuple[Optional[Parameters], Dict[str, Scalar]]:
         """Aggregate fit results using weighted average."""
 
-        ####################################################
-
-                  
-            
-        nome_arquivo = "NIID/DATASET_NIID_MNIST_DNN.csv"
-        
+        ####################################################        
         with open(nome_arquivo, 'a') as file:
             if server_round > 1:
                 for _, fit_res in results:
@@ -205,7 +200,7 @@ class Timming(fl.server.strategy.FedAvg):
                         nome_arquivo = f"DADOS_BRUTOS/{fit_res.metrics['iid_niid']}/{fit_res.metrics['modelo']}.csv"
                         os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)   
                         with open(nome_arquivo,'a') as file:
-                            file.write(f"{norm1},{delta_l1},{norm2},{delta_l2},{norm3},{delta_l3},")                    
+                            file.write(f"{norm1},{delta_l1},{norm2},{delta_l2},{norm3},{delta_l3},{situação}")                    
                     
                     file.write(f"{situação}\n")                       
         ####################################################  
