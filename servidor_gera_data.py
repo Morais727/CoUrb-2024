@@ -178,7 +178,7 @@ class Timming(fl.server.strategy.FedAvg):
         if server_round > 1:
             for _, fit_res in results:
                 result   = parameters_to_ndarrays(fit_res.parameters)
-                situação = fit_res.metrics["situação"]
+                situacao = fit_res.metrics["situacao"]
                 camadas = fit_res.metrics['camada']
                                             
                 for i in range(camadas+1):       
@@ -202,7 +202,7 @@ class Timming(fl.server.strategy.FedAvg):
                     with open(nome_arquivo,'a') as file:
                         file.write(f"{norm1},{delta_l1},{norm2},{delta_l2},{norm3},{delta_l3},")                    
                 
-                file.write(f"{situação}\n")                       
+                file.write(f"{situacao}\n")                       
         ####################################################  
         #  
         if not results:
