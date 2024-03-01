@@ -70,8 +70,7 @@ class Timming(fl.server.strategy.FedAvg):
         self.resultados    = []  
         self.classificacao = {} 
         self.modo_execucao = modo_execucao           
-        if modo_execucao == 1:
-            print('modo execucao funcionando')
+    
         minmax_mnist_dnn_path = 'MODELOS/MINMAX_XGB_mnist_dnn.pkl'
         modelo_mnist_dnn_path = 'MODELOS/CLASSIFICADOR_XGB_mnist_dnn.h5'
 
@@ -222,90 +221,111 @@ class Timming(fl.server.strategy.FedAvg):
                     delta3 = norm3  - (np.power(np.sum(np.abs(ultimo_modelo) ** 3), 1/3))
                     
                     normas.extend([norm1,delta1,norm2,delta2,norm3,delta3])
+
+                if self.modo_execucao == 1:
+                    normas.extend(situacao,'\n')
+                    nome_arquivo = f"DADOS_BRUTOS/{modelo}/data.csv"
+                    os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)
+                    with open(nome_arquivo,'a') as file:
+                        file.write(normas)
+                elif self.modo_execucao == 0:
+                    data.append(normas)
                     
-                data.append(normas)
-                
-                selected_feature = np.array(data)
-                
-                if modelo == "CNN":
-                    minmax_selecionado = self.minmax_cnn
-                    modelo_selecionado = self.loaded_model_cnn
-                elif modelo == "DNN":
-                    minmax_selecionado = self.minmax_dnn
-                    modelo_selecionado = self.loaded_model_dnn
-                else:
-                    raise ValueError(f"Complemento do nome inválido: {modelo}")
+                    selected_feature = np.array(data)
+                    
+                    if modelo == "CNN":
+                        minmax_selecionado = self.minmax_cnn
+                        modelo_selecionado = self.loaded_model_cnn
+                    elif modelo == "DNN":
+                        minmax_selecionado = self.minmax_dnn
+                        modelo_selecionado = self.loaded_model_dnn
+                    else:
+                        raise ValueError(f"Complemento do nome inválido: {modelo}")
 
-                # Acessar o minmax usando o objeto selecionado
-                normalizado = minmax_selecionado.transform(selected_feature)
+                    # Acessar o minmax usando o objeto selecionado
+                    normalizado = minmax_selecionado.transform(selected_feature)
 
-                # Acessar o modelo usando o objeto selecionado
-                # predict = modelo_selecionado.predict(xgb.DMatrix(normalizado))
-                # prev = (predict > 0.5).astype('int32')
+                    # Acessar o modelo usando o objeto selecionado
+                    # predict = modelo_selecionado.predict(xgb.DMatrix(normalizado))
+                    # prev = (predict > 0.5).astype('int32')
 
-                predict = modelo_selecionado.predict(normalizado, verbose = 0)
-                prev = (predict > 0.5).astype('int32')
-                
-                chaves = {
-                            (0): 'n_atak',
-                            (1): 'atak',
-                        }
-                
-                chave = chaves.get(( int(prev[0])), 'atak')            
-                self.classificacao.setdefault(chave,[]).append(iid) 
-          
-                if situacao == prev[0]:
-                    self.resultados.append('Acertos')
-                    atual.append('Acertos')
-                else:
-                    self.resultados.append('Erros')
-                    atual.append('Erros')
+                    predict = modelo_selecionado.predict(normalizado, verbose = 0)
+                    prev = (predict > 0.5).astype('int32')
+                    
+                    chaves = {
+                                (0): 'n_atak',
+                                (1): 'atak',
+                            }
+                    
+                    chave = chaves.get(( int(prev[0])), 'atak')            
+                    self.classificacao.setdefault(chave,[]).append(iid) 
             
-                self.verifica_acertos.append((server_round,iid,situacao,prev[0]))
-
-        cont_atual = Counter(atual)
-        tot = sum(cont_atual.values())
-        contagem = Counter(self.resultados)
-        total = sum(contagem.values())
-        if cont_atual['Acertos'] > 0:
-            percents_atual = (cont_atual['Acertos'] / tot) * 100
-        if contagem['Acertos'] > 0:
-            self.percents = (contagem['Acertos'] / total) * 100
-        else:
-            self.percents = 0
-            percents_atual = 0
-        
-        print(f'\n\nround >>>>> {server_round}')
-        print(f'Percentual de acertos atual: {percents_atual:.2f}%')
-        print(f'Percentual de acertos geral: {self.percents:.2f}%  {contagem}')        
-        print(f'{self.classificacao}\n\n')   
-        
-        if not results:
-            return None, {}
-        # Do not aggregate if there are failures and failures are not accepted
-        if not self.accept_failures and failures:
-            return None, {}
-
-        # Converte resultados
-        weights_results = []
-        malicious = []
-        for client, fit_res in results:
-            if 'atak' in self.classificacao.keys() and server_round:
-                if client.cid in self.classificacao['atak']: 
-                    malicious.append((parameters_to_ndarrays(fit_res.parameters), fit_res.num_examples)) 
-                    
-                else:       
-                    weights_results.append((parameters_to_ndarrays(fit_res.parameters), fit_res.num_examples))                                  
+                    if situacao == prev[0]:
+                        self.resultados.append('Acertos')
+                        atual.append('Acertos')
+                    else:
+                        self.resultados.append('Erros')
+                        atual.append('Erros')
+                
+                    self.verifica_acertos.append((server_round,iid,situacao,prev[0]))
+        if self.modo_execucao == 0:
+            cont_atual = Counter(atual)
+            tot = sum(cont_atual.values())
+            contagem = Counter(self.resultados)
+            total = sum(contagem.values())
+            if cont_atual['Acertos'] > 0:
+                percents_atual = (cont_atual['Acertos'] / tot) * 100
+            if contagem['Acertos'] > 0:
+                self.percents = (contagem['Acertos'] / total) * 100
             else:
-                weights_results.append((parameters_to_ndarrays(fit_res.parameters), fit_res.num_examples))
+                self.percents = 0
+                percents_atual = 0
+            
+            print(f'\n\nround >>>>> {server_round}')
+            print(f'Percentual de acertos atual: {percents_atual:.2f}%')
+            print(f'Percentual de acertos geral: {self.percents:.2f}%  {contagem}')        
+            print(f'{self.classificacao}\n\n')   
+            
+            if not results:
+                return None, {}
+            # Do not aggregate if there are failures and failures are not accepted
+            if not self.accept_failures and failures:
+                return None, {}
 
-        if weights_results == []:
-            parameters_aggregated = ndarrays_to_parameters(self.last_model) 
-        else:
-            parameters_aggregated = ndarrays_to_parameters(aggregate(weights_results))
-            self.last_model = parameters_to_ndarrays(parameters_aggregated) 
-        
-        
+            # Converte resultados
+            weights_results = []
+            malicious = []
+            for client, fit_res in results:
+                if 'atak' in self.classificacao.keys() and server_round:
+                    if client.cid in self.classificacao['atak']: 
+                        malicious.append((parameters_to_ndarrays(fit_res.parameters), fit_res.num_examples)) 
+                        
+                    else:       
+                        weights_results.append((parameters_to_ndarrays(fit_res.parameters), fit_res.num_examples))                                  
+                else:
+                    weights_results.append((parameters_to_ndarrays(fit_res.parameters), fit_res.num_examples))
+
+            if weights_results == []:
+                parameters_aggregated = ndarrays_to_parameters(self.last_model) 
+            else:
+                parameters_aggregated = ndarrays_to_parameters(aggregate(weights_results))
+                self.last_model = parameters_to_ndarrays(parameters_aggregated) 
+        elif self.modo_execucao == 1:
+            if not results:
+                return None, {}
+            # Do not aggregate if there are failures and failures are not accepted
+            if not self.accept_failures and failures:
+                return None, {}
+
+            # Convert results
+            weights_results = [
+                (parameters_to_ndarrays(fit_res.parameters), fit_res.num_examples)
+                for _, fit_res in results
+            ]
+
+            parameters_aggregated = ndarrays_to_parameters(aggregate(weights_results)) 
+            self.modelo_anterior = parameters_to_ndarrays(parameters_aggregated)
+
         # Aggregate custom metrics if aggregation fn was provided
         metrics_aggregated = {}
         if self.fit_metrics_aggregation_fn:
@@ -345,19 +365,19 @@ class Timming(fl.server.strategy.FedAvg):
         elif server_round == 1:  # Only log this warning once
             log(WARNING, "No evaluate_metrics_aggregation_fn provided")
          
-        
-        for client,eval_res in results:            
-            nome_arquivo = f"TESTES/{eval_res.metrics['iid_niid']}/LOG_EVALUATE/{eval_res.metrics['ataque']}_{eval_res.metrics['dataset']}_{eval_res.metrics['modelo']}_{eval_res.metrics['porcentagem_ataque']}_{eval_res.metrics['alpha_dirichlet']}_{eval_res.metrics['noise_gaussiano']}_{eval_res.metrics['round_inicio']}.csv"
-            os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)   
-            with open(nome_arquivo,'a') as file:          
-                file.write(f"\n{server_round},{client.cid},{eval_res.metrics['accuracy']},{eval_res.loss}")
-        
-        arquivo_verifica_acertos = f"TESTES/{eval_res.metrics['iid_niid']}/LOG_ACERTOS/{eval_res.metrics['ataque']}_{eval_res.metrics['dataset']}_{eval_res.metrics['modelo']}_{eval_res.metrics['porcentagem_ataque']}_{eval_res.metrics['alpha_dirichlet']}_{eval_res.metrics['noise_gaussiano']}_{eval_res.metrics['round_inicio']}.csv"        
-        os.makedirs(os.path.dirname(arquivo_verifica_acertos), exist_ok=True)
-        with open(arquivo_verifica_acertos, 'a', newline='') as arquivo_csv:
-            escritor_csv = csv.writer(arquivo_csv)
-            for linha in self.verifica_acertos:
-                escritor_csv.writerow(linha)
+        if self.modo_execucao == 0:
+            for client,eval_res in results:            
+                nome_arquivo = f"TESTES/{eval_res.metrics['iid_niid']}/LOG_EVALUATE/{eval_res.metrics['ataque']}_{eval_res.metrics['dataset']}_{eval_res.metrics['modelo']}_{eval_res.metrics['porcentagem_ataque']}_{eval_res.metrics['alpha_dirichlet']}_{eval_res.metrics['noise_gaussiano']}_{eval_res.metrics['round_inicio']}.csv"
+                os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)   
+                with open(nome_arquivo,'a') as file:          
+                    file.write(f"\n{server_round},{client.cid},{eval_res.metrics['accuracy']},{eval_res.loss}")
+            
+            arquivo_verifica_acertos = f"TESTES/{eval_res.metrics['iid_niid']}/LOG_ACERTOS/{eval_res.metrics['ataque']}_{eval_res.metrics['dataset']}_{eval_res.metrics['modelo']}_{eval_res.metrics['porcentagem_ataque']}_{eval_res.metrics['alpha_dirichlet']}_{eval_res.metrics['noise_gaussiano']}_{eval_res.metrics['round_inicio']}.csv"        
+            os.makedirs(os.path.dirname(arquivo_verifica_acertos), exist_ok=True)
+            with open(arquivo_verifica_acertos, 'a', newline='') as arquivo_csv:
+                escritor_csv = csv.writer(arquivo_csv)
+                for linha in self.verifica_acertos:
+                    escritor_csv.writerow(linha)
 
         return loss_aggregated, metrics_aggregated            
     
