@@ -207,7 +207,7 @@ class Timming(fl.server.strategy.FedAvg):
                 normas   = []                                
 
                 for i in range(camadas+1):
-                    ultimo_modelo = self.last_model[i]
+                    ultimo_modelo = self.modelo_anterior[i]
                     
                     result[i] = result[i].flatten()
                     ultimo_modelo = ultimo_modelo.flatten()
@@ -306,7 +306,7 @@ class Timming(fl.server.strategy.FedAvg):
                     weights_results.append((parameters_to_ndarrays(fit_res.parameters), fit_res.num_examples))
 
             if weights_results == []:
-                parameters_aggregated = ndarrays_to_parameters(self.last_model) 
+                parameters_aggregated = ndarrays_to_parameters(self.modelo_anterior) 
             
         elif self.modo_execucao == 1:
             if not results:
