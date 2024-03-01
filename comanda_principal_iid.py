@@ -22,13 +22,6 @@ padroes = ['TESTES/IID/LABELS/*.csv',
 for i in padroes:
     limpa_arquivos_csv.extend(glob.glob(i))
 
-try:
-    for arquivo in limpa_arquivos_csv:
-        os.remove(arquivo)
-
-except OSError as e:
-    print(f'Erro ao limpar arquivo: {e}')
-
 arquivos_teste = ['simulacao_principal.py']
 
 def executar_arquivo(arquivo):
@@ -43,8 +36,16 @@ def executar_arquivo(arquivo):
         round_inicio = [2, 4, 6, 8]
         per_cents_atacantes = [30, 60, 80, 85, 88, 90, 95]
         modo_execucao = [1]
-        
+
         combinacoes_unicas = set() 
+
+        if modo_execucao[0] == 0:
+            try:
+                for arquivo in limpa_arquivos_csv:
+                    os.remove(arquivo)
+
+            except OSError as e:
+                print(f'Erro ao limpar arquivo: {e}')
 
         for i, j, k, l, m, n, o, p, q, r in product(niid_iid, ataques, data_set, modelos, round_inicio, per_cents_atacantes, noise_gaussiano, alpha_dirichlet, num_round, modo_execucao):
             combinacao = (i, j, k, l, m, n, o, p, q, r) 

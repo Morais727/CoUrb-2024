@@ -307,9 +307,7 @@ class Timming(fl.server.strategy.FedAvg):
 
             if weights_results == []:
                 parameters_aggregated = ndarrays_to_parameters(self.last_model) 
-            else:
-                parameters_aggregated = ndarrays_to_parameters(aggregate(weights_results))
-                self.last_model = parameters_to_ndarrays(parameters_aggregated) 
+            
         elif self.modo_execucao == 1:
             if not results:
                 return None, {}
@@ -323,8 +321,8 @@ class Timming(fl.server.strategy.FedAvg):
                 for _, fit_res in results
             ]
 
-            parameters_aggregated = ndarrays_to_parameters(aggregate(weights_results)) 
-            self.modelo_anterior = parameters_to_ndarrays(parameters_aggregated)
+        parameters_aggregated = ndarrays_to_parameters(aggregate(weights_results)) 
+        self.modelo_anterior = parameters_to_ndarrays(parameters_aggregated)
 
         # Aggregate custom metrics if aggregation fn was provided
         metrics_aggregated = {}
