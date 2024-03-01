@@ -33,6 +33,7 @@ arquivos_teste = ['simulacao_principal.py']
 
 def executar_arquivo(arquivo):
     try:
+        num_round = [15,30]
         modelos = ['DNN', 'CNN']
         niid_iid = ['IID']        
         ataques = ['ALTERNA_INICIO', 'ATACANTES', 'EMBARALHA', 'INVERTE_TREINANDO', 'INVERTE_SEM_TREINAR', 'INVERTE_CONVEGENCIA', 'ZEROS', 'RUIDO_GAUSSIANO', 'NORMAL']
@@ -41,7 +42,29 @@ def executar_arquivo(arquivo):
         noise_gaussiano = [0.0, 0.1, 0.5, 0.8]
         round_inicio = [2, 4, 6, 8]
         per_cents_atacantes = [30, 60, 80, 85, 88, 90, 95]
+        modo_execucao = 1
         
+        combinacoes_unicas = set() 
+
+        for i, j, k, l, m, n, o, p, q, r in product(niid_iid, ataques, data_set, modelos, round_inicio, per_cents_atacantes, noise_gaussiano, alpha_dirichlet, num_round, modo_execucao):
+            combinacao = (i, j, k, l, m, n, o, p, q, r) 
+            
+            if i == 'IID' and p > 0:                
+                continue
+
+            if j != 'RUIDO_GAUSSIANO' and o > 0:
+                continue
+
+            if (k == 'MNIST' and l == 'CNN') or (k == 'CIFAR10' and l == 'DNN'):
+                continue
+
+            if combinacao not in combinacoes_unicas:                  
+                combinacoes_unicas.add(combinacao)
+            else:
+                continue 
+
+            print(f'Executando {arquivo}')                
+            comando = f'python3 {arquivo} --iid_niid {i} --modo_ataque {j} --dataset {k} --modelo_definido {l} --round_inicio {m} --per_cents_atacantes {n} --noise_gaussiano {o} --alpha_dirichlet {p} --num_rounds {q} --modo_execucao {r}'
         combinacoes_unicas = set() 
 
         for i, j, k, l, m, n, o, p in product(niid_iid, ataques, data_set, modelos, round_inicio, per_cents_atacantes, noise_gaussiano, alpha_dirichlet):

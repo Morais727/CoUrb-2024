@@ -5,11 +5,11 @@ import subprocess
 import concurrent.futures
 from itertools import product
 
-arquivos_teste = ['simulacao_gera_data.py']
+arquivos_teste = ['simulacao_principal.py']
 
 def executar_arquivo(arquivo):
     try:
-        num_round = [50]
+        num_round = [15,30]
         modelos = ['DNN', 'CNN']
         niid_iid = ['NIID']        
         ataques = ['ALTERNA_INICIO', 'ATACANTES', 'EMBARALHA', 'INVERTE_TREINANDO', 'INVERTE_SEM_TREINAR', 'INVERTE_CONVEGENCIA', 'ZEROS', 'RUIDO_GAUSSIANO', 'NORMAL']
@@ -18,11 +18,12 @@ def executar_arquivo(arquivo):
         noise_gaussiano = [0.1, 0.5, 0.8]
         round_inicio = [2, 4, 6, 8,30]
         per_cents_atacantes = [30, 60, 80, 85, 90]
+        modo_execucao = 1
         
         combinacoes_unicas = set() 
 
-        for i, j, k, l, m, n, o, p, q in product(niid_iid, ataques, data_set, modelos, round_inicio, per_cents_atacantes, noise_gaussiano, alpha_dirichlet, num_round):
-            combinacao = (i, j, k, l, m, n, o, p, q) 
+        for i, j, k, l, m, n, o, p, q, r in product(niid_iid, ataques, data_set, modelos, round_inicio, per_cents_atacantes, noise_gaussiano, alpha_dirichlet, num_round, modo_execucao):
+            combinacao = (i, j, k, l, m, n, o, p, q, r) 
             
             if i == 'IID' and p > 0:                
                 continue
@@ -39,7 +40,7 @@ def executar_arquivo(arquivo):
                 continue 
 
             print(f'Executando {arquivo}')                
-            comando = f'python3 {arquivo} --iid_niid {i} --modo_ataque {j} --dataset {k} --modelo_definido {l} --round_inicio {m} --per_cents_atacantes {n} --noise_gaussiano {o} --alpha_dirichlet {p} --num_rounds {q}'
+            comando = f'python3 {arquivo} --iid_niid {i} --modo_ataque {j} --dataset {k} --modelo_definido {l} --round_inicio {m} --per_cents_atacantes {n} --noise_gaussiano {o} --alpha_dirichlet {p} --num_rounds {q} --modo_execucao {r}'
             print(f'\n\n################################################################################################')
             print(f'\n\n{comando}\n\n')
             print(f'################################################################################################\n\n')
