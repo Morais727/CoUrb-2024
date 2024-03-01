@@ -2,7 +2,7 @@ import argparse
 import flwr as fl
 from functools import partial
 from cliente_principal import ClienteFlower
-import servidor_gera_data
+import servidor_principal
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Flower Simulation")
@@ -40,16 +40,18 @@ def main():
   
     try:
         def Cliente(cid, modelo_definido, iid_niid, modo_ataque, dataset, total_clients, alpha_dirichlet, noise_gaussiano,round_inicio, per_cents_atacantes):
-            return ClienteFlower(cid, modelo_definido, iid_niid, modo_ataque, dataset, total_clients, alpha_dirichlet, noise_gaussiano,round_inicio, per_cents_atacantes, modo_execucao)
+            return ClienteFlower(cid, modelo_definido, iid_niid, modo_ataque, dataset, total_clients, alpha_dirichlet, noise_gaussiano,round_inicio, per_cents_atacantes)
+        
+        strategy=servidor_principal.Timming(fraction_fit=fraction_fit, modo_execucao=modo_execucao)
 
         client_fn = partial(Cliente, modelo_definido=modelo_definido, iid_niid=iid_niid,
                             modo_ataque=modo_ataque, dataset=dataset, total_clients=total_clients,
-                            alpha_dirichlet=alpha_dirichlet, noise_gaussiano=noise_gaussiano, round_inicio=round_inicio,per_cents_atacantes=per_cents_atacantes, modo_execucao=modo_execucao)
+                            alpha_dirichlet=alpha_dirichlet, noise_gaussiano=noise_gaussiano, round_inicio=round_inicio,per_cents_atacantes=per_cents_atacantes)
 
         history = fl.simulation.start_simulation(
             client_fn=client_fn,
             num_clients=total_clients,
-            strategy=servidor_gera_data.Timming(fraction_fit=fraction_fit),
+            strategy=strategy,
             config=fl.server.ServerConfig(num_rounds=num_rounds)
         )
     except ValueError as e:
