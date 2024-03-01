@@ -26,7 +26,7 @@ arquivos_teste = ['simulacao_principal.py']
 
 def executar_arquivo(arquivo):
     try:
-        num_round = [15,30]
+        num_round = [5,15,30]
         total_clients = [5,10,15,20]
         modelos = ['DNN', 'CNN']
         niid_iid = ['IID']        
