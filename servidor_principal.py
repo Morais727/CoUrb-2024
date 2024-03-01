@@ -223,7 +223,7 @@ class Timming(fl.server.strategy.FedAvg):
                     normas.extend([norm1,delta1,norm2,delta2,norm3,delta3])
 
                 if self.modo_execucao == 1:
-                    normas.extend(situacao,'\n')
+                    normas.extend([situacao,'\n'])
                     nome_arquivo = f"DADOS_BRUTOS/{modelo}/data.csv"
                     os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)
                     with open(nome_arquivo,'a') as file:
