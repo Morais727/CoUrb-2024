@@ -5,12 +5,12 @@ from sklearn.utils import resample
 
 erros = []
 
-pastas = ['cifar_cnn', 'mnist_dnn']
+pastas = ['DNN_corrigido']
 
 for pasta in pastas:
     lista_de_dfs = []
     try:
-        arquivos = glob.glob(f'datasets_brutos/{pasta}/*.csv', recursive=True)
+        arquivos = glob.glob(f'DADOS_BRUTOS/NIID/{pasta}*.csv', recursive=True)
 
         for arquivo in arquivos:
             try:
@@ -47,7 +47,7 @@ for pasta in pastas:
 
                 conjunto_balanceado = conjunto_balanceado.sample(frac=1)
 
-                conjunto_balanceado.to_csv(f'datasets_brutos/Balanceado_{pasta}.csv', header=None, index=False)
+                conjunto_balanceado.to_csv(f'DADOS_BRUTOS/Balanceado_{pasta}.csv', header=None, index=False)
 
             print(cont)
         else:
