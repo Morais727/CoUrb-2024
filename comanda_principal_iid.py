@@ -65,28 +65,7 @@ def executar_arquivo(arquivo):
 
             print(f'Executando {arquivo}')                
             comando = f'python3 {arquivo} --iid_niid {i} --modo_ataque {j} --dataset {k} --modelo_definido {l} --round_inicio {m} --per_cents_atacantes {n} --noise_gaussiano {o} --alpha_dirichlet {p} --num_rounds {q} --modo_execucao {r}'
-        combinacoes_unicas = set() 
-
-        for i, j, k, l, m, n, o, p in product(niid_iid, ataques, data_set, modelos, round_inicio, per_cents_atacantes, noise_gaussiano, alpha_dirichlet):
-            combinacao = (i, j, k, l, m, n, o, p) 
-            
-            if i == 'IID' and p > 0:
-                print('Combinação inválida. A execução será interrompida.')
-                continue
-
-            if j != 'RUIDO_GAUSSIANO' and o > 0:
-                print('Combinação inválida. A execução será interrompida.')
-                continue
-
-            if (k == 'MNIST' and l == 'CNN') or (k == 'CIFAR10' and l == 'DNN'):
-                print('Combinação inválida. A execução será interrompida.')
-                continue
-
-            if combinacao not in combinacoes_unicas:                  
-                combinacoes_unicas.add(combinacao)
-            else:
-                continue 
-
+        
             print(f'Executando {arquivo}')                
             comando = f'python3 {arquivo} --iid_niid {i} --modo_ataque {j} --dataset {k} --modelo_definido {l} --round_inicio {m} --per_cents_atacantes {n} --noise_gaussiano {o} --alpha_dirichlet {p}'
             print(f'\n\n################################################################################################')
