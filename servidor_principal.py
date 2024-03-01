@@ -227,7 +227,8 @@ class Timming(fl.server.strategy.FedAvg):
                     nome_arquivo = f"DADOS_BRUTOS/{modelo}/data.csv"
                     os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)
                     with open(nome_arquivo,'a') as file:
-                        file.write(normas)
+                        file.write(",".join(map(str, normas)))
+
                 elif self.modo_execucao == 0:
                     data.append(normas)
                     
