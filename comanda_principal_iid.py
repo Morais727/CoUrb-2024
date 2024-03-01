@@ -42,7 +42,7 @@ def executar_arquivo(arquivo):
         noise_gaussiano = [0.0, 0.1, 0.5, 0.8]
         round_inicio = [2, 4, 6, 8]
         per_cents_atacantes = [30, 60, 80, 85, 88, 90, 95]
-        modo_execucao = 1
+        modo_execucao = [1]
         
         combinacoes_unicas = set() 
 
