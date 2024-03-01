@@ -51,13 +51,20 @@ def executar_arquivo(arquivo):
         for i, j, k, l, m, n, o, p, q, r, s in product(niid_iid, ataques, data_set, modelos, round_inicio, per_cents_atacantes, noise_gaussiano, alpha_dirichlet, num_round, modo_execucao, total_clients):
             combinacao = (i, j, k, l, m, n, o, p, q, r, s) 
             
-            if i == 'IID' and p > 0:                
+            if i == 'NIID' and p == 0: 
+                print('NON IID com Dirichlet = 0')               
+                continue
+
+            if i == 'IID' and p > 0: 
+                print('IID com Dirichlet > 0', i, p)                
                 continue
 
             if j != 'RUIDO_GAUSSIANO' and o > 0:
+                print('RUIDO_GAUSSIANO > 0', j, p)   
                 continue
 
             if (k == 'MNIST' and l == 'CNN') or (k == 'CIFAR10' and l == 'DNN'):
+                print("Combinacao incorreta", k, l)
                 continue
 
             if combinacao not in combinacoes_unicas:                  
