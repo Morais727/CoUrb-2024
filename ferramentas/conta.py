@@ -5,12 +5,12 @@ from sklearn.utils import resample
 
 erros = []
 
-pastas = ['DNN_corrigido']
+pastas = ['DNN','CNN']
 
 for pasta in pastas:
     lista_de_dfs = []
     try:
-        arquivos = glob.glob(f'DADOS_BRUTOS/NIID/{pasta}*.csv', recursive=True)
+        arquivos = glob.glob(f'DADOS_BRUTOS/{pasta}/*.csv', recursive=True)
 
         for arquivo in arquivos:
             try:

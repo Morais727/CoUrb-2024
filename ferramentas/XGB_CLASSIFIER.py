@@ -7,8 +7,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
 arquivos =  [
-                'datasets_brutos/Balanceado_cifar_cnn.csv',
-                'datasets_brutos/Balanceado_mnist_dnn.csv'
+                'DADOS_BRUTOS/Balanceado_CNN.csv',
+                'DADOS_BRUTOS/Balanceado_DNN.csv'
             ]
 erros = []
 for arquivo in arquivos:
@@ -30,7 +30,7 @@ for arquivo in arquivos:
         base = arquivo[0].split('_')
         
         
-        nome = (f'MODELOS/MINMAX_XGB_{base[2]}_{base[3]}.pkl')
+        nome = (f'MODELOS/MINMAX_XGB_{base[2]}.pkl')
 
         with open(nome, 'wb') as min:
             pickle.dump(minmax, min)
@@ -41,7 +41,7 @@ for arquivo in arquivos:
         xgb_classifier = XGBClassifier(max_depth=25)
         xgb_classifier.fit(X_train, y_train)
 
-        nome_arquivo = (f'MODELOS/CLASSIFICADOR_XGB_{base[2]}_{base[3]}.model')
+        nome_arquivo = (f'MODELOS/CLASSIFICADOR_XGB_{base[2]}.model')
         xgb_classifier.get_booster().save_model(nome_arquivo)
 
         # Faz previsões no conjunto de teste

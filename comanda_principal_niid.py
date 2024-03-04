@@ -6,11 +6,11 @@ import concurrent.futures
 from itertools import product
 
 limpa_arquivos_csv = []
-padroes = ['TESTES/IID/LABELS/*.csv', 
-           'TESTES/IID/LOG_EVALUATE/*.csv', 
-           'TESTES/IID/LOG_ACERTOS/*.csv',
-           'TESTES/IID/LOG_ACERTOS/GRAFICOS/*.png',
-           'TESTES/IID/GRAFICOS/*.png',
+padroes = ['TESTES/NIID/LABELS/*.csv', 
+           'TESTES/NIID/LOG_EVALUATE/*.csv',  
+           'TESTES/NIID/LOG_ACERTOS/*.csv',
+           'TESTES/NIID/LOG_ACERTOS/GRAFICOS/*.png',
+           'TESTES/NIID/GRAFICOS/*.png',
           ]
 
 for i in padroes:

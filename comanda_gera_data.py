@@ -11,7 +11,7 @@ def executar_arquivo(arquivo):
     try:
         num_round = [5,15,30]
         total_clients = [5,10,15,20]
-        modelos = ['DNN', 'CNN']
+        modelos = ['CNN','DNN','CNN']
         niid_iid = ['NIID']        
         ataques = ['ALTERNA_INICIO', 'ATACANTES', 'EMBARALHA', 'INVERTE_TREINANDO', 'INVERTE_SEM_TREINAR', 'INVERTE_CONVEGENCIA', 'ZEROS', 'RUIDO_GAUSSIANO', 'NORMAL']
         data_set = ['MNIST', 'CIFAR10']                        

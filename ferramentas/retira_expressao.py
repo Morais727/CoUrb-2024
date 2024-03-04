@@ -1,30 +1,19 @@
-import os
-import glob
+import csv
 
-# Função para substituir 'Valor,Contagem' por uma string vazia
-def substituir_valor_contagem(texto):
-    return texto.replace('Valor,Contagem', '')
+def ler_csv_remover_linhas_excedentes(nome_arquivo):
+    conteudo = []
+    with open(nome_arquivo, 'r', newline='') as arquivo_csv:
+        leitor_csv = csv.reader(arquivo_csv)
+        for linha in leitor_csv:
+            if len(linha)> 56:
+                continue
+            else:
+                conteudo.append(linha[:-1])
 
-# Diretório dos arquivos
-diretorio = 'TESTES/NIID/LABELS'
 
-# Listar arquivos CSV no diretório
-arquivos = glob.glob(os.path.join(diretorio, '*.csv'))
+    with open(nome_arquivo, 'w', newline='') as arquivo_csv:
+        escritor_csv = csv.writer(arquivo_csv)
+        escritor_csv.writerows(conteudo)
 
-# Iterar sobre cada arquivo
-for arquivo in arquivos:
-    try:
-        with open(arquivo, 'r', newline='') as f:
-            # Ler todo o conteúdo do arquivo
-            conteudo = f.read()
-        
-        # Substituir a expressão no conteúdo
-        conteudo_modificado = substituir_valor_contagem(conteudo)
-        
-        # Escrever o conteúdo modificado de volta para o arquivo
-        with open(arquivo, 'w', newline='') as f:
-            f.write(conteudo_modificado)
-
-        print(f"Expressão substituída em {arquivo}.")
-    except Exception as e:
-        print(f"Ocorreu um erro ao processar {arquivo}: {str(e)}")
+nome_arquivo = 'DADOS_BRUTOS/CNN/data.csv'
+ler_csv_remover_linhas_excedentes(nome_arquivo)
