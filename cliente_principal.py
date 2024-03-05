@@ -71,14 +71,14 @@ class ClienteFlower(fl.client.NumPyClient):
             x_treino, y_treino, x_teste, y_teste = ManageDatasets(self.cid, dataset_name=self.dataset).select_dataset(alpha = alpha, dataset_size = dataset_size)
             
             
-            # nome_arquivo = f"TESTES/{self.iid_niid}/LABELS/{self.modo_ataque}_{self.dataset}_{self.modelo_definido}_{self.atacantes}_{self.alpha_dirichlet}_{self.noise_gaussiano}_{self.round_inicio}.csv"
-            # uniq, count = np.unique(y_treino, return_counts=True)                 
+            nome_arquivo = f"TESTES/{self.iid_niid}/LABELS/{self.modo_ataque}_{self.dataset}_{self.modelo_definido}_{self.atacantes}_{self.alpha_dirichlet}_{self.noise_gaussiano}_{self.round_inicio}.csv"
+            uniq, count = np.unique(y_treino, return_counts=True)                 
             
-            # os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)   
-            # with open(nome_arquivo,'a') as csvfile:          
-            #     writer = csv.writer(csvfile)
-            #     for valor, contagem in zip(uniq, count):
-            #         writer.writerow([valor, contagem, self.cid])
+            os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)   
+            with open(nome_arquivo,'a') as csvfile:          
+                writer = csv.writer(csvfile)
+                for valor, contagem in zip(uniq, count):
+                    writer.writerow([valor, contagem, self.cid])
 
         return x_treino, y_treino, x_teste, y_teste
     

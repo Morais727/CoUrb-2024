@@ -276,7 +276,8 @@ class Timming(fl.server.strategy.FedAvg):
         print(f'Percentual de acertos atual: {percents_atual:.2f}%')
         print(f'Percentual de acertos geral: {self.percents:.2f}%  {contagem}')        
         print(f'{self.classificacao}\n\n')
-
+        self.verifica_acertos.append(self.classificacao)
+        self.verifica_acertos.append(self.classificacao.values)
         if not results:
             return None, {}
         # Do not aggregate if there are failures and failures are not accepted
@@ -341,19 +342,19 @@ class Timming(fl.server.strategy.FedAvg):
         elif server_round == 1:  # Only log this warning once
             log(WARNING, "No evaluate_metrics_aggregation_fn provided")
          
-        if self.modo_execucao == 0:
-            for client,eval_res in results:            
-                nome_arquivo = f"TESTES/{eval_res.metrics['iid_niid']}/LOG_EVALUATE/{eval_res.metrics['ataque']}_{eval_res.metrics['dataset']}_{eval_res.metrics['modelo']}_{eval_res.metrics['porcentagem_ataque']}_{eval_res.metrics['alpha_dirichlet']}_{eval_res.metrics['noise_gaussiano']}_{eval_res.metrics['round_inicio']}.csv"
-                os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)   
-                with open(nome_arquivo,'a') as file:          
-                    file.write(f"\n{server_round},{client.cid},{eval_res.metrics['accuracy']},{eval_res.loss}")
-            
-                arquivo_verifica_acertos = f"TESTES/{eval_res.metrics['iid_niid']}/LOG_ACERTOS/{eval_res.metrics['ataque']}_{eval_res.metrics['dataset']}_{eval_res.metrics['modelo']}_{eval_res.metrics['porcentagem_ataque']}_{eval_res.metrics['alpha_dirichlet']}_{eval_res.metrics['noise_gaussiano']}_{eval_res.metrics['round_inicio']}.csv"        
-                os.makedirs(os.path.dirname(arquivo_verifica_acertos), exist_ok=True)
-                with open(arquivo_verifica_acertos, 'a', newline='') as arquivo_csv:
-                    escritor_csv = csv.writer(arquivo_csv)
-                    for linha in self.verifica_acertos:
-                        escritor_csv.writerow(linha)
+       
+        for client,eval_res in results:            
+            nome_arquivo = f"TESTES/{eval_res.metrics['iid_niid']}/LOG_EVALUATE/{eval_res.metrics['ataque']}_{eval_res.metrics['dataset']}_{eval_res.metrics['modelo']}_{eval_res.metrics['porcentagem_ataque']}_{eval_res.metrics['alpha_dirichlet']}_{eval_res.metrics['noise_gaussiano']}_{eval_res.metrics['round_inicio']}.csv"
+            os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)   
+            with open(nome_arquivo,'a') as file:          
+                file.write(f"\n{server_round},{client.cid},{eval_res.metrics['accuracy']},{eval_res.loss}")
+        
+            arquivo_verifica_acertos = f"TESTES/{eval_res.metrics['iid_niid']}/LOG_ACERTOS/{eval_res.metrics['ataque']}_{eval_res.metrics['dataset']}_{eval_res.metrics['modelo']}_{eval_res.metrics['porcentagem_ataque']}_{eval_res.metrics['alpha_dirichlet']}_{eval_res.metrics['noise_gaussiano']}_{eval_res.metrics['round_inicio']}.csv"        
+            os.makedirs(os.path.dirname(arquivo_verifica_acertos), exist_ok=True)
+            with open(arquivo_verifica_acertos, 'a', newline='') as arquivo_csv:
+                escritor_csv = csv.writer(arquivo_csv)
+                for linha in self.verifica_acertos:
+                    escritor_csv.writerow(linha)
 
         return loss_aggregated, metrics_aggregated            
     

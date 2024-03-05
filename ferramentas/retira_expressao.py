@@ -5,10 +5,10 @@ def ler_csv_remover_linhas_excedentes(nome_arquivo):
     with open(nome_arquivo, 'r', newline='') as arquivo_csv:
         leitor_csv = csv.reader(arquivo_csv)
         for linha in leitor_csv:
-            if len(linha)> 56:
+            if len(linha)!= 55:
                 continue
-            else:
-                conteudo.append(linha[:-1])
+            # else:
+            #     conteudo.append(linha[:-1])
 
 
     with open(nome_arquivo, 'w', newline='') as arquivo_csv:
