@@ -41,7 +41,7 @@ for arquivo in arquivos:
         xgb_classifier = XGBClassifier(max_depth=25)
         xgb_classifier.fit(X_train, y_train)
 
-        nome_arquivo = (f'MODELOS/CLASSIFICADOR_XGB_{base[2]}.model')
+        nome_arquivo = (f'MODELOS/CLASSIFICADOR_XGB_{base[2]}.h5')
         xgb_classifier.get_booster().save_model(nome_arquivo)
 
         # Faz previsões no conjunto de teste

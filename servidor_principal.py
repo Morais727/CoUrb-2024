@@ -72,25 +72,25 @@ class Timming(fl.server.strategy.FedAvg):
         self.modo_execucao = modo_execucao           
     
         minmax_mnist_dnn_path = 'MODELOS/MINMAX_XGB_mnist_dnn.pkl'
-        modelo_mnist_dnn_path = 'MODELOS/CLASSIFICADOR_XGB_mnist_dnn.h5'
+        modelo_mnist_dnn_path = 'MODELOS/CLASSIFICADOR_XGB_DNN.h5'
 
         minmax_cifar10_cnn_path = 'MODELOS/MINMAX_XGB_cifar_cnn.pkl'
-        modelo_cifar10_cnn_path = 'MODELOS/CLASSIFICADOR_XGB_cifar_cnn.h5'
+        modelo_cifar10_cnn_path = 'MODELOS/CLASSIFICADOR_XGB_CNN.h5'
 
         # Verifica se os arquivos existem antes de tentar carregá-los
         if os.path.exists(minmax_mnist_dnn_path) and os.path.exists(modelo_mnist_dnn_path):
             with open(minmax_mnist_dnn_path, 'rb') as file:
                 self.minmax_dnn = pickle.load(file)
-            self.loaded_model_dnn = Booster(model_file=modelo_mnist_dnn_path)
-            # self.loaded_model_dnn = tf.keras.saving.load_model(modelo_mnist_dnn_path)
+            # self.loaded_model_dnn = Booster(model_file=modelo_mnist_dnn_path)
+            self.loaded_model_dnn = tf.keras.saving.load_model(modelo_mnist_dnn_path)
         else:
             print(f"Erro: Arquivos não encontrados - {minmax_mnist_dnn_path}, {modelo_mnist_dnn_path}")
 
         if os.path.exists(minmax_cifar10_cnn_path) and os.path.exists(modelo_cifar10_cnn_path):
             with open(minmax_cifar10_cnn_path, 'rb') as file:
                 self.minmax_cnn = pickle.load(file)
-            self.loaded_model_cnn = Booster(model_file=modelo_cifar10_cnn_path)
-            # self.loaded_model_cnn = tf.keras.saving.load_model(modelo_cifar10_cnn_path)
+            # self.loaded_model_cnn = Booster(model_file=modelo_cifar10_cnn_path)
+            self.loaded_model_cnn = tf.keras.saving.load_model(modelo_cifar10_cnn_path)
         else:
             print(f"Erro: Arquivos não encontrados - {minmax_cifar10_cnn_path}, {modelo_cifar10_cnn_path}")
 
