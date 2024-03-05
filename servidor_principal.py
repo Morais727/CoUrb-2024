@@ -222,14 +222,7 @@ class Timming(fl.server.strategy.FedAvg):
                     
                     normas.extend([norm1,delta1,norm2,delta2,norm3,delta3])
 
-                if self.modo_execucao == 1:
-                    normas.extend([f'{situacao}\n'])
-                    nome_arquivo = f"DADOS_BRUTOS/{modelo}/data.csv"
-                    os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)
-                    with open(nome_arquivo,'a') as file:
-                        file.write(",".join(map(str, normas)))
-
-                elif self.modo_execucao == 0:
+               
                     data.append(normas)
                     
                     selected_feature = np.array(data)
@@ -253,79 +246,62 @@ class Timming(fl.server.strategy.FedAvg):
                     # prev = (predict > 0.5).astype('int32')
                     
                     chaves = {
-                                (0): 'n_atak',
-                                (1): 'atak',
-                            }
-                    
-                    chave = chaves.get(( int(prev[0])), 'atak')            
-                    self.classificacao.setdefault(chave,[]).append(iid) 
-            
-                    if situacao == prev[0]:
-                        self.resultados.append('Acertos')
-                        atual.append('Acertos')
-                    else:
-                        self.resultados.append('Erros')
-                        atual.append('Erros')
+                            (0): 'n_atak',
+                            (1): 'atak',
+                        }
                 
-                    self.verifica_acertos.append((server_round,iid,situacao,prev[0]))
-        if self.modo_execucao == 0:
-            cont_atual = Counter(atual)
-            tot = sum(cont_atual.values())
-            contagem = Counter(self.resultados)
-            total = sum(contagem.values())
-            if cont_atual['Acertos'] > 0:
-                percents_atual = (cont_atual['Acertos'] / tot) * 100
-            if contagem['Acertos'] > 0:
-                self.percents = (contagem['Acertos'] / total) * 100
-            else:
-                self.percents = 0
-                percents_atual = 0
-            
-            print(f'\n\nround >>>>> {server_round}')
-            print(f'Percentual de acertos atual: {percents_atual:.2f}%')
-            print(f'Percentual de acertos geral: {self.percents:.2f}%  {contagem}')        
-            print(f'{self.classificacao}\n\n')   
-            
-            if not results:
-                return None, {}
-            # Do not aggregate if there are failures and failures are not accepted
-            if not self.accept_failures and failures:
-                return None, {}
-
-            # Converte resultados
-            weights_results = []
-            malicious = []
-            for client, fit_res in results:
-                if 'atak' in self.classificacao.keys() and server_round:
-                    if client.cid in self.classificacao['atak']: 
-                        malicious.append((parameters_to_ndarrays(fit_res.parameters), fit_res.num_examples)) 
-                    else:       
-                        weights_results.append((parameters_to_ndarrays(fit_res.parameters), fit_res.num_examples))                                  
+                chave = chaves.get(( int(prev[0])), 'atak')            
+                self.classificacao.setdefault(chave,[]).append(iid) 
+          
+                if situacao == prev[0]:
+                    self.resultados.append('Acertos')
+                    atual.append('Acertos')
                 else:
-                    weights_results.append((parameters_to_ndarrays(fit_res.parameters), fit_res.num_examples))
+                    self.resultados.append('Erros')
+                    atual.append('Erros')
 
-            if weights_results == []:
-                parameters_aggregated = ndarrays_to_parameters(self.last_model) 
+        cont_atual = Counter(atual)
+        tot = sum(cont_atual.values())
+        contagem = Counter(self.resultados)
+        total = sum(contagem.values())
+        if cont_atual['Acertos'] > 0:
+            percents_atual = (cont_atual['Acertos'] / tot) * 100
+        if contagem['Acertos'] > 0:
+            self.percents = (contagem['Acertos'] / total) * 100
+        else:
+            self.percents = 0
+            percents_atual = 0
+        
+        print(f'\n\nround >>>>> {server_round}')
+        print(f'Percentual de acertos atual: {percents_atual:.2f}%')
+        print(f'Percentual de acertos geral: {self.percents:.2f}%  {contagem}')        
+        print(f'{self.classificacao}\n\n')
+
+        if not results:
+            return None, {}
+        # Do not aggregate if there are failures and failures are not accepted
+        if not self.accept_failures and failures:
+            return None, {}
+
+        # Converte resultados
+        weights_results = []
+        malicious = []
+        for client, fit_res in results:
+            if 'atak' in self.classificacao.keys() and server_round:
+                if client.cid in self.classificacao['atak']: 
+                    malicious.append((parameters_to_ndarrays(fit_res.parameters), fit_res.num_examples)) 
+                else:       
+                    weights_results.append((parameters_to_ndarrays(fit_res.parameters), fit_res.num_examples))                                  
             else:
-                parameters_aggregated = ndarrays_to_parameters(aggregate(weights_results))
-                self.last_model = parameters_to_ndarrays(parameters_aggregated) 
-            
-        elif self.modo_execucao == 1:
-            if not results:
-                return None, {}
-            # Do not aggregate if there are failures and failures are not accepted
-            if not self.accept_failures and failures:
-                return None, {}
+                weights_results.append((parameters_to_ndarrays(fit_res.parameters), fit_res.num_examples))
 
-            # Convert results
-            weights_results = [
-                (parameters_to_ndarrays(fit_res.parameters), fit_res.num_examples)
-                for _, fit_res in results
-            ]
-
-        parameters_aggregated = ndarrays_to_parameters(aggregate(weights_results)) 
-        self.modelo_anterior = parameters_to_ndarrays(parameters_aggregated)
-
+        if weights_results == []:
+            parameters_aggregated = ndarrays_to_parameters(self.last_model) 
+        else:
+            parameters_aggregated = ndarrays_to_parameters(aggregate(weights_results))
+            self.last_model = parameters_to_ndarrays(parameters_aggregated) 
+        
+        
         # Aggregate custom metrics if aggregation fn was provided
         metrics_aggregated = {}
         if self.fit_metrics_aggregation_fn:
@@ -334,8 +310,8 @@ class Timming(fl.server.strategy.FedAvg):
         elif server_round == 1:  # Only log this warning once
             log(WARNING, "No fit_metrics_aggregation_fn provided")
         
-        return parameters_aggregated, metrics_aggregated 
-
+        return parameters_aggregated, metrics_aggregated
+    
     def aggregate_evaluate(
         self,
         server_round: int,
