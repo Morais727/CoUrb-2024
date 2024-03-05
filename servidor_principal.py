@@ -299,14 +299,16 @@ class Timming(fl.server.strategy.FedAvg):
                 if 'atak' in self.classificacao.keys() and server_round:
                     if client.cid in self.classificacao['atak']: 
                         malicious.append((parameters_to_ndarrays(fit_res.parameters), fit_res.num_examples)) 
-                        
                     else:       
                         weights_results.append((parameters_to_ndarrays(fit_res.parameters), fit_res.num_examples))                                  
                 else:
                     weights_results.append((parameters_to_ndarrays(fit_res.parameters), fit_res.num_examples))
 
             if weights_results == []:
-                parameters_aggregated = ndarrays_to_parameters(self.modelo_anterior) 
+                parameters_aggregated = ndarrays_to_parameters(self.last_model) 
+            else:
+                parameters_aggregated = ndarrays_to_parameters(aggregate(weights_results))
+                self.last_model = parameters_to_ndarrays(parameters_aggregated) 
             
         elif self.modo_execucao == 1:
             if not results:
