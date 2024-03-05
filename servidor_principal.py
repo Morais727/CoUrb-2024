@@ -296,7 +296,7 @@ class Timming(fl.server.strategy.FedAvg):
                 weights_results.append((parameters_to_ndarrays(fit_res.parameters), fit_res.num_examples))
 
         if weights_results == []:
-            parameters_aggregated = ndarrays_to_parameters(self.last_model) 
+            parameters_aggregated = ndarrays_to_parameters(self.modelo_anterior) 
         else:
             parameters_aggregated = ndarrays_to_parameters(aggregate(weights_results))
             self.modelo_anterior = parameters_to_ndarrays(parameters_aggregated) 
