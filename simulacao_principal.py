@@ -17,7 +17,7 @@ def parse_args():
     parser.add_argument("--noise_gaussiano", type=float, default=0, help="Define o alpha para ruído gaussiano")#Usar números entre 0 e 1
     parser.add_argument("--round_inicio", type=int, default=0, help="Define o round de inicio do ataque")#Usar números inteiros
     parser.add_argument("--per_cents_atacantes", type=int, default=0, help="Define o percentual de atacantes")#Usar números inteiros
-    parser.add_argument("--modo_execucao", type=int, default=0, help="Define o percentual de atacantes")#Define se iremos treinar(0) ou gerar data(1) 
+    
 
     return parser.parse_args()
 
@@ -35,14 +35,14 @@ def main():
     noise_gaussiano = args.noise_gaussiano
     round_inicio = args.round_inicio
     per_cents_atacantes = args.per_cents_atacantes
-    modo_execucao = args.modo_execucao
+   
 
   
     try:
         def Cliente(cid, modelo_definido, iid_niid, modo_ataque, dataset, total_clients, alpha_dirichlet, noise_gaussiano,round_inicio, per_cents_atacantes):
             return ClienteFlower(cid, modelo_definido, iid_niid, modo_ataque, dataset, total_clients, alpha_dirichlet, noise_gaussiano,round_inicio, per_cents_atacantes)
         
-        strategy=servidor_gera_data.Timming(fraction_fit=fraction_fit, modo_execucao=modo_execucao)
+        strategy=servidor_gera_data.Timming(fraction_fit=fraction_fit)
 
         client_fn = partial(Cliente, modelo_definido=modelo_definido, iid_niid=iid_niid,
                             modo_ataque=modo_ataque, dataset=dataset, total_clients=total_clients,

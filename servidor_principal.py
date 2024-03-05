@@ -61,15 +61,13 @@ class Timming(fl.server.strategy.FedAvg):
         initial_parameters: Optional[Parameters] = None,
         fit_metrics_aggregation_fn: Optional[MetricsAggregationFn] = None,
         evaluate_metrics_aggregation_fn: Optional[MetricsAggregationFn] = None,
-
-        modo_execucao
     ) -> None:
        
         super().__init__()
         self.percents = None
         self.resultados    = []  
         self.classificacao = {} 
-        self.modo_execucao = modo_execucao           
+                 
     
         minmax_mnist_dnn_path = 'MODELOS/MINMAX_XGB_mnist_dnn.pkl'
         modelo_mnist_dnn_path = 'MODELOS/CLASSIFICADOR_XGB_mnist_dnn.h5'
