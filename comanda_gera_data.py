@@ -19,12 +19,11 @@ def executar_arquivo(arquivo):
         noise_gaussiano = [0.1]
         round_inicio = [2,  8]
         per_cents_atacantes = [30, 60]
-        modo_execucao = [0]
-
+       
         combinacoes_unicas = set() 
 
-        for i, j, k, l, m, n, o, p, q, r, s in product(niid_iid, ataques, data_set, modelos, round_inicio, per_cents_atacantes, noise_gaussiano, alpha_dirichlet, num_round, modo_execucao, total_clients):
-            combinacao = (i, j, k, l, m, n, o, p, q, r, s) 
+        for i, j, k, l, m, n, o, p, q, r in product(niid_iid, ataques, data_set, modelos, round_inicio, per_cents_atacantes, noise_gaussiano, alpha_dirichlet, num_round, total_clients):
+            combinacao = (i, j, k, l, m, n, o, p, q, r) 
             if i == 'NIID' and p == 0: 
                 print('NON IID com Dirichlet = 0')               
                 continue
@@ -47,7 +46,7 @@ def executar_arquivo(arquivo):
                 continue 
 
             print(f'Executando {arquivo}')                
-            comando = f'python3 {arquivo} --iid_niid {i} --modo_ataque {j} --dataset {k} --modelo_definido {l} --round_inicio {m} --per_cents_atacantes {n} --noise_gaussiano {o} --alpha_dirichlet {p} --num_rounds {q} --modo_execucao {r} --total_clients {s}'
+            comando = f'python3 {arquivo} --iid_niid {i} --modo_ataque {j} --dataset {k} --modelo_definido {l} --round_inicio {m} --per_cents_atacantes {n} --noise_gaussiano {o} --alpha_dirichlet {p} --num_rounds {q} --total_clients {r}'
             print(f'\n\n################################################################################################')
             print(f'\n\n{comando}\n\n')
             print(f'################################################################################################\n\n')
