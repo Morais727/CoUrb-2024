@@ -348,12 +348,12 @@ class Timming(fl.server.strategy.FedAvg):
                 with open(nome_arquivo,'a') as file:          
                     file.write(f"\n{server_round},{client.cid},{eval_res.metrics['accuracy']},{eval_res.loss}")
             
-            arquivo_verifica_acertos = f"TESTES/{eval_res.metrics['iid_niid']}/LOG_ACERTOS/{eval_res.metrics['ataque']}_{eval_res.metrics['dataset']}_{eval_res.metrics['modelo']}_{eval_res.metrics['porcentagem_ataque']}_{eval_res.metrics['alpha_dirichlet']}_{eval_res.metrics['noise_gaussiano']}_{eval_res.metrics['round_inicio']}.csv"        
-            os.makedirs(os.path.dirname(arquivo_verifica_acertos), exist_ok=True)
-            with open(arquivo_verifica_acertos, 'a', newline='') as arquivo_csv:
-                escritor_csv = csv.writer(arquivo_csv)
-                for linha in self.verifica_acertos:
-                    escritor_csv.writerow(linha)
+                arquivo_verifica_acertos = f"TESTES/{eval_res.metrics['iid_niid']}/LOG_ACERTOS/{eval_res.metrics['ataque']}_{eval_res.metrics['dataset']}_{eval_res.metrics['modelo']}_{eval_res.metrics['porcentagem_ataque']}_{eval_res.metrics['alpha_dirichlet']}_{eval_res.metrics['noise_gaussiano']}_{eval_res.metrics['round_inicio']}.csv"        
+                os.makedirs(os.path.dirname(arquivo_verifica_acertos), exist_ok=True)
+                with open(arquivo_verifica_acertos, 'a', newline='') as arquivo_csv:
+                    escritor_csv = csv.writer(arquivo_csv)
+                    for linha in self.verifica_acertos:
+                        escritor_csv.writerow(linha)
 
         return loss_aggregated, metrics_aggregated            
     
