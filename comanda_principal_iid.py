@@ -34,13 +34,13 @@ def executar_arquivo(arquivo):
 
         combinacoes_unicas = set() 
 
-        if modo_execucao[0] == 0:
-            try:
-                for arquivo in limpa_arquivos_csv:
-                    os.remove(arquivo)
+        # if modo_execucao[0] == 0:
+        #     try:
+        #         for arquivo in limpa_arquivos_csv:
+        #             os.remove(arquivo)
 
-            except OSError as e:
-                print(f'Erro ao limpar arquivo: {e}')
+        #     except OSError as e:
+        #         print(f'Erro ao limpar arquivo: {e}')
 
         for i, j, k, l, m, n, o, p, q, r, s in product(niid_iid, ataques, data_set, modelos, round_inicio, per_cents_atacantes, noise_gaussiano, alpha_dirichlet, num_round, modo_execucao, total_clients):
             combinacao = (i, j, k, l, m, n, o, p, q, r, s) 
