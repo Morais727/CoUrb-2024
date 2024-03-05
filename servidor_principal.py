@@ -223,32 +223,32 @@ class Timming(fl.server.strategy.FedAvg):
                     normas.extend([norm1,delta1,norm2,delta2,norm3,delta3])
 
                
-                    data.append(normas)
-                    
-                    selected_feature = np.array(data)
-                    
-                    if modelo == "CNN":
-                        minmax_selecionado = self.minmax_cnn
-                        modelo_selecionado = self.loaded_model_cnn
-                    elif modelo == "DNN":
-                        minmax_selecionado = self.minmax_dnn
-                        modelo_selecionado = self.loaded_model_dnn
-                    else:
-                        raise ValueError(f"Complemento do nome inválido: {modelo}")
+                data.append(normas)
+                
+                selected_feature = np.array(data)
+                
+                if modelo == "CNN":
+                    minmax_selecionado = self.minmax_cnn
+                    modelo_selecionado = self.loaded_model_cnn
+                elif modelo == "DNN":
+                    minmax_selecionado = self.minmax_dnn
+                    modelo_selecionado = self.loaded_model_dnn
+                else:
+                    raise ValueError(f"Complemento do nome inválido: {modelo}")
 
-                    # Acessar o minmax usando o objeto selecionado
-                    normalizado = minmax_selecionado.transform(selected_feature)
+                # Acessar o minmax usando o objeto selecionado
+                normalizado = minmax_selecionado.transform(selected_feature)
 
-                    predict = modelo_selecionado.predict(xgb.DMatrix(normalizado))
-                    prev = (predict > 0.5).astype('int32')
+                predict = modelo_selecionado.predict(xgb.DMatrix(normalizado))
+                prev = (predict > 0.5).astype('int32')
 
-                    # predict = modelo_selecionado.predict(normalizado)
-                    # prev = (predict > 0.5).astype('int32')
-                    
-                    chaves = {
-                            (0): 'n_atak',
-                            (1): 'atak',
-                        }
+                # predict = modelo_selecionado.predict(normalizado)
+                # prev = (predict > 0.5).astype('int32')
+                
+                chaves = {
+                        (0): 'n_atak',
+                        (1): 'atak',
+                    }
                 
                 chave = chaves.get(( int(prev[0])), 'atak')            
                 self.classificacao.setdefault(chave,[]).append(iid) 
