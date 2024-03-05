@@ -89,8 +89,8 @@ class Timming(fl.server.strategy.FedAvg):
         if os.path.exists(minmax_cifar10_cnn_path) and os.path.exists(modelo_cifar10_cnn_path):
             with open(minmax_cifar10_cnn_path, 'rb') as file:
                 self.minmax_cnn = pickle.load(file)
-            self.loaded_model_cnn = Booster(model_file=modelo_cifar10_cnn_path)
-            # self.loaded_model_cnn = tf.keras.saving.load_model(modelo_cifar10_cnn_path)
+            # self.loaded_model_cnn = Booster(model_file=modelo_cifar10_cnn_path)
+            self.loaded_model_cnn = tf.keras.saving.load_model(modelo_cifar10_cnn_path)
         else:
             print(f"Erro: Arquivos não encontrados - {minmax_cifar10_cnn_path}, {modelo_cifar10_cnn_path}")
 
