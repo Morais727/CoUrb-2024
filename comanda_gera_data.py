@@ -5,12 +5,12 @@ import subprocess
 import concurrent.futures
 from itertools import product
 
-arquivos_teste = ['servidor_gera_data.py']
+arquivos_teste = ['simulacao_principal.py']
 
 def executar_arquivo(arquivo):
     try:
         num_round = [5,5,15]
-        total_clients = [5,5,10]
+        total_clients = [5,10,15,20]
         modelos = ['CNN','DNN']
         niid_iid = ['NIID']        
         ataques = ['ALTERNA_INICIO', 'ATACANTES', 'EMBARALHA', 'INVERTE_TREINANDO', 'INVERTE_SEM_TREINAR', 'INVERTE_CONVEGENCIA', 'ZEROS', 'RUIDO_GAUSSIANO', 'NORMAL']
@@ -19,7 +19,7 @@ def executar_arquivo(arquivo):
         noise_gaussiano = [0.1]
         round_inicio = [2,  8]
         per_cents_atacantes = [30, 60]
-        modo_execucao = [1]
+        modo_execucao = [0]
 
         combinacoes_unicas = set() 
 
