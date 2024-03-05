@@ -26,7 +26,7 @@ def executar_arquivo(arquivo):
         niid_iid = ['NIID']        
         ataques = ['ALTERNA_INICIO', 'ATACANTES', 'EMBARALHA', 'INVERTE_TREINANDO', 'INVERTE_SEM_TREINAR', 'INVERTE_CONVEGENCIA', 'ZEROS', 'RUIDO_GAUSSIANO', 'NORMAL']
         data_set = ['MNIST', 'CIFAR10']                        
-        alpha_dirichlet = [0.0]
+        alpha_dirichlet = [0.1]
         noise_gaussiano = [0.0, 0.1]
         round_inicio = [2, 8]
         per_cents_atacantes = [40]
