@@ -250,7 +250,7 @@ class Timming(fl.server.strategy.FedAvg):
                     # predict = modelo_selecionado.predict(xgb.DMatrix(normalizado))
                     # prev = (predict > 0.5).astype('int32')
 
-                    predict = modelo_selecionado.predict(normalizado, verbose = 0)
+                    predict = modelo_selecionado.predict(normalizado)
                     prev = (predict > 0.5).astype('int32')
                     
                     chaves = {
