@@ -13,7 +13,7 @@ from scipy.stats import dirichlet, multinomial, beta
 
 class ClienteFlower(fl.client.NumPyClient):
     def __init__(self,cid, modelo_definido, iid_niid, modo_ataque, dataset, 
-                 total_clients, alpha_dirichlet,ruido_gaussiano, round_inicio, 
+                 total_clients, alpha_dirichlet,noise_gaussiano, round_inicio, 
                  per_cents_atacantes):  
         self.modelo_definido = str(modelo_definido)
         self.iid_niid = str(iid_niid)
@@ -21,7 +21,7 @@ class ClienteFlower(fl.client.NumPyClient):
         self.dataset = str(dataset)
         self.total_clients = int(total_clients)
         self.alpha_dirichlet = alpha_dirichlet
-        self.ruido_gaussiano = ruido_gaussiano
+        self.noise_gaussiano = noise_gaussiano
         self.round_inicio = round_inicio
         self.per_cents_atacantes = int((int(total_clients) * per_cents_atacantes)/100)
         self.atacantes = per_cents_atacantes
@@ -71,7 +71,7 @@ class ClienteFlower(fl.client.NumPyClient):
             x_treino, y_treino, x_teste, y_teste = ManageDatasets(self.cid, dataset_name=self.dataset).select_dataset(alpha = alpha, dataset_size = dataset_size)
             
             
-            nome_arquivo = f"TESTES/{self.iid_niid}/LABELS/{self.modo_ataque}_{self.dataset}_{self.modelo_definido}_{self.atacantes}_{self.alpha_dirichlet}_{self.ruido_gaussiano}_{self.round_inicio}.csv"
+            nome_arquivo = f"TESTES/{self.iid_niid}/LABELS/{self.modo_ataque}_{self.dataset}_{self.modelo_definido}_{self.atacantes}_{self.alpha_dirichlet}_{self.noise_gaussiano}_{self.round_inicio}.csv"
             uniq, count = np.unique(y_treino, return_counts=True)                 
             
             os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)   
@@ -137,7 +137,7 @@ class ClienteFlower(fl.client.NumPyClient):
             a[camada] = min_value + (max_value- min_value) * np.random.rand(*shape_list)    
                             
             return a, len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'camada':camada_alvo,'porcentagem_ataque': int(self.atacantes),'modelo':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 
-                                            'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet,'ruido_gaussiano':self.ruido_gaussiano, 'round_inicio':self.round_inicio, 'conjunto_de_dados':self.dataset}
+                                            'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet,'ruido_gaussiano':self.noise_gaussiano, 'round_inicio':self.round_inicio, 'conjunto_de_dados':self.dataset}
 
             
         elif modo=='ATACANTES' and server_round >= self.round_inicio and self.cid <= self.per_cents_atacantes: 
@@ -158,7 +158,7 @@ class ClienteFlower(fl.client.NumPyClient):
             a[camada] = min_value + (max_value- min_value) * np.random.rand(*shape_list)
             
             return a, len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'camada':camada_alvo,'porcentagem_ataque': int(self.atacantes),'modelo':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 
-                                            'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet,'ruido_gaussiano':self.ruido_gaussiano, 'round_inicio':self.round_inicio, 'conjunto_de_dados':self.dataset}
+                                            'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet,'ruido_gaussiano':self.noise_gaussiano, 'round_inicio':self.round_inicio, 'conjunto_de_dados':self.dataset}
                
         
         elif modo=='EMBARALHA' and server_round >= self.round_inicio and self.cid <= self.per_cents_atacantes:
@@ -183,7 +183,7 @@ class ClienteFlower(fl.client.NumPyClient):
                 a[camada] = min_value + (max_value- min_value) * np.random.rand(*shape_list)
             
             return a, len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'camada':camada_alvo,'porcentagem_ataque': int(self.atacantes),'modelo':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 
-                                            'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet,'ruido_gaussiano':self.ruido_gaussiano, 'round_inicio':self.round_inicio, 'conjunto_de_dados':self.dataset}
+                                            'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet,'ruido_gaussiano':self.noise_gaussiano, 'round_inicio':self.round_inicio, 'conjunto_de_dados':self.dataset}
 
 
         elif modo=='INVERTE_TREINANDO' and server_round >= self.round_inicio and self.cid <= self.per_cents_atacantes: 
@@ -197,7 +197,7 @@ class ClienteFlower(fl.client.NumPyClient):
             loss = history.history["loss"][0] 
             
             return self.modelo.get_weights(), len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'camada':camada_alvo,'porcentagem_ataque': int(self.atacantes),'modelo':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 
-                                            'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet,'ruido_gaussiano':self.ruido_gaussiano, 'round_inicio':self.round_inicio, 'conjunto_de_dados':self.dataset}
+                                            'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet,'ruido_gaussiano':self.noise_gaussiano, 'round_inicio':self.round_inicio, 'conjunto_de_dados':self.dataset}
 
         
         elif modo=='INVERTE_SEM_TREINAR' and server_round >= self.round_inicio and self.cid <= self.per_cents_atacantes:       
@@ -208,7 +208,7 @@ class ClienteFlower(fl.client.NumPyClient):
             loss = 0.001 
             
             return pesos_invertidos, len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'camada':camada_alvo,'porcentagem_ataque': int(self.atacantes),'modelo':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 
-                                            'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet,'ruido_gaussiano':self.ruido_gaussiano, 'round_inicio':self.round_inicio, 'conjunto_de_dados':self.dataset}
+                                            'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet,'ruido_gaussiano':self.noise_gaussiano, 'round_inicio':self.round_inicio, 'conjunto_de_dados':self.dataset}
 
 
         elif modo=='INVERTE_CONVEGENCIA' and server_round >= self.round_inicio and self.cid <= self.per_cents_atacantes:
@@ -242,7 +242,7 @@ class ClienteFlower(fl.client.NumPyClient):
             loss = history.history["loss"][0]                           
       
             return a, len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'camada':camada_alvo,'porcentagem_ataque': int(self.atacantes),'modelo':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 
-                                            'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet,'ruido_gaussiano':self.ruido_gaussiano, 'round_inicio':self.round_inicio, 'conjunto_de_dados':self.dataset}
+                                            'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet,'ruido_gaussiano':self.noise_gaussiano, 'round_inicio':self.round_inicio, 'conjunto_de_dados':self.dataset}
 
         
         elif modo=='RUIDO_GAUSSIANO':
@@ -262,7 +262,7 @@ class ClienteFlower(fl.client.NumPyClient):
             a[camada_alvo] += np.random.normal(0, noise, shape_list)
 
             return a, len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'camada':camada_alvo,'porcentagem_ataque': int(self.atacantes),'modelo':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 
-                                            'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet,'ruido_gaussiano':self.ruido_gaussiano, 'round_inicio':self.round_inicio, 'conjunto_de_dados':self.dataset}
+                                            'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet,'ruido_gaussiano':self.noise_gaussiano, 'round_inicio':self.round_inicio, 'conjunto_de_dados':self.dataset}
 
             
         else:
@@ -273,7 +273,7 @@ class ClienteFlower(fl.client.NumPyClient):
             loss = history.history["loss"][0]              
             
             return self.modelo.get_weights(),len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'camada':camada_alvo,'porcentagem_ataque': int(self.atacantes),'modelo':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 
-                                            'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet,'ruido_gaussiano':self.ruido_gaussiano, 'round_inicio':self.round_inicio, 'conjunto_de_dados':self.dataset}
+                                            'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet,'ruido_gaussiano':self.noise_gaussiano, 'round_inicio':self.round_inicio, 'conjunto_de_dados':self.dataset}
 
     def evaluate(self, parameters, config):
         self.modelo.set_weights(parameters)
@@ -281,7 +281,7 @@ class ClienteFlower(fl.client.NumPyClient):
         
         return loss, len(self.x_teste), {
                                             "accuracy": accuracy, 'porcentagem_ataque': int(self.atacantes),'modelo':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 
-                                            'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet,'ruido_gaussiano':self.ruido_gaussiano, 'round_inicio':self.round_inicio
+                                            'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet,'noise_gaussiano':self.noise_gaussiano, 'round_inicio':self.round_inicio
                                          }
     
 
