@@ -193,7 +193,7 @@ class Timming(fl.server.strategy.FedAvg):
         atual = [] 
         self.classificacao = {} 
         percents_atual = 0.0  
-        self.verifica_acertos = [] 
+       
         if server_round > 1:
             for client, fit_res in results:
                 result   = parameters_to_ndarrays(fit_res.parameters)
@@ -258,7 +258,13 @@ class Timming(fl.server.strategy.FedAvg):
                     self.resultados.append('Erros')
                     atual.append('Erros')
                 
-                self.verifica_acertos.append([iid,situacao,prev[0]])
+                self.verifica_acertos = f'{iid},{situacao},{prev[0]}\n'
+
+                arquivo_verifica_acertos = f"TESTES/{fit_res.metrics['iid_niid']}/LOG_ACERTOS/{fit_res.metrics['ataque']}_{fit_res.metrics['conjunto_de_dados']}_{fit_res.metrics['modelo']}_{fit_res.metrics['porcentagem_ataque']}_{fit_res.metrics['alpha_dirichlet']}_{fit_res.metrics['ruido_gaussiano']}_{fit_res.metrics['round_inicio']}.csv"
+                os.makedirs(os.path.dirname(arquivo_verifica_acertos), exist_ok=True)
+                with open(arquivo_verifica_acertos, 'a', newline='') as arquivo_csv:
+                    escritor_csv = csv.writer(arquivo_csv)
+                    escritor_csv.writerow(self.verifica_acertos)
 
         cont_atual = Counter(atual)
         tot = sum(cont_atual.values())
@@ -277,12 +283,7 @@ class Timming(fl.server.strategy.FedAvg):
         print(f'Percentual de acertos geral: {self.percents:.2f}%  {contagem}')        
         print(f'{self.classificacao}\n\n')
         
-        arquivo_verifica_acertos = f"TESTES/{fit_res.metrics['iid_niid']}/LOG_ACERTOS/{fit_res.metrics['ataque']}_{fit_res.metrics['conjunto_de_dados']}_{fit_res.metrics['modelo']}_{fit_res.metrics['porcentagem_ataque']}_{fit_res.metrics['alpha_dirichlet']}_{fit_res.metrics['ruido_gaussiano']}_{fit_res.metrics['round_inicio']}.csv"
-        os.makedirs(os.path.dirname(arquivo_verifica_acertos), exist_ok=True)
-        with open(arquivo_verifica_acertos, 'a', newline='') as arquivo_csv:
-            escritor_csv = csv.writer(arquivo_csv)
-            for sublist in self.verifica_acertos:
-                escritor_csv.writerow(sublist)
+        
         
         if not results:
             return None, {}
