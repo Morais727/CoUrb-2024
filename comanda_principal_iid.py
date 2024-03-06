@@ -48,8 +48,8 @@ def executar_arquivo(arquivo):
         #     except OSError as e:
         #         print(f'Erro ao limpar arquivo: {e}')
 
-        for i, j, k, l, m, n, o, p, q, r, s in product(niid_iid, ataques, data_set, modelos, round_inicio, per_cents_atacantes, noise_gaussiano, alpha_dirichlet, num_round, total_clients):
-            combinacao = (i, j, k, l, m, n, o, p, q, r, s) 
+        for i, j, k, l, m, n, o, p, q, r in product(niid_iid, ataques, data_set, modelos, round_inicio, per_cents_atacantes, noise_gaussiano, alpha_dirichlet, num_round, total_clients):
+            combinacao = (i, j, k, l, m, n, o, p, q, r) 
             
             if i == 'NIID' and p == 0: 
                 print('NON IID com Dirichlet = 0')               
