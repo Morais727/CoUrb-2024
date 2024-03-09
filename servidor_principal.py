@@ -258,13 +258,13 @@ class Timming(fl.server.strategy.FedAvg):
                     self.resultados.append('Erros')
                     atual.append('Erros')
                 
-                self.verifica_acertos = f'{iid},{situacao},{prev[0]}\n'
+                dados_linha = [iid, situacao, prev[0]]
 
                 arquivo_verifica_acertos = f"TESTES/{fit_res.metrics['iid_niid']}/LOG_ACERTOS/{fit_res.metrics['ataque']}_{fit_res.metrics['conjunto_de_dados']}_{fit_res.metrics['modelo']}_{fit_res.metrics['porcentagem_ataque']}_{fit_res.metrics['alpha_dirichlet']}_{fit_res.metrics['ruido_gaussiano']}_{fit_res.metrics['round_inicio']}.csv"
                 os.makedirs(os.path.dirname(arquivo_verifica_acertos), exist_ok=True)
                 with open(arquivo_verifica_acertos, 'a', newline='') as arquivo_csv:
                     escritor_csv = csv.writer(arquivo_csv)
-                    escritor_csv.writerow(self.verifica_acertos)
+                    escritor_csv.writerow(dados_linha)
 
         cont_atual = Counter(atual)
         tot = sum(cont_atual.values())
