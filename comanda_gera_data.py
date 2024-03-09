@@ -9,16 +9,16 @@ arquivos_teste = ['simulacao_principal.py']
 
 def executar_arquivo(arquivo):
     try:
-        num_round = [5,5,15]
-        total_clients = [5,10,15,20]
+        num_round = [5,5,20]
+        total_clients = [5,10,10,20]
         modelos = ['CNN','DNN']
-        niid_iid = ['NIID']        
+        niid_iid = ['NIID','IID']        
         ataques = ['ALTERNA_INICIO', 'ATACANTES', 'EMBARALHA', 'INVERTE_TREINANDO', 'INVERTE_SEM_TREINAR', 'INVERTE_CONVEGENCIA', 'ZEROS', 'RUIDO_GAUSSIANO', 'NORMAL']
         data_set = ['MNIST', 'CIFAR10']                        
         alpha_dirichlet = [0.1]
-        noise_gaussiano = [0.1]
-        round_inicio = [2,  8]
-        per_cents_atacantes = [30, 60]
+        noise_gaussiano = [0.1,0.5]
+        round_inicio = [2,6,8]
+        per_cents_atacantes = [30,60,95]
        
         combinacoes_unicas = set() 
 
