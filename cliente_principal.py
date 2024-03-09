@@ -257,7 +257,7 @@ class ClienteFlower(fl.client.NumPyClient):
             camada = random.randint(0,camada_alvo)
             shape_list = np.shape(a[camada_alvo])
 
-            noise = self.ruido_gaussiano
+            noise = self.noise_gaussiano
             # loc = float(self.cid) * np.random.uniform(1.5,2)
             a[camada_alvo] += np.random.normal(0, noise, shape_list)
 
