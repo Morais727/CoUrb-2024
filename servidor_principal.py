@@ -198,7 +198,7 @@ class Timming(fl.server.strategy.FedAvg):
             for client, fit_res in results:
                 result   = parameters_to_ndarrays(fit_res.parameters)
                 situacao = fit_res.metrics['situacao']
-                variavel = fit_res.metrics['variavel']
+                modelo = fit_res.metrics['modelo']
                 camadas = fit_res.metrics['camada']
                 iid      = client.cid
                 data     = []               
@@ -224,14 +224,14 @@ class Timming(fl.server.strategy.FedAvg):
                 
                 selected_feature = np.array(data)
                 
-                if variavel == "CNN":
+                if modelo == "CNN":
                     minmax_selecionado = self.minmax_cnn
                     modelo_selecionado = self.loaded_model_cnn
-                elif variavel == "DNN":
+                elif modelo == "DNN":
                     minmax_selecionado = self.minmax_dnn
                     modelo_selecionado = self.loaded_model_dnn
                 else:
-                    raise ValueError(f"Complemento do nome inválido: {variavel}")
+                    raise ValueError(f"Complemento do nome inválido: {modelo}")
 
                 # Acessar o minmax usando o objeto selecionado
                 normalizado = minmax_selecionado.transform(selected_feature)
