@@ -5,7 +5,7 @@ from sklearn.utils import resample
 
 erros = []
 
-pastas = ['DNN','CNN']
+pastas = ['data dnn','data cnn']
 
 for pasta in pastas:
     lista_de_dfs = []
