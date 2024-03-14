@@ -65,10 +65,10 @@ class Timming(fl.server.strategy.FedAvg):
        
         super().__init__()
         self.percents = None
-        self.resultados    = []  
+        self.resultados        = []  
         self.classificacao = {} 
-                 
-    
+                   
+        
         minmax_mnist_dnn_path = 'MODELOS/MINMAX_XGB_mnist_dnn.pkl'
         modelo_mnist_dnn_path = 'MODELOS/CLASSIFICADOR_XGB_mnist_dnn.h5'
 
@@ -193,19 +193,19 @@ class Timming(fl.server.strategy.FedAvg):
         atual = [] 
         self.classificacao = {} 
         percents_atual = 0.0  
-       
+        self.verifica_acertos = [] 
         if server_round > 1:
             for client, fit_res in results:
                 result   = parameters_to_ndarrays(fit_res.parameters)
                 situacao = fit_res.metrics['situacao']
-                modelo = fit_res.metrics['modelo']
+                variavel = fit_res.metrics['variavel']
                 camadas = fit_res.metrics['camada']
                 iid      = client.cid
                 data     = []               
                 normas   = []                                
 
                 for i in range(camadas+1):
-                    ultimo_modelo = self.modelo_anterior[i]
+                    ultimo_modelo = self.last_model[i]
                     
                     result[i] = result[i].flatten()
                     ultimo_modelo = ultimo_modelo.flatten()
@@ -219,34 +219,34 @@ class Timming(fl.server.strategy.FedAvg):
                     delta3 = norm3  - (np.power(np.sum(np.abs(ultimo_modelo) ** 3), 1/3))
                     
                     normas.extend([norm1,delta1,norm2,delta2,norm3,delta3])
-
-               
+                    
                 data.append(normas)
                 
                 selected_feature = np.array(data)
                 
-                if modelo == "CNN":
+                if variavel == "CNN":
                     minmax_selecionado = self.minmax_cnn
                     modelo_selecionado = self.loaded_model_cnn
-                elif modelo == "DNN":
+                elif variavel == "DNN":
                     minmax_selecionado = self.minmax_dnn
                     modelo_selecionado = self.loaded_model_dnn
                 else:
-                    raise ValueError(f"Complemento do nome inválido: {modelo}")
+                    raise ValueError(f"Complemento do nome inválido: {variavel}")
 
                 # Acessar o minmax usando o objeto selecionado
                 normalizado = minmax_selecionado.transform(selected_feature)
 
+                # Acessar o modelo usando o objeto selecionado
                 # predict = modelo_selecionado.predict(xgb.DMatrix(normalizado))
                 # prev = (predict > 0.5).astype('int32')
 
-                predict = modelo_selecionado.predict(normalizado)
+                predict = modelo_selecionado.predict(normalizado, verbose = 0)
                 prev = (predict > 0.5).astype('int32')
                 
                 chaves = {
-                        (0): 'n_atak',
-                        (1): 'atak',
-                    }
+                            (0): 'n_atak',
+                            (1): 'atak',
+                        }
                 
                 chave = chaves.get(( int(prev[0])), 'atak')            
                 self.classificacao.setdefault(chave,[]).append(iid) 
@@ -257,14 +257,8 @@ class Timming(fl.server.strategy.FedAvg):
                 else:
                     self.resultados.append('Erros')
                     atual.append('Erros')
-                
-                dados_linha = [iid, situacao, prev[0]]
-
-                arquivo_verifica_acertos = f"TESTES/{fit_res.metrics['iid_niid']}/LOG_ACERTOS/{fit_res.metrics['ataque']}_{fit_res.metrics['conjunto_de_dados']}_{fit_res.metrics['modelo']}_{fit_res.metrics['porcentagem_ataque']}_{fit_res.metrics['alpha_dirichlet']}_{fit_res.metrics['ruido_gaussiano']}_{fit_res.metrics['round_inicio']}.csv"
-                os.makedirs(os.path.dirname(arquivo_verifica_acertos), exist_ok=True)
-                with open(arquivo_verifica_acertos, 'a', newline='') as arquivo_csv:
-                    escritor_csv = csv.writer(arquivo_csv)
-                    escritor_csv.writerow(dados_linha)
+            
+                self.verifica_acertos.append((server_round,iid,situacao,prev[0]))
 
         cont_atual = Counter(atual)
         tot = sum(cont_atual.values())
@@ -281,9 +275,7 @@ class Timming(fl.server.strategy.FedAvg):
         print(f'\n\nround >>>>> {server_round}')
         print(f'Percentual de acertos atual: {percents_atual:.2f}%')
         print(f'Percentual de acertos geral: {self.percents:.2f}%  {contagem}')        
-        print(f'{self.classificacao}\n\n')
-        
-        
+        print(f'{self.classificacao}\n\n')   
         
         if not results:
             return None, {}
@@ -298,16 +290,17 @@ class Timming(fl.server.strategy.FedAvg):
             if 'atak' in self.classificacao.keys() and server_round:
                 if client.cid in self.classificacao['atak']: 
                     malicious.append((parameters_to_ndarrays(fit_res.parameters), fit_res.num_examples)) 
+                    
                 else:       
                     weights_results.append((parameters_to_ndarrays(fit_res.parameters), fit_res.num_examples))                                  
             else:
                 weights_results.append((parameters_to_ndarrays(fit_res.parameters), fit_res.num_examples))
 
         if weights_results == []:
-            parameters_aggregated = ndarrays_to_parameters(self.modelo_anterior) 
+            parameters_aggregated = ndarrays_to_parameters(self.last_model) 
         else:
             parameters_aggregated = ndarrays_to_parameters(aggregate(weights_results))
-            self.modelo_anterior = parameters_to_ndarrays(parameters_aggregated) 
+            self.last_model = parameters_to_ndarrays(parameters_aggregated) 
         
         
         # Aggregate custom metrics if aggregation fn was provided
@@ -318,8 +311,8 @@ class Timming(fl.server.strategy.FedAvg):
         elif server_round == 1:  # Only log this warning once
             log(WARNING, "No fit_metrics_aggregation_fn provided")
         
-        return parameters_aggregated, metrics_aggregated
-    
+        return parameters_aggregated, metrics_aggregated 
+
     def aggregate_evaluate(
         self,
         server_round: int,
@@ -348,14 +341,21 @@ class Timming(fl.server.strategy.FedAvg):
             metrics_aggregated = self.evaluate_metrics_aggregation_fn(eval_metrics)
         elif server_round == 1:  # Only log this warning once
             log(WARNING, "No evaluate_metrics_aggregation_fn provided")
-
-        for client, eval_res in results:
+         
+        
+        for client,eval_res in results: 
+            alpha_dirichlet_str = str(eval_res.metrics['alpha_dirichlet'])           
             nome_arquivo = f"TESTES/{eval_res.metrics['iid_niid']}/LOG_EVALUATE/{eval_res.metrics['ataque']}_{eval_res.metrics['dataset']}_{eval_res.metrics['modelo']}_{eval_res.metrics['porcentagem_ataque']}_{eval_res.metrics['alpha_dirichlet']}_{eval_res.metrics['noise_gaussiano']}_{eval_res.metrics['round_inicio']}.csv"
-            os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)
-            with open(nome_arquivo, 'a') as file:
+            os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)   
+            with open(nome_arquivo,'a') as file:          
                 file.write(f"\n{server_round},{client.cid},{eval_res.metrics['accuracy']},{eval_res.loss}")
+        
+        arquivo_verifica_acertos = f"TESTES/{eval_res.metrics['iid_niid']}/LOG_ACERTOS/{eval_res.metrics['ataque']}_{eval_res.metrics['dataset']}_{eval_res.metrics['modelo']}_{eval_res.metrics['porcentagem_ataque']}_{eval_res.metrics['alpha_dirichlet']}_{eval_res.metrics['noise_gaussiano']}_{eval_res.metrics['round_inicio']}.csv"        
+        os.makedirs(os.path.dirname(arquivo_verifica_acertos), exist_ok=True)
+        with open(arquivo_verifica_acertos, 'a', newline='') as arquivo_csv:
+            escritor_csv = csv.writer(arquivo_csv)
+            for linha in self.verifica_acertos:
+                escritor_csv.writerow(linha)
 
-            
-        return loss_aggregated, metrics_aggregated
-       
+        return loss_aggregated, metrics_aggregated            
     
