@@ -200,7 +200,7 @@ class Timming(fl.server.strategy.FedAvg):
                 result   = parameters_to_ndarrays(fit_res.parameters)
                 situacao = fit_res.metrics['situacao']
                 modelo = fit_res.metrics['modelo']
-                camadas = fit_res.metrics['camada']
+                camadas = fit_res.metrics['camada_alvo']
                 iid      = client.cid
                 data     = []               
                 normas   = []                                
