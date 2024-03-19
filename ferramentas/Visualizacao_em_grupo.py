@@ -82,8 +82,9 @@ for arquivos in lista:
                 title='# Round',
                 title_fontsize=tamanho_fonte
             )
-
-            plt.savefig(f'TESTES/{caminho[1]}/GRAFICOS/{nome_arquivo}_accuracy.png', dpi=100)
+            arquivo_accuracy = f'TESTES/{caminho[1]}/GRAFICOS/{nome_arquivo}_accuracy.png'
+            os.makedirs(os.path.dirname(arquivo_accuracy), exist_ok=True)
+            plt.savefig(arquivo_accuracy, dpi=100)
             plt.close()
 
             plt.figure(figsize=(9, 5))
@@ -109,8 +110,9 @@ for arquivos in lista:
                 title='# Round',
                 title_fontsize=tamanho_fonte
             )
-
-            plt.savefig(f'TESTES/{caminho[1]}/GRAFICOS/{nome_arquivo}_loss.png', dpi=100)
+            arquivo_loss = f'TESTES/{caminho[1]}/GRAFICOS/{nome_arquivo}_loss.png'
+            os.makedirs(os.path.dirname(arquivo_loss), exist_ok=True)
+            plt.savefig(arquivo_loss, dpi=100)
             plt.close()
         except Exception as e:
             print(f"Ocorreu um erro ao processar o arquivo {arquivo}: {str(e)}")

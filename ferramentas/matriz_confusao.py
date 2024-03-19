@@ -1,3 +1,4 @@
+import os
 import glob
 import numpy as np
 import pandas as pd
@@ -77,7 +78,9 @@ for arquivo in lista:
         plt.ylabel('Classe Real')
         plt.xlabel('Classe Prevista')
         plt.tight_layout()
-        plt.savefig(f'TESTES/{caminho[1]}/LOG_ACERTOS/GRAFICOS/{base[0]}_{base[1]}_{base[2]}_{base[3]}_{base[4]}_{base[5]}_{base[6]}_{base[7]}_MATRIZ_CONFUSAO.png', dpi=300)
+        arquivo_ = f'TESTES/{caminho[1]}/LOG_ACERTOS/GRAFICOS/{base[0]}_{base[1]}_{base[2]}_{base[3]}_{base[4]}_{base[5]}_{base[6]}_{base[7]}_MATRIZ_CONFUSAO.png'
+        os.makedirs(os.path.dirname(arquivo_), exist_ok=True)
+        plt.savefig(arquivo_, dpi=300)
         plt.close()
     except Exception as e:
         print(f"Ocorreu um erro ao processar: {str(e)}")
