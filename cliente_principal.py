@@ -136,7 +136,7 @@ class ClienteFlower(fl.client.NumPyClient):
             
             a[camada] = min_value + (max_value- min_value) * np.random.rand(*shape_list)    
                             
-            return a, len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'camada':camada_alvo,'porcentagem_ataque': int(self.atacantes),'modelo':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 
+            return a, len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'camada_alvo':camada_alvo,'porcentagem_ataque': int(self.atacantes),'modelo':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 
                                             'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet,'ruido_gaussiano':self.noise_gaussiano, 'round_inicio':self.round_inicio, 'conjunto_de_dados':self.dataset}
 
             
@@ -157,7 +157,7 @@ class ClienteFlower(fl.client.NumPyClient):
             
             a[camada] = min_value + (max_value- min_value) * np.random.rand(*shape_list)
             
-            return a, len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'camada':camada_alvo,'porcentagem_ataque': int(self.atacantes),'modelo':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 
+            return a, len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'camada_alvo':camada_alvo,'porcentagem_ataque': int(self.atacantes),'modelo':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 
                                             'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet,'ruido_gaussiano':self.noise_gaussiano, 'round_inicio':self.round_inicio, 'conjunto_de_dados':self.dataset}
                
         
@@ -182,7 +182,7 @@ class ClienteFlower(fl.client.NumPyClient):
                 
                 a[camada] = min_value + (max_value- min_value) * np.random.rand(*shape_list)
             
-            return a, len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'camada':camada_alvo,'porcentagem_ataque': int(self.atacantes),'modelo':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 
+            return a, len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'camada_alvo':camada_alvo,'porcentagem_ataque': int(self.atacantes),'modelo':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 
                                             'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet,'ruido_gaussiano':self.noise_gaussiano, 'round_inicio':self.round_inicio, 'conjunto_de_dados':self.dataset}
 
 
@@ -196,7 +196,7 @@ class ClienteFlower(fl.client.NumPyClient):
             accuracy = history.history["accuracy"][0]  
             loss = history.history["loss"][0] 
             
-            return self.modelo.get_weights(), len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'camada':camada_alvo,'porcentagem_ataque': int(self.atacantes),'modelo':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 
+            return self.modelo.get_weights(), len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'camada_alvo':camada_alvo,'porcentagem_ataque': int(self.atacantes),'modelo':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 
                                             'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet,'ruido_gaussiano':self.noise_gaussiano, 'round_inicio':self.round_inicio, 'conjunto_de_dados':self.dataset}
 
         
@@ -207,7 +207,7 @@ class ClienteFlower(fl.client.NumPyClient):
             accuracy = 99.999
             loss = 0.001 
             
-            return pesos_invertidos, len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'camada':camada_alvo,'porcentagem_ataque': int(self.atacantes),'modelo':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 
+            return pesos_invertidos, len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'camada_alvo':camada_alvo,'porcentagem_ataque': int(self.atacantes),'modelo':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 
                                             'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet,'ruido_gaussiano':self.noise_gaussiano, 'round_inicio':self.round_inicio, 'conjunto_de_dados':self.dataset}
 
 
@@ -226,7 +226,7 @@ class ClienteFlower(fl.client.NumPyClient):
             
             accuracy = 99.999
             loss = 0.001 
-            return self.modelo.get_weights(), len(self.x_treino), {"accuracy": accuracy, "loss": loss,"situacao":situacao,'modelo':self.modelo_definido,'camada':camada_alvo, 'iid_niid': self.iid_niid,"ataque":self.modo_ataque,'conjunto_de_dados':self.dataset}
+            return self.modelo.get_weights(), len(self.x_treino), {"accuracy": accuracy, "loss": loss,"situacao":situacao,'modelo':self.modelo_definido,'camada_alvo':camada_alvo, 'iid_niid': self.iid_niid,"ataque":self.modo_ataque,'conjunto_de_dados':self.dataset}
 
         elif modo== 'ZEROS' and server_round >= self.round_inicio and self.cid <= self.per_cents_atacantes:
             situacao = 1       		           
@@ -241,7 +241,7 @@ class ClienteFlower(fl.client.NumPyClient):
             accuracy = history.history["accuracy"][0]  
             loss = history.history["loss"][0]                           
       
-            return a, len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'camada':camada_alvo,'porcentagem_ataque': int(self.atacantes),'modelo':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 
+            return a, len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'camada_alvo':camada_alvo,'porcentagem_ataque': int(self.atacantes),'modelo':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 
                                             'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet,'ruido_gaussiano':self.noise_gaussiano, 'round_inicio':self.round_inicio, 'conjunto_de_dados':self.dataset}
 
         
@@ -261,7 +261,7 @@ class ClienteFlower(fl.client.NumPyClient):
             # loc = float(self.cid) * np.random.uniform(1.5,2)
             a[camada_alvo] += np.random.normal(0, noise, shape_list)
 
-            return a, len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'camada':camada_alvo,'porcentagem_ataque': int(self.atacantes),'modelo':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 
+            return a, len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'camada_alvo':camada_alvo,'porcentagem_ataque': int(self.atacantes),'modelo':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 
                                             'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet,'ruido_gaussiano':self.noise_gaussiano, 'round_inicio':self.round_inicio, 'conjunto_de_dados':self.dataset}
 
             
@@ -272,7 +272,7 @@ class ClienteFlower(fl.client.NumPyClient):
             accuracy = history.history["accuracy"][0]  
             loss = history.history["loss"][0]              
             
-            return self.modelo.get_weights(),len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'camada':camada_alvo,'porcentagem_ataque': int(self.atacantes),'modelo':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 
+            return self.modelo.get_weights(),len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'camada_alvo':camada_alvo,'porcentagem_ataque': int(self.atacantes),'modelo':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 
                                             'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet,'ruido_gaussiano':self.noise_gaussiano, 'round_inicio':self.round_inicio, 'conjunto_de_dados':self.dataset}
 
     def evaluate(self, parameters, config):

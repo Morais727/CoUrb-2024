@@ -172,19 +172,19 @@ class Timming(fl.server.strategy.FedAvg):
         failures: List[Union[Tuple[ClientProxy, FitRes], BaseException]],
     ) -> Tuple[Optional[Parameters], Dict[str, Scalar]]:
         """Aggregate fit results using weighted average."""
-
-        ####################################################                
+                  
         if server_round > 1:
             for _, fit_res in results:
                 result   = parameters_to_ndarrays(fit_res.parameters)
                 situacao = fit_res.metrics["situacao"]
-                camadas = fit_res.metrics['camada']
+                camada_alvo = fit_res.metrics['camada_alvo']
+                camada = int(camada_alvo) + 1
                 modelo = fit_res.metrics['modelo']
 
                 nome_arquivo = f"DADOS_BRUTOS/{modelo}/data.csv"
                 os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)
                 with open(nome_arquivo,'a') as file:                                           
-                    for i in range(camadas+1):       
+                    for i in range(camada):       
                         camda_antiga = self.modelo_anterior[i]
 
                         norma_l= result[i]
@@ -199,11 +199,10 @@ class Timming(fl.server.strategy.FedAvg):
                         delta_l1 = norm1 - np.linalg.norm(camda_antiga, ord=1)
                         delta_l2 = norm2 - np.linalg.norm(camda_antiga, ord=2)
                         delta_l3 = norm3 - np.power(np.sum(np.abs(camda_antiga) ** 3), 1/3)
-
                                                
                         file.write(f"{norm1},{delta_l1},{norm2},{delta_l2},{norm3},{delta_l3},")                                        
                     file.write(f"{situacao}\n")                       
-        ####################################################  
+        
         #  
         if not results:
             return None, {}
