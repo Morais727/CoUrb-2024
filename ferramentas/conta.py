@@ -11,7 +11,7 @@ for pasta in pastas:
     lista_de_dfs = []
     try:
         arquivos = glob.glob(f'DADOS_BRUTOS/{pasta}/*.csv', recursive=True)
-        print(f"Arquivos encontrados na pasta {pasta}: {arquivos}")  # Adicionando um print para verificar os arquivos encontrados
+        print(f"Arquivos encontrados na pasta {pasta}: {arquivos}")  
 
         for arquivo in arquivos:
             try:
@@ -25,7 +25,7 @@ for pasta in pastas:
 
             except Exception as e:
                 erros.append(f'ERRO {arquivo}: {str(e)}')
-        print(erros)  # Adicionando um print para verificar os erros encontrados durante a leitura dos arquivos
+        print(erros)  
 
         if lista_de_dfs:
             df_mestre = pd.concat(lista_de_dfs, ignore_index=True)                        
@@ -35,17 +35,20 @@ for pasta in pastas:
             n_atak = df_mestre[df_mestre[indice] == 1]
             menor = min(len(atak), len(n_atak))
             
-
             if menor > 0:
                 atak_undersampled = resample(atak, n_samples=menor)
                 n_atak_undersampled = resample(n_atak, n_samples=menor)
 
                 conjunto_balanceado = pd.concat([atak_undersampled, n_atak_undersampled], ignore_index=True)
-
                 conjunto_balanceado = conjunto_balanceado.sample(frac=1)
+                
+                # Convertendo a última coluna para inteiros
+                conjunto_balanceado.iloc[:, -1] = conjunto_balanceado.iloc[:, -1].astype(int)
 
+                # Salvando o arquivo CSV
                 conjunto_balanceado.to_csv(f'DADOS_BRUTOS/Balanceado_{pasta}.csv', header=None, index=False)
-                print(f"Dados balanceados salvos com sucesso para a pasta {pasta}!")  # Adicionando um print para verificar se os dados balanceados foram salvos
+
+                print(f"Dados balanceados salvos com sucesso para a pasta {pasta}!")
 
             print(cont)
         else:
