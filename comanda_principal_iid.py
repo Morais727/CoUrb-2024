@@ -29,12 +29,12 @@ def executar_arquivo(arquivo):
         num_round = [20]
         total_clients = [20]
         modelos = ['CNN','DNN']
-        niid_iid = ['IID']        
+        niid_iid = ['IID','NIID']        
         ataques = ['ALTERNA_INICIO', 'ATACANTES', 'EMBARALHA', 'INVERTE_TREINANDO', 'INVERTE_SEM_TREINAR', 'INVERTE_CONVEGENCIA', 'ZEROS', 'RUIDO_GAUSSIANO', 'NORMAL']
         data_set = ['MNIST', 'CIFAR10']                        
-        alpha_dirichlet = [0.0]
+        alpha_dirichlet = [0.0,0.1]
         noise_gaussiano = [0.1,0.0]
-        round_inicio = [4,8]
+        round_inicio = [4]
         per_cents_atacantes = [40]
         
 
