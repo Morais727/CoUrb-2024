@@ -262,7 +262,7 @@ class Timming(fl.server.strategy.FedAvg):
                     with open(nome_arquivo,'a') as file:                                                                               
                         for i in range(camadas+1):
                             result[i] = result[i].flatten()
-                            file.write(result[i])
+                            np.savetxt(file, [result[i]], delimiter=',')
 
                     self.resultados.append('Erros')
                     atual.append('Erros')
@@ -274,7 +274,7 @@ class Timming(fl.server.strategy.FedAvg):
                     with open(nome_arquivo,'a') as file:                                                                               
                         for i in range(camadas+1):
                             result[i] = result[i].flatten()
-                            file.write(result[i])
+                            np.savetxt(file, [result[i]], delimiter=',')
                     
                 self.verifica_acertos.append((server_round,iid,situacao,prev[0]))
 
