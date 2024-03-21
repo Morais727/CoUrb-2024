@@ -257,24 +257,21 @@ class Timming(fl.server.strategy.FedAvg):
                     atual.append('Acertos')
                 else:
                     self.conta +=1
-                    nome_arquivo = f"TESTES/{fit_res.metrics['iid_niid']}/GRADIENTES/gradiente_{iid}.csv"
+                    nome_arquivo = f"TESTES/{fit_res.metrics['iid_niid']}/GRADIENTES/{modelo}/gradiente_{iid}.npy"
                     os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True) 
-                    with open(nome_arquivo,'a') as file:                                                                               
-                        for i in range(camadas+1):
-                            result[i] = result[i].flatten()
-                            np.savetxt(file, [result[i]], delimiter=',')
+                                                                                                
+                    for i in range(camadas+1):
+                        np.save('nome_arquivo', result[i])
 
                     self.resultados.append('Erros')
                     atual.append('Erros')
                     
                 if iid == 20 and server_round == 20:
                     self.conta +=1
-                    nome_arquivo = f"TESTES/{fit_res.metrics['iid_niid']}/GRADIENTES/gradiente_{iid}.csv"
+                    nome_arquivo = f"TESTES/{fit_res.metrics['iid_niid']}/GRADIENTES/{modelo}/gradiente_{iid}.npy"
                     os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True) 
-                    with open(nome_arquivo,'a') as file:                                                                               
-                        for i in range(camadas+1):
-                            result[i] = result[i].flatten()
-                            np.savetxt(file, [result[i]], delimiter=',')
+                    for i in range(camadas+1):
+                        np.save('nome_arquivo', result[i])
                     
                 self.verifica_acertos.append((server_round,iid,situacao,prev[0]))
 

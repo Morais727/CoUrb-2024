@@ -1,21 +1,23 @@
 import pandas as pd
-import tensorflow as tf
+import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
 # Carregar os gradientes de cada conjunto
 conjunto_gradientes = []
-for i in range(1, 11):  # Supondo que os gradientes são salvos em arquivos gradiente_1.csv, gradiente_2.csv, ..., gradiente_10.csv
+for i in range(1, 11):
     filename = f"TESTES/IID/GRADIENTES/gradiente_{i}.csv"
-    gradientes_df = pd.read_csv(filename)
-    gradientes_tensor = tf.convert_to_tensor(gradientes_df["gradiente"].values, dtype=tf.float32)
-    conjunto_gradientes.append(gradientes_tensor)
+    gradientes_df = pd.read_csv(filename, header=None)  # Supondo que não haja cabeçalho no arquivo CSV
+    conjunto_gradientes.append(gradientes_df)
 
 # Calcular a similaridade entre os gradientes de cada conjunto
-for i, gradientes_tensor in enumerate(conjunto_gradientes):
+for i, gradientes_df in enumerate(conjunto_gradientes):
     similaridades = []
-    for j in range(len(gradientes_tensor)):
-        for k in range(j + 1, len(gradientes_tensor)):
-            similarity = cosine_similarity(tf.reshape(gradientes_tensor[j], (1, -1)), tf.reshape(gradientes_tensor[k], (1, -1)))
+    for j in range(len(gradientes_df)):
+        for k in range(j + 1, len(gradientes_df)):
+            # Calcular a similaridade de cosseno entre os gradientes j e k
+            gradiente_j = np.array(gradientes_df.iloc[j])
+            gradiente_k = np.array(gradientes_df.iloc[k])
+            similarity = cosine_similarity(gradiente_j.reshape(1, -1), gradiente_k.reshape(1, -1))
             similaridades.append(similarity[0][0])
 
     # Calcular a média da similaridade entre os gradientes do conjunto atual
