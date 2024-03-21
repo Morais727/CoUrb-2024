@@ -6,7 +6,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 conjunto_gradientes = []
 for i in range(1, 11):
     filename = f"TESTES/IID/GRADIENTES/gradiente_{i}.csv"
-    gradientes_df = pd.read_csv(filename, header=None)  # Supondo que não haja cabeçalho no arquivo CSV
+    gradientes_df = np.load(filename)  # Supondo que não haja cabeçalho no arquivo CSV
     conjunto_gradientes.append(gradientes_df)
 
 # Calcular a similaridade entre os gradientes de cada conjunto
