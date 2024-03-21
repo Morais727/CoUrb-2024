@@ -69,11 +69,11 @@ class Timming(fl.server.strategy.FedAvg):
         self.classificacao = {} 
         self.conta = 0          
         
-        minmax_mnist_dnn_path = 'MODELOS/MINMAX_XGB_data dnn.pkl'
-        modelo_mnist_dnn_path = 'MODELOS/CLASSIFICADOR_XGB_data dnn.model'
+        minmax_mnist_dnn_path = 'MODELOS/MINMAX_XGB_DNN.pkl'
+        modelo_mnist_dnn_path = 'MODELOS/CLASSIFICADOR_XGB_DNN.model'
 
-        minmax_cifar10_cnn_path = 'MODELOS/MINMAX_XGB_data cnn.pkl'
-        modelo_cifar10_cnn_path = 'MODELOS/CLASSIFICADOR_XGB_data cnn.model'
+        minmax_cifar10_cnn_path = 'MODELOS/MINMAX_XGB_CNN.pkl'
+        modelo_cifar10_cnn_path = 'MODELOS/CLASSIFICADOR_XGB_CNN.model'
 
         # Verifica se os arquivos existem antes de tentar carregá-los
         if os.path.exists(minmax_mnist_dnn_path) and os.path.exists(modelo_mnist_dnn_path):
