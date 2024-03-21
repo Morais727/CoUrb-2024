@@ -258,26 +258,21 @@ class Timming(fl.server.strategy.FedAvg):
                 else:
                     self.conta +=1
                     nome_arquivo = f"TESTES/{fit_res.metrics['iid_niid']}/GRADIENTES/gradiente_{self.conta}.csv"
-                    os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)   
-                    result_array = np.array([np.array(item) for item in result])
-
-                    result_str = np.array2string(result_array, separator=',')
-
-                    with open(nome_arquivo, 'a') as file:
-                        file.write(result_str)
+                    os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True) 
+                    with open(nome_arquivo,'a') as file:                                                                               
+                        for i in range(camadas+1):
+                            file.write(result[i])
 
                     self.resultados.append('Erros')
                     atual.append('Erros')
+                    
                 if iid == 20:
                     self.conta +=1
                     nome_arquivo = f"TESTES/{fit_res.metrics['iid_niid']}/GRADIENTES/gradiente_{self.conta}.csv"
-                    os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)   
-                    result_array = np.array([np.array(item) for item in result])
-
-                    result_str = np.array2string(result_array, separator=',')
-
-                    with open(nome_arquivo, 'a') as file:
-                        file.write(result_str)
+                    os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True) 
+                    with open(nome_arquivo,'a') as file:                                                                               
+                        for i in range(camadas+1):
+                            file.write(result[i])
                     
                 self.verifica_acertos.append((server_round,iid,situacao,prev[0]))
 
