@@ -259,7 +259,10 @@ class Timming(fl.server.strategy.FedAvg):
                     self.conta +=1
                     nome_arquivo = f"TESTES/{fit_res.metrics['iid_niid']}/GRADIENTES/gradiente_{self.conta}.csv"
                     os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)   
-                    result_str = np.array2string(result, separator=',')
+                                        
+                    result_array = np.array(result)
+                    result_str = np.array2string(result_array, separator=',')
+
                     with open(nome_arquivo, 'a') as file:
                         file.write(result_str)
 
@@ -269,7 +272,9 @@ class Timming(fl.server.strategy.FedAvg):
                     self.conta +=1
                     nome_arquivo = f"TESTES/{fit_res.metrics['iid_niid']}/GRADIENTES/gradiente_{self.conta}.csv"
                     os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)   
-                    result_str = np.array2string(result, separator=',')
+                    result_array = np.array(result)
+                    result_str = np.array2string(result_array, separator=',')
+
                     with open(nome_arquivo, 'a') as file:
                         file.write(result_str)
                     
