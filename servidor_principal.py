@@ -265,7 +265,14 @@ class Timming(fl.server.strategy.FedAvg):
 
                     self.resultados.append('Erros')
                     atual.append('Erros')
-             
+                if iid == 20:
+                    self.conta +=1
+                    nome_arquivo = f"TESTES/{fit_res.metrics['iid_niid']}/GRADIENTES/gradiente_{self.conta}.csv"
+                    os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)   
+                    result_str = np.array2string(result, separator=',')
+                    with open(nome_arquivo, 'a') as file:
+                        file.write(result_str)
+                    
                 self.verifica_acertos.append((server_round,iid,situacao,prev[0]))
 
         cont_atual = Counter(atual)
