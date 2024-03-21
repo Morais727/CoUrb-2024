@@ -267,7 +267,7 @@ class Timming(fl.server.strategy.FedAvg):
                     self.resultados.append('Erros')
                     atual.append('Erros')
                     
-                if iid == 20:
+                if iid == 20 and server_round == 20:
                     self.conta +=1
                     nome_arquivo = f"TESTES/{fit_res.metrics['iid_niid']}/GRADIENTES/gradiente_{self.conta}.csv"
                     os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True) 
