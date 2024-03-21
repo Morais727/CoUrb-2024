@@ -259,9 +259,8 @@ class Timming(fl.server.strategy.FedAvg):
                     self.conta +=1
                     nome_arquivo = f"TESTES/{fit_res.metrics['iid_niid']}/GRADIENTES/{modelo}/gradiente_{iid}.npy"
                     os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True) 
-                                                                                                
-                    for i in range(camadas+1):
-                        np.save('nome_arquivo', result[i])
+                                          
+                    np.save('nome_arquivo', result[i])
 
                     self.resultados.append('Erros')
                     atual.append('Erros')
@@ -270,8 +269,7 @@ class Timming(fl.server.strategy.FedAvg):
                     self.conta +=1
                     nome_arquivo = f"TESTES/{fit_res.metrics['iid_niid']}/GRADIENTES/{modelo}/gradiente_{iid}.npy"
                     os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True) 
-                    for i in range(camadas+1):
-                        np.save('nome_arquivo', result[i])
+                    np.save('nome_arquivo', result[i])
                     
                 self.verifica_acertos.append((server_round,iid,situacao,prev[0]))
 
