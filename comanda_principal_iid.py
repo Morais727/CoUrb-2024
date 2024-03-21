@@ -17,6 +17,9 @@ padroes = ['TESTES/IID/LABELS/*.csv',
            'TESTES/NIID/LOG_ACERTOS/*.csv',
            'TESTES/NIID/LOG_ACERTOS/GRAFICOS/*.png',
            'TESTES/NIID/GRAFICOS/*.png',
+
+           'TESTES/IID/GRADIENTES/*.csv',
+           'TESTES/NIID/GRADIENTES/*.csv',
           ]
 
 for i in padroes:

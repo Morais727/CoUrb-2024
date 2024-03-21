@@ -257,7 +257,7 @@ class Timming(fl.server.strategy.FedAvg):
                     atual.append('Acertos')
                 else:
                     self.conta +=1
-                    nome_arquivo = f"TESTES/{fit_res.metrics['iid_niid']}/GRADIENTES/gradiente_{self.conta}.csv"
+                    nome_arquivo = f"TESTES/{fit_res.metrics['iid_niid']}/GRADIENTES/gradiente_{iid}.csv"
                     os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True) 
                     with open(nome_arquivo,'a') as file:                                                                               
                         for i in range(camadas+1):
@@ -269,7 +269,7 @@ class Timming(fl.server.strategy.FedAvg):
                     
                 if iid == 20 and server_round == 20:
                     self.conta +=1
-                    nome_arquivo = f"TESTES/{fit_res.metrics['iid_niid']}/GRADIENTES/gradiente_{self.conta}.csv"
+                    nome_arquivo = f"TESTES/{fit_res.metrics['iid_niid']}/GRADIENTES/gradiente_{iid}.csv"
                     os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True) 
                     with open(nome_arquivo,'a') as file:                                                                               
                         for i in range(camadas+1):
