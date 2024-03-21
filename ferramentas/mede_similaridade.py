@@ -32,3 +32,4 @@ for i, gradientes_array in enumerate(conjunto_gradientes):
     # Calcular a média da similaridade entre os gradientes do conjunto atual
     media_similaridades = sum(similaridades) / len(similaridades)
     print(f"Média da similaridade para o conjunto {i+1}: {media_similaridades}")
+
