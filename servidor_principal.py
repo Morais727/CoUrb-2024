@@ -261,6 +261,7 @@ class Timming(fl.server.strategy.FedAvg):
                     os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True) 
                     with open(nome_arquivo,'a') as file:                                                                               
                         for i in range(camadas+1):
+                            result[i] = result[i].flatten()
                             file.write(result[i])
 
                     self.resultados.append('Erros')
@@ -272,6 +273,7 @@ class Timming(fl.server.strategy.FedAvg):
                     os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True) 
                     with open(nome_arquivo,'a') as file:                                                                               
                         for i in range(camadas+1):
+                            result[i] = result[i].flatten()
                             file.write(result[i])
                     
                 self.verifica_acertos.append((server_round,iid,situacao,prev[0]))
