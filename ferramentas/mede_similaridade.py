@@ -3,7 +3,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 # Carregar os gradientes de cada conjunto
 conjunto_gradientes = []
-for i in range(1, 11):
+for i in range(1, 6):
     filename = f"TESTES/IID/GRADIENTES/DNN/gradiente_{i}.npy"
     gradientes_array = np.load(filename, allow_pickle=True)  # Permitir pickle ao carregar o arquivo numpy
     conjunto_gradientes.append(gradientes_array)
