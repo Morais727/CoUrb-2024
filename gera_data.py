@@ -32,13 +32,13 @@ def executar_arquivo(arquivo):
         num_round = [20]
         total_clients = [20]
         modelos = ['CNN','DNN']
-        niid_iid = ['IID','NIID']        
+        niid_iid = ['IID']        
         ataques = ['ALTERNA_INICIO', 'ATACANTES', 'EMBARALHA', 'INVERTE_TREINANDO', 'INVERTE_SEM_TREINAR', 'INVERTE_CONVEGENCIA', 'ZEROS', 'RUIDO_GAUSSIANO', 'NORMAL']
         data_set = ['MNIST', 'CIFAR10']                        
         alpha_dirichlet = [0.0,0.1]
         noise_gaussiano = [0.1,0.0]
-        round_inicio = [4]
-        per_cents_atacantes = [40]
+        round_inicio = [2,4]
+        per_cents_atacantes = [40,90]
         
 
         combinacoes_unicas = set() 
@@ -75,7 +75,7 @@ def executar_arquivo(arquivo):
             else:
                 continue 
 
-            print(f'Executando {arquivo}')                
+            print(f'Executando {arquivo} GERANDO DATA')                
             comando = f'python3 {arquivo} --iid_niid {i} --modo_ataque {j} --dataset {k} --modelo_definido {l} --round_inicio {m} --per_cents_atacantes {n} --noise_gaussiano {o} --alpha_dirichlet {p} --num_rounds {q}  --total_clients {r}'
                     
             print(f'\n\n################################################################################################')
