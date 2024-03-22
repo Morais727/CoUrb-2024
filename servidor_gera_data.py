@@ -175,15 +175,22 @@ class Timming(fl.server.strategy.FedAvg):
                   
         if server_round > 1:
             for _, fit_res in results:
-                result   = parameters_to_ndarrays(fit_res.parameters)
-                situacao = fit_res.metrics["situacao"]
-                camada_alvo = fit_res.metrics['camada_alvo']
-                camada = int(camada_alvo) + 1
-                modelo = fit_res.metrics['modelo']
-
-                nome_arquivo = f"DADOS_BRUTOS/{modelo}/data.csv"
-                os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)
-                with open(nome_arquivo,'a') as file:                                           
+                if fit_res.metrics['camada_alvo'] == 8:
+                    modelo = 'CNN'
+                    break
+                else:
+                    modelo = 'DNN'
+                    break
+            nome_arquivo = f"DADOS_BRUTOS/{modelo}/data.csv"
+            os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)
+            with open(nome_arquivo,'a') as file:  
+                for _, fit_res in results:
+                    result   = parameters_to_ndarrays(fit_res.parameters)
+                    situacao = fit_res.metrics["situacao"]
+                    camada_alvo = fit_res.metrics['camada_alvo']
+                    camada = int(camada_alvo) + 1
+                    modelo = fit_res.metrics['modelo']
+                                                         
                     for i in range(camada):       
                         camda_antiga = self.modelo_anterior[i]
 
