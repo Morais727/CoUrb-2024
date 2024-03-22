@@ -251,7 +251,7 @@ class Timming(fl.server.strategy.FedAvg):
                     atual.append('Acertos')
                 else:
                     self.conta += 1
-                    nome_arquivo = f"TESTES/{fit_res.metrics['iid_niid']}/GRADIENTES/{modelo}/gradiente_{iid}.npy"
+                    nome_arquivo = f"TESTES/{fit_res.metrics['iid_niid']}/GRADIENTES/{modelo}/gradiente_{iid}_{server_round}.npy"
                     os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True) 
                     result_combinado = np.concatenate(result)
                     np.save(nome_arquivo, result_combinado)
