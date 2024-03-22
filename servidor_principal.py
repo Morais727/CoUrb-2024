@@ -197,34 +197,34 @@ class Timming(fl.server.strategy.FedAvg):
         self.verifica_acertos = [] 
         if server_round > 1:
             for client, fit_res in results:
-                result   = parameters_to_ndarrays(fit_res.parameters)
+                result = parameters_to_ndarrays(fit_res.parameters)
                 situacao = fit_res.metrics['situacao']
                 modelo = fit_res.metrics['modelo']
                 camadas = fit_res.metrics['camada_alvo']
-                iid      = client.cid
-                data     = []               
-                normas   = []                                
-                print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>',np.shape(result))
+                iid = client.cid
+                data = []               
+                normas = []                                
+                    
                 for i in range(camadas+1):
                     ultimo_modelo = self.last_model[i]
-                    
+                        
                     result[i] = result[i].flatten()
                     ultimo_modelo = ultimo_modelo.flatten()
 
-                    norm1 = np.linalg.norm (result[i], ord=1)
-                    norm2 = np.linalg.norm (result[i], ord=2)
+                    norm1 = np.linalg.norm(result[i], ord=1)
+                    norm2 = np.linalg.norm(result[i], ord=2)
                     norm3 = np.power(np.sum(np.abs(result[i]) ** 3), 1/3)
-                    
-                    delta1 = norm1 - (np.linalg.norm (ultimo_modelo, ord=1))
-                    delta2 = norm2 - (np.linalg.norm (ultimo_modelo, ord=2))
-                    delta3 = norm3  - (np.power(np.sum(np.abs(ultimo_modelo) ** 3), 1/3))
-                    
-                    normas.extend([norm1,delta1,norm2,delta2,norm3,delta3])
-                    
+                        
+                    delta1 = norm1 - (np.linalg.norm(ultimo_modelo, ord=1))
+                    delta2 = norm2 - (np.linalg.norm(ultimo_modelo, ord=2))
+                    delta3 = norm3 - (np.power(np.sum(np.abs(ultimo_modelo) ** 3), 1/3))
+                        
+                    normas.extend([norm1, delta1, norm2, delta2, norm3, delta3])
+                        
                 data.append(normas)
-                
+                    
                 selected_feature = np.array(data)
-                
+                    
                 if modelo == "CNN":
                     minmax_selecionado = self.minmax_cnn
                     modelo_selecionado = self.loaded_model_cnn
@@ -240,23 +240,17 @@ class Timming(fl.server.strategy.FedAvg):
                 # Acessar o modelo usando o objeto selecionado
                 predict = modelo_selecionado.predict(xgb.DMatrix(normalizado))
                 prev = (predict > 0.5).astype('int32')
-
-                # predict = modelo_selecionado.predict(normalizado, verbose = 0)
-                # prev = (predict > 0.5).astype('int32')
-                
-                chaves = {
-                            (0): 'n_atak',
-                            (1): 'atak',
-                        }
-                
-                chave = chaves.get(( int(prev[0])), 'atak')            
-                self.classificacao.setdefault(chave,[]).append(iid) 
-          
+                    
+                chaves = {(0): 'n_atak', (1): 'atak'}
+                    
+                chave = chaves.get((int(prev[0])), 'atak')            
+                self.classificacao.setdefault(chave, []).append(iid) 
+            
                 if situacao == prev[0]:
                     self.resultados.append('Acertos')
                     atual.append('Acertos')
                 else:
-                    self.conta +=1
+                    self.conta += 1
                     nome_arquivo = f"TESTES/{fit_res.metrics['iid_niid']}/GRADIENTES/{modelo}/gradiente_{iid}.npy"
                     os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True) 
                     result_combinado = np.concatenate(result)
@@ -264,15 +258,15 @@ class Timming(fl.server.strategy.FedAvg):
 
                     self.resultados.append('Erros')
                     atual.append('Erros')
-                    
+                        
                 if iid == 20 and server_round == 20:
-                    self.conta +=1
+                    self.conta += 1
                     nome_arquivo = f"TESTES/{fit_res.metrics['iid_niid']}/GRADIENTES/{modelo}/gradiente_{iid}.npy"
                     os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True) 
                     result_combinado = np.concatenate(result)
                     np.save(nome_arquivo, result_combinado)
-                    
-                self.verifica_acertos.append((server_round,iid,situacao,prev[0]))
+                        
+                self.verifica_acertos.append((server_round, iid, situacao, prev[0]))
 
         cont_atual = Counter(atual)
         tot = sum(cont_atual.values())
@@ -285,7 +279,7 @@ class Timming(fl.server.strategy.FedAvg):
         else:
             self.percents = 0
             percents_atual = 0
-        
+            
         print(f'\n\nround >>>>> {server_round}')
         print(f'Percentual de acertos atual: {percents_atual:.2f}%')
         print(f'Percentual de acertos geral: {self.percents:.2f}%  {contagem}')        
@@ -304,7 +298,7 @@ class Timming(fl.server.strategy.FedAvg):
             if 'atak' in self.classificacao.keys() and server_round:
                 if client.cid in self.classificacao['atak']: 
                     malicious.append((parameters_to_ndarrays(fit_res.parameters), fit_res.num_examples)) 
-                    
+                        
                 else:       
                     weights_results.append((parameters_to_ndarrays(fit_res.parameters), fit_res.num_examples))                                  
             else:
@@ -315,8 +309,8 @@ class Timming(fl.server.strategy.FedAvg):
         else:
             parameters_aggregated = ndarrays_to_parameters(aggregate(weights_results))
             self.last_model = parameters_to_ndarrays(parameters_aggregated) 
-        
-        
+            
+            
         # Aggregate custom metrics if aggregation fn was provided
         metrics_aggregated = {}
         if self.fit_metrics_aggregation_fn:
@@ -324,8 +318,9 @@ class Timming(fl.server.strategy.FedAvg):
             metrics_aggregated = self.fit_metrics_aggregation_fn(fit_metrics)
         elif server_round == 1:  # Only log this warning once
             log(WARNING, "No fit_metrics_aggregation_fn provided")
-        
-        return parameters_aggregated, metrics_aggregated 
+            
+        return parameters_aggregated, metrics_aggregated
+
 
     def aggregate_evaluate(
         self,

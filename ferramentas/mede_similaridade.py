@@ -8,15 +8,11 @@ for i in range(1, 11):
     gradientes_array = np.load(filename, allow_pickle=True)  # Permitir pickle ao carregar o arquivo numpy
     conjunto_gradientes.append(gradientes_array)
 
-    # Salvar o conjunto de gradientes como arquivo numpy
-    np.save(f"gradientes_conjunto_{i}.npy", gradientes_array)
-
-    # Verificar se o arquivo foi salvo corretamente
-    gradientes_verificados = np.load(f"gradientes_conjunto_{i}.npy", allow_pickle=True)
-    if np.array_equal(gradientes_array, gradientes_verificados):
-        print(f"Arquivo 'gradientes_conjunto_{i}.npy' foi salvo corretamente!")
+    # Verificar se o arquivo foi carregado corretamente
+    if gradientes_array is not None:
+        print(f"Arquivo 'gradiente_{i}.npy' foi carregado corretamente!")
     else:
-        print(f"Erro ao salvar o arquivo 'gradientes_conjunto_{i}.npy'.")
+        print(f"Erro ao carregar o arquivo 'gradiente_{i}.npy'.")
 
 # Calcular a similaridade entre os gradientes de cada conjunto
 for i, gradientes_array in enumerate(conjunto_gradientes):
@@ -32,4 +28,3 @@ for i, gradientes_array in enumerate(conjunto_gradientes):
     # Calcular a média da similaridade entre os gradientes do conjunto atual
     media_similaridades = sum(similaridades) / len(similaridades)
     print(f"Média da similaridade para o conjunto {i+1}: {media_similaridades}")
-
