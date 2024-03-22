@@ -17,6 +17,7 @@ else:
 
 # Carregar os gradientes de cada conjunto
 for gradiente_file in gradientes_files:
+    gradiente_file = gradiente_file.replace('\\', '/')
     gradientes_array = np.load(gradiente_file, allow_pickle=True)
     conjunto_gradientes.append(gradientes_array)
 
@@ -30,10 +31,13 @@ for gradiente_file in gradientes_files:
 for i, gradientes_array in enumerate(conjunto_gradientes):
     similaridades = []
     for gradiente in gradientes_array:
-        # Verificar se o número de características é o mesmo para o gradiente de referência
-        similarity = cosine_similarity(gradiente.reshape(1, -1), gradiente_referencia.reshape(1, -1))
-        similaridades.append(similarity[0][0])
+        # Ajustar a forma do gradiente atual
+        gradiente = gradiente.reshape(-1, 1)
+        gradiente_referencia_reshaped = gradiente_referencia.reshape(-1, 1)
         
+        # Calcular a similaridade do cosseno
+        similarity = cosine_similarity(gradiente, gradiente_referencia_reshaped)
+        similaridades.append(similarity[0][0])
 
     # Calcular a média da similaridade entre os gradientes do conjunto atual e o gradiente de referência
     media_similaridades = sum(similaridades) / len(similaridades)
