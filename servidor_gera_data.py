@@ -187,6 +187,7 @@ class Timming(fl.server.strategy.FedAvg):
                 for _, fit_res in results:
                     result   = parameters_to_ndarrays(fit_res.parameters)
                     situacao = fit_res.metrics["situacao"]
+                    print(situacao,'caso1')  
                     camada_alvo = fit_res.metrics['camada_alvo']
                     camada = int(camada_alvo) + 1
                     modelo = fit_res.metrics['modelo']
@@ -208,7 +209,9 @@ class Timming(fl.server.strategy.FedAvg):
                         delta_l3 = norm3 - np.power(np.sum(np.abs(camda_antiga) ** 3), 1/3)
                                                
                         file.write(f"{norm1},{delta_l1},{norm2},{delta_l2},{norm3},{delta_l3},")                                        
-                    file.write(f"{situacao}\n")                       
+                    file.write(f"{situacao}\n") 
+
+                    print(situacao,'caso 2')                      
         
         #  
         if not results:
