@@ -20,7 +20,7 @@ try:
     combinacoes_unicas = set()        
 
     for i, j, k, l, m, n, o, p in product(niid_iid, ataques, data_set, modelos, per_cents_atacantes, alpha_dirichlet, noise_gaussiano, round_inicio):                    
-        file_list = glob.glob(f'TESTES/{i}/LOG_ACERTOS/{j}_{k}_{l}_{m}_{n}_{o}*.csv') 
+        file_list = glob.glob(f'TESTES/{i}/LOG_ACERTOS/*.csv') 
         combinacao = (i, j, k, l, m, n, o, p)  
            
         if i == 'IID' and n > 0: 
