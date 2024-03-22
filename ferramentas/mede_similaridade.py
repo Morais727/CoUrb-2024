@@ -9,7 +9,7 @@ gradientes_files = glob.glob("TESTES/IID/GRADIENTES/DNN/gradiente_*.npy")
 conjunto_gradientes = []
 
 # Carregar o gradiente de referência
-gradiente_referencia = np.load("TESTES/IID/GRADIENTES/DNN/gradiente_19_1.npy", allow_pickle=True)
+gradiente_referencia = np.load("TESTES/IID/GRADIENTES/DNN/gradiente_19_20.npy", allow_pickle=True)
 if gradiente_referencia is not None:
     print("Gradiente de referência carregado corretamente!")
 else:
