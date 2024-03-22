@@ -3,13 +3,13 @@ from sklearn.metrics.pairwise import cosine_similarity
 import glob
 
 # Encontrar todos os caminhos de arquivos de gradientes disponíveis
-gradientes_files = glob.glob("TESTES/IID/GRADIENTES/DNN/gradiente_*.npy")
+gradientes_files = glob.glob("TESTES/IID/GRADIENTES/CNN/gradiente_*.npy")
 
 # Lista para armazenar os gradientes de referência e os gradientes de cada conjunto
 conjunto_gradientes = []
 
 # Carregar o gradiente de referência
-gradiente_referencia = np.load("TESTES/IID/GRADIENTES/DNN/gradiente_19_20.npy", allow_pickle=True)
+gradiente_referencia = np.load("TESTES/IID/GRADIENTES/CNN/gradiente_19.npy", allow_pickle=True)
 if gradiente_referencia is not None:
     print("Gradiente de referência carregado corretamente!")
 else:
@@ -30,8 +30,10 @@ for gradiente_file in gradientes_files:
 for i, gradientes_array in enumerate(conjunto_gradientes):
     similaridades = []
     for gradiente in gradientes_array:
+        # Verificar se o número de características é o mesmo para o gradiente de referência
         similarity = cosine_similarity(gradiente.reshape(1, -1), gradiente_referencia.reshape(1, -1))
         similaridades.append(similarity[0][0])
+        
 
     # Calcular a média da similaridade entre os gradientes do conjunto atual e o gradiente de referência
     media_similaridades = sum(similaridades) / len(similaridades)
