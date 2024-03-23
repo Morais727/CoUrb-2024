@@ -245,7 +245,7 @@ class ClienteFlower(fl.client.NumPyClient):
                                             'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet,'ruido_gaussiano':self.noise_gaussiano, 'round_inicio':self.round_inicio, 'conjunto_de_dados':self.dataset}
 
         
-        elif modo=='RUIDO_GAUSSIANO':
+        elif modo=='RUIDO_GAUSSIANO' and server_round >= self.round_inicio and self.cid <= self.per_cents_atacantes:
             situacao = 1
             self.modelo.set_weights(parameters)
             history = self.modelo.fit(self.x_treino, self.y_treino, epochs=1, verbose=2)
