@@ -211,22 +211,28 @@ class ClienteFlower(fl.client.NumPyClient):
                                             'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet,'ruido_gaussiano':self.noise_gaussiano, 'round_inicio':self.round_inicio, 'conjunto_de_dados':self.dataset}
 
 
-        elif modo=='INVERTE_CONVEGENCIA' and server_round >= self.round_inicio and self.cid <= self.per_cents_atacantes:
+        elif modo == 'INVERTE_CONVEGENCIA' and server_round >= self.round_inicio and self.cid <= self.per_cents_atacantes:
             situacao = 1
             pesos_locais = self.modelo.get_weights()
             self.modelo.set_weights(parameters)
             pesos_globais = self.modelo.get_weights()
             modelo_corrompido = []
             
-            for i in range(camada_alvo):
-                camada_corrompida = pesos_globais[i] + (pesos_globais[i] - pesos_locais[i])
-                modelo_corrompido.append(camada_corrompida)
+            for pesos_local, pesos_global in zip(pesos_locais, pesos_globais):
+                # Garanta que os pesos locais e globais tenham a mesma forma
+                assert pesos_local.shape == pesos_global.shape
+                
+                # Calcule os pesos corrompidos combinando os pesos locais e globais
+                pesos_corrompidos = pesos_global + (pesos_global - pesos_local)
+                modelo_corrompido.append(pesos_corrompidos)
             
-            self.modelo.set_weights(modelo_corrompido)            
+            # Defina os pesos do modelo para os pesos corrompidos
+            self.modelo.set_weights(modelo_corrompido)  
             
             accuracy = 99.999
             loss = 0.001 
             return self.modelo.get_weights(), len(self.x_treino), {"accuracy": accuracy, "loss": loss,"situacao":situacao,'modelo':self.modelo_definido,'camada_alvo':camada_alvo, 'iid_niid': self.iid_niid,"ataque":self.modo_ataque,'conjunto_de_dados':self.dataset}
+
 
         elif modo== 'ZEROS' and server_round >= self.round_inicio and self.cid <= self.per_cents_atacantes:
             situacao = 1       		           
