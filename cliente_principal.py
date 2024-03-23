@@ -188,13 +188,27 @@ class ClienteFlower(fl.client.NumPyClient):
 
         elif modo=='INVERTE_TREINANDO' and server_round >= self.round_inicio and self.cid <= self.per_cents_atacantes: 
             situacao = 1
-
-            a = parameters                
-            pesos_invertidos = [np.flipud(peso) for peso in a]                
-            self.modelo.set_weights(pesos_invertidos)
+            pesos_locais = self.modelo.get_weights()
+            self.modelo.set_weights(parameters)
+            pesos_globais = self.modelo.get_weights()
+            modelo_corrompido = []
+            
+            for pesos_local, pesos_global in zip(pesos_locais, pesos_globais):
+                # Garanta que os pesos locais e globais tenham a mesma forma
+                assert pesos_local.shape == pesos_global.shape
+                
+                # Calcule os pesos corrompidos combinando os pesos locais e globais
+                pesos_invertidos = [np.flipud(peso) for peso in a]
+                modelo_corrompido.append(pesos_invertidos)
+            
+            # Defina os pesos do modelo para os pesos corrompidos
+            self.modelo.set_weights(modelo_corrompido)  
+            
+            accuracy = 99.999
+            loss = 0.001 
+            
             history = self.modelo.fit(self.x_treino, self.y_treino, epochs=1, verbose=0)
-            accuracy = history.history["accuracy"][0]  
-            loss = history.history["loss"][0] 
+            
             
             return self.modelo.get_weights(), len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'camada_alvo':camada_alvo,'porcentagem_ataque': int(self.atacantes),'modelo':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 
                                             'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet,'ruido_gaussiano':self.noise_gaussiano, 'round_inicio':self.round_inicio, 'conjunto_de_dados':self.dataset}
@@ -202,8 +216,20 @@ class ClienteFlower(fl.client.NumPyClient):
         
         elif modo=='INVERTE_SEM_TREINAR' and server_round >= self.round_inicio and self.cid <= self.per_cents_atacantes:       
             situacao = 1
-            a = self.modelo.get_weights()                
-            pesos_invertidos = [np.flipud(peso) for peso in a]
+            pesos_locais = self.modelo.get_weights()
+            self.modelo.set_weights(parameters)
+            pesos_globais = self.modelo.get_weights()
+            modelo_corrompido = []
+            
+            for pesos_local, pesos_global in zip(pesos_locais, pesos_globais):
+                # Garanta que os pesos locais e globais tenham a mesma forma
+                assert pesos_local.shape == pesos_global.shape
+                
+                # Calcule os pesos corrompidos combinando os pesos locais e globais
+                pesos_invertidos = [np.flipud(peso) for peso in a]
+                modelo_corrompido.append(pesos_invertidos)
+                              
+            
             accuracy = 99.999
             loss = 0.001 
             
