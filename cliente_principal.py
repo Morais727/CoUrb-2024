@@ -222,11 +222,11 @@ class ClienteFlower(fl.client.NumPyClient):
                 camada_corrompida = pesos_globais[i] + (pesos_globais[i] - pesos_locais[i])
                 modelo_corrompido.append(camada_corrompida)
             
-            self.modelo.set_weights(modelo_corrompido)            
+                       
             
             accuracy = 99.999
             loss = 0.001 
-            return self.modelo.get_weights(), len(self.x_treino), {"accuracy": accuracy, "loss": loss,"situacao":situacao,'modelo':self.modelo_definido,'camada_alvo':camada_alvo, 'iid_niid': self.iid_niid,"ataque":self.modo_ataque,'conjunto_de_dados':self.dataset}
+            return modelo_corrompido, len(self.x_treino), {"accuracy": accuracy, "loss": loss,"situacao":situacao,'modelo':self.modelo_definido,'camada_alvo':camada_alvo, 'iid_niid': self.iid_niid,"ataque":self.modo_ataque,'conjunto_de_dados':self.dataset}
 
         elif modo== 'ZEROS' and server_round >= self.round_inicio and self.cid <= self.per_cents_atacantes:
             situacao = 1       		           
