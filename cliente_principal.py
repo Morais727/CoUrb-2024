@@ -214,7 +214,7 @@ class ClienteFlower(fl.client.NumPyClient):
         elif modo=='INVERTE_CONVEGENCIA' and server_round >= self.round_inicio and self.cid <= self.per_cents_atacantes:
             situacao = 1       		           
             a = parameters
-            b = self.modelo.get_weights(a)
+            b = self.modelo.get_weights()
             for i in range(camada_alvo):
                 camada = i
                 a[camada] = a[i] + (a[i] - b[i])
