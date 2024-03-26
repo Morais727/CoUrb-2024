@@ -36,7 +36,9 @@ def executar_arquivo(arquivo):
             if j != 'RUIDO_GAUSSIANO' and o > 0:
                 print('RUIDO_GAUSSIANO > 0', j, p)   
                 continue
-
+            elif j == 'RUIDO_GAUSSIANO' and o != 0:
+                continue
+            
             if (k == 'MNIST' and l == 'CNN') or (k == 'CIFAR10' and l == 'DNN'):
                 print("Combinacao incorreta", k, l)
                 continue
