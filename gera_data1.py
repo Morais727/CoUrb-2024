@@ -13,7 +13,7 @@ def executar_arquivo(arquivo):
         total_clients = [20]
         modelos = ['DNN','CNN']
         niid_iid = ['NIID']        
-        ataques = ['INVERTE_CONVEGENCIA',  'ATACANTES', 'INVERTE_TREINANDO']
+        ataques = ['ALTERNA_INICIO', 'INVERTE_TREINANDO', 'INVERTE_SEM_TREINAR','RUIDO_GAUSSIANO']
         data_set = ['MNIST', 'CIFAR10']                        
         alpha_dirichlet = [0.0,0.1]
         noise_gaussiano = [0.1,0.0]
@@ -38,7 +38,7 @@ def executar_arquivo(arquivo):
                 continue
             elif j == 'RUIDO_GAUSSIANO' and o != 0:
                 continue
-            
+
             if (k == 'MNIST' and l == 'CNN') or (k == 'CIFAR10' and l == 'DNN'):
                 print("Combinacao incorreta", k, l)
                 continue
@@ -64,6 +64,6 @@ def executar_arquivo(arquivo):
         print(f'Erro inesperado: {e}')
 
 max_threads = 1
-for i in range(30):
+for i in range(50):
     with concurrent.futures.ThreadPoolExecutor(max_threads) as executor:
         resultados = list(executor.map(executar_arquivo, arquivos_teste))

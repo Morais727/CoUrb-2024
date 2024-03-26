@@ -17,9 +17,9 @@ try:
     niid_iid = ['IID','NIID']        
     ataques = ['ALTERNA_INICIO', 'ATACANTES', 'EMBARALHA', 'INVERTE_TREINANDO', 'INVERTE_SEM_TREINAR', 'INVERTE_CONVEGENCIA', 'ZEROS', 'RUIDO_GAUSSIANO', 'NORMAL']
     data_set = ['MNIST', 'CIFAR10']                        
-    alpha_dirichlet = [0.0,0.1]
+    alpha_dirichlet = [0.0,0.5]
     noise_gaussiano = [0.0,0.1,]
-    round_inicio = [4, 8]
+    round_inicio = [4]
     per_cents_atacantes = [40]
             
    
