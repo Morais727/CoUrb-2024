@@ -201,9 +201,11 @@ class Timming(fl.server.strategy.FedAvg):
                 situacao = fit_res.metrics['situacao']
                 modelo = fit_res.metrics['modelo']
                 camadas = fit_res.metrics['camada_alvo']
+                ataque = fit_res.metrics['ataque']  
                 iid = client.cid
                 data = []               
-                normas = []                                
+                normas = []  
+                                          
                     
                 for i in range(camadas+1):
                     ultimo_modelo = self.last_model[i]
@@ -251,7 +253,7 @@ class Timming(fl.server.strategy.FedAvg):
                     atual.append('Acertos')
                 else:
                     self.conta += 1
-                    nome_arquivo = f"TESTES/{fit_res.metrics['iid_niid']}/GRADIENTES/{modelo}/gradiente_{iid}_{server_round}.npy"
+                    nome_arquivo = f"TESTES/{fit_res.metrics['iid_niid']}/GRADIENTES/{modelo}/{ataque}/gradiente_{iid}_{server_round}.npy"
                     os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True) 
                     result_combinado = np.concatenate(result)
                     np.save(nome_arquivo, result_combinado)
@@ -261,7 +263,7 @@ class Timming(fl.server.strategy.FedAvg):
                         
                 if iid == 19 and server_round == 20:
                     self.conta += 1
-                    nome_arquivo = f"TESTES/{fit_res.metrics['iid_niid']}/GRADIENTES/{modelo}/gradiente_{iid}_{server_round}.npy"
+                    nome_arquivo = f"TESTES/{fit_res.metrics['iid_niid']}/GRADIENTES/{modelo}/{ataque}/gradiente_{iid}_{server_round}.npy"
                     os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True) 
                     result_combinado = np.concatenate(result)
                     np.save(nome_arquivo, result_combinado)
@@ -352,8 +354,7 @@ class Timming(fl.server.strategy.FedAvg):
             log(WARNING, "No evaluate_metrics_aggregation_fn provided")
          
         
-        for client,eval_res in results: 
-            alpha_dirichlet_str = str(eval_res.metrics['alpha_dirichlet'])           
+        for client,eval_res in results:            
             nome_arquivo = f"TESTES/{eval_res.metrics['iid_niid']}/LOG_EVALUATE/{eval_res.metrics['ataque']}_{eval_res.metrics['dataset']}_{eval_res.metrics['modelo']}_{eval_res.metrics['porcentagem_ataque']}_{eval_res.metrics['alpha_dirichlet']}_{eval_res.metrics['noise_gaussiano']}_{eval_res.metrics['round_inicio']}.csv"
             os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)   
             with open(nome_arquivo,'a') as file:          
