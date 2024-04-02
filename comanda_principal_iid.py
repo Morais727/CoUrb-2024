@@ -6,19 +6,20 @@ import concurrent.futures
 from itertools import product
 
 limpa_arquivos_csv = []
-padroes = [
+caminhos = ['IID', 'NIID']
+for caminho in caminhos:
+    padroes = [
 
-           'TESTES/IID/LABELS/*.csv', 
-           'TESTES/IID/LOG_EVALUATE/*.csv', 
-           'TESTES/IID/LOG_ACERTOS/*.csv',
-           'TESTES/IID/LOG_ACERTOS/GRAFICOS/*.png',
-           'TESTES/IID/GRAFICOS/*.png',
+            f'TESTES/{caminho}/LABELS/*.csv', 
+            f'TESTES/{caminho}/LOG_EVALUATE/*.csv', 
+            f'TESTES/{caminho}/LOG_ACERTOS/*.csv',
+            f'TESTES/{caminho}/LOG_ACERTOS/GRAFICOS/*.png',
+            f'TESTES/{caminho}/GRAFICOS/*.png',
+            f'TESTES/{caminho}/GRADIENTES/*/*.csv',
+            ]
 
-           'TESTES/IID/GRADIENTES/*.csv',
-          ]
-
-for i in padroes:
-    limpa_arquivos_csv.extend(glob.glob(i))
+    for i in padroes:
+        limpa_arquivos_csv.extend(glob.glob(i))
 
 arquivos_teste = ['simulacao_principal.py']
 
