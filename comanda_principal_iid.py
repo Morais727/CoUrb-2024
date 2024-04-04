@@ -29,7 +29,7 @@ def executar_arquivo(arquivo):
         total_clients = [20]
         modelos = ['CNN','DNN']
         niid_iid = ['IID','NIID']        
-        ataques = ['ALTERNA_INICIO', 'ATACANTES', 'EMBARALHA', 'INVERTE_TREINANDO', 'INVERTE_SEM_TREINAR', 'INVERTE_CONVEGENCIA', 'ZEROS', 'RUIDO_GAUSSIANO']
+        ataques = ['ALTERNA_INICIO', 'ATACANTES', 'EMBARALHA', 'INVERTE_TREINANDO', 'INVERTE_SEM_TREINAR', 'INVERTE_CONVEGENCIA', 'ZEROS', 'RUIDO_GAUSSIANO','NORMAL']
         data_set = ['MNIST', 'CIFAR10']                        
         alpha_dirichlet = [0.0,0.5]
         noise_gaussiano = [0.1,0.0]
@@ -50,28 +50,20 @@ def executar_arquivo(arquivo):
         for i, j, k, l, m, n, o, p, q, r in product(niid_iid, ataques, data_set, modelos, round_inicio, per_cents_atacantes, noise_gaussiano, alpha_dirichlet, num_round, total_clients):
             combinacao = (i, j, k, l, m, n, o, p, q, r) 
             
-            if i == 'NIID' and p == 0: 
-                print('NON IID com Dirichlet = 0')               
+            if i == 'NIID' and p == 0:                             
                 continue
-
-            if i == 'IID' and p > 0: 
-                print('IID com Dirichlet > 0', i, p)                
+            elif i == 'IID' and p > 0:               
                 continue
-
-            if j != 'RUIDO_GAUSSIANO' and o > 0:
-                print('RUIDO_GAUSSIANO > 0', j, p)   
+            elif j != 'RUIDO_GAUSSIANO' and o > 0:   
                 continue
             elif j == 'RUIDO_GAUSSIANO' and o != 0:
+                continue            
+            elif (k == 'MNIST' and l == 'CNN') or (k == 'CIFAR10' and l == 'DNN'):
                 continue
-            
-            if (k == 'MNIST' and l == 'CNN') or (k == 'CIFAR10' and l == 'DNN'):
-                print("Combinacao incorreta", k, l)
-                continue
-
-            if combinacao not in combinacoes_unicas:                  
-                combinacoes_unicas.add(combinacao)
             else:
-                continue 
+                if combinacao not in combinacoes_unicas:           
+                    combinacoes_unicas.add(combinacao)
+         
 
             print(f'Executando {arquivo}')                
             comando = f'python3 {arquivo} --iid_niid {i} --modo_ataque {j} --dataset {k} --modelo_definido {l} --round_inicio {m} --per_cents_atacantes {n} --noise_gaussiano {o} --alpha_dirichlet {p} --num_rounds {q}  --total_clients {r}'
@@ -109,6 +101,6 @@ def processar_graficos(arquivos):
         except subprocess.CalledProcessError as e:
             print(f"Erro ao executar {arquivo}: {e}")
 
-gera_graficos = ['ferramentas/retira_caracter_nome.py','ferramentas/matriz_confusao.py', 'ferramentas/Visualizacao_em_grupo.py','ferramentas/gera_grafico_niid.py','ferramentas/mede_similaridade.py']
+gera_graficos = ['ferramentas/retira_caracter_nome.py','ferramentas/matriz_confusao.py', 'ferramentas/Visualizacao_em_grupo.py','ferramentas/gera_grafico_niid.py','ferramentas/gera_tabela.py','ferramentas/mede_similaridade.py']
 
 processar_dados(gera_graficos)

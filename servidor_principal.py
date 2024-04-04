@@ -195,13 +195,14 @@ class Timming(fl.server.strategy.FedAvg):
         self.classificacao = {} 
         percents_atual = 0.0  
         self.verifica_acertos = [] 
-        if server_round > 1:
-            for client, fit_res in results:
+        for client, fit_res in results:
+            ataque = fit_res.metrics['ataque'] 
+            if server_round > 1 and ataque != 'NORMAL' :
                 result = parameters_to_ndarrays(fit_res.parameters)
                 situacao = fit_res.metrics['situacao']
                 modelo = fit_res.metrics['modelo']
                 camadas = fit_res.metrics['camada_alvo']
-                ataque = fit_res.metrics['ataque']  
+                 
                 iid = client.cid
                 data = []               
                 normas = []  
