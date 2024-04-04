@@ -253,7 +253,6 @@ class Timming(fl.server.strategy.FedAvg):
                     self.resultados.append('Acertos')
                     atual.append('Acertos')
                 else:
-                    self.conta += 1
                     nome_arquivo = f"TESTES/{fit_res.metrics['iid_niid']}/GRADIENTES/{modelo}/{ataque}/gradiente_{iid}_{server_round}.npy"
                     os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True) 
                     result_combinado = np.concatenate(result)
@@ -262,8 +261,7 @@ class Timming(fl.server.strategy.FedAvg):
                     self.resultados.append('Erros')
                     atual.append('Erros')
                         
-                if iid == 19 and server_round == 20:
-                    self.conta += 1
+                if iid == 19 and server_round == 20:                    
                     nome_arquivo = f"TESTES/{fit_res.metrics['iid_niid']}/GRADIENTES/{modelo}/{ataque}/gradiente_{iid}_{server_round}.npy"
                     os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True) 
                     result_combinado = np.concatenate(result)
