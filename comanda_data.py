@@ -17,7 +17,7 @@ def executar_arquivo(arquivo):
         data_set = ['MNIST', 'CIFAR10']                        
         alpha_dirichlet = [0.0,0.5]
         noise_gaussiano = [0.1,0.0]
-        round_inicio = [4]
+        round_inicio = [4,10]
         per_cents_atacantes = [40,90]        
         combinacoes_unicas = set() 
 
