@@ -1,7 +1,7 @@
 import argparse
 import flwr as fl
 from functools import partial
-from cliente_principal import ClienteFlower
+from cliente_principal_copy import ClienteFlower
 import servidor_principal_copy
 def parse_args():
     parser = argparse.ArgumentParser(description="Flower Simulation")
