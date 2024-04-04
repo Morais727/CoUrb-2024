@@ -1,8 +1,8 @@
 import argparse
 import flwr as fl
 from functools import partial
-from cliente_principal_copy import ClienteFlower
-import servidor_principal_copy
+from cliente_principal import ClienteFlower
+import servidor_data
 def parse_args():
     parser = argparse.ArgumentParser(description="Flower Simulation")
     parser.add_argument("--total_clients", type=int, default=20, help="Total de clients") 
@@ -41,7 +41,7 @@ def main():
         def Cliente(cid, modelo_definido, iid_niid, modo_ataque, dataset, total_clients, alpha_dirichlet, noise_gaussiano,round_inicio, per_cents_atacantes):
             return ClienteFlower(cid, modelo_definido, iid_niid, modo_ataque, dataset, total_clients, alpha_dirichlet, noise_gaussiano,round_inicio, per_cents_atacantes)
         
-        strategy=servidor_principal_copy.Timming(fraction_fit=fraction_fit)
+        strategy=servidor_data.Timming(fraction_fit=fraction_fit)
 
         client_fn = partial(Cliente, modelo_definido=modelo_definido, iid_niid=iid_niid,
                             modo_ataque=modo_ataque, dataset=dataset, total_clients=total_clients,
