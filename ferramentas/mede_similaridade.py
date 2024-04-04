@@ -13,8 +13,8 @@ for caminho, modelo, ataque in product(caminhos, modelos, ataques):
 
     conjunto_gradientes = []
 
-    # Carregar o gradiente de referência
-    gradiente_referencia = np.load(f"TESTES/{caminho}/GRADIENTES/{modelo}/{ataque}/gradiente_19_20.npy", allow_pickle=True)
+    # Carregar o gradiente de referência TESTES\NIID\GRADIENTES\DNN\ALTERNA_INICIO\gradiente_19_20.npy
+    gradiente_referencia = np.load(f"TESTES/{caminho}/GRADIENTES/{modelo}/{ataque}/gradiente_19_18.npy", allow_pickle=True)
     if gradiente_referencia is not None:
         print("Gradiente de referência carregado corretamente!")
     else:

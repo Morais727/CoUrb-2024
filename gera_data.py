@@ -5,7 +5,7 @@ import subprocess
 import concurrent.futures
 from itertools import product
 
-arquivos_teste = ['simulacao_principal.py']
+arquivos_teste = ['simulacao_principal_data.py']
 
 def executar_arquivo(arquivo):
     try:
