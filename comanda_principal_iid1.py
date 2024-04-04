@@ -20,7 +20,7 @@ padroes = [
 for i in padroes:
     limpa_arquivos_csv.extend(glob.glob(i))
 
-arquivos_teste = ['simulacao_principal.py']
+arquivos_teste = ['simulacao_principal_data.py']
 
 def executar_arquivo(arquivo):
     try:
