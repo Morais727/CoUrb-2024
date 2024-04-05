@@ -13,7 +13,7 @@ def executar_arquivo(arquivo):
         total_clients = [20]
         modelos = ['CNN','DNN']
         niid_iid = ['NIID','IID']        
-        ataques = ['ALTERNA_INICIO', 'ATACANTES', 'EMBARALHA', 'INVERTE_TREINANDO', 'INVERTE_SEM_TREINAR', 'INVERTE_CONVEGENCIA', 'ZEROS', 'RUIDO_GAUSSIANO']
+        ataques = ['EMBARALHA', 'INVERTE_TREINANDO', 'INVERTE_SEM_TREINAR', 'INVERTE_CONVEGENCIA', 'RUIDO_GAUSSIANO']
         data_set = ['MNIST', 'CIFAR10']                        
         alpha_dirichlet = [0.0,0.5]
         noise_gaussiano = [0.1,0.0]
