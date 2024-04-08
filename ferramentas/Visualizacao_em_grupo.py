@@ -26,7 +26,7 @@ try:
          
 
     for i, j, k, l, m, n, o, p in product(niid_iid, ataques, data_set, modelos, per_cents_atacantes, alpha_dirichlet, noise_gaussiano, round_inicio):                    
-        file_list = glob.glob(f'TESTES_OK/{i}/LOG_EVALUATE/{j}_{k}_{l}_{m}_{n}_{o}*.csv') 
+        file_list = glob.glob(f'TESTES/{i}/LOG_EVALUATE/{j}_{k}_{l}_{m}_{n}_{o}*.csv') 
         combinacao = (i, j, k, l, m, n, o, p)  
             
         if i == 'IID' and n > 0:           
@@ -86,7 +86,7 @@ for arquivos in lista:
             #     title='# Round',
             #     title_fontsize=tamanho_fonte
             # )
-            arquivo_accuracy = f'TESTES_OK/{caminho[1]}/GRAFICOS/{nome_arquivo}_accuracy.png'
+            arquivo_accuracy = f'TESTES/{caminho[1]}/GRAFICOS/{nome_arquivo}_accuracy.png'
             os.makedirs(os.path.dirname(arquivo_accuracy), exist_ok=True)
             plt.savefig(arquivo_accuracy, dpi=100)
             plt.close()
@@ -117,7 +117,7 @@ for arquivos in lista:
             #     title='# Round',
             #     title_fontsize=tamanho_fonte
             # )
-            arquivo_loss = f'TESTES_OK/{caminho[1]}/GRAFICOS/{nome_arquivo}_loss.png'
+            arquivo_loss = f'TESTES/{caminho[1]}/GRAFICOS/{nome_arquivo}_loss.png'
             os.makedirs(os.path.dirname(arquivo_loss), exist_ok=True)
             plt.savefig(arquivo_loss, dpi=100)
             plt.close()

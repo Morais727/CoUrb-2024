@@ -55,6 +55,6 @@ def executar_arquivo(arquivo):
         print(f'Erro inesperado: {e}')
 
 max_threads = 1
-for i in range(50):
+for i in range(100):
     with concurrent.futures.ThreadPoolExecutor(max_threads) as executor:
         resultados = list(executor.map(executar_arquivo, arquivos_teste))
