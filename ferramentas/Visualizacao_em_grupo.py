@@ -57,7 +57,8 @@ for arquivos in lista:
             base = caminho[-1].split('_')
             rotulos.append(base[-1])
             
-            plt.figure(figsize=(9, 5))
+            # plt.figure(figsize=(9, 5))
+            plt.figure(figsize=(10, 7))
             for i, arquivo_atual in enumerate(arquivos):
                 data = pd.read_csv(arquivo_atual, header=None)
                 data.columns = ['server_round', 'cid', 'accuracy', 'loss']
@@ -73,7 +74,10 @@ for arquivos in lista:
             plt.xticks(xticks, fontsize=tamanho_fonte)
             plt.xticks(fontsize=tamanho_fonte)
             plt.yticks(fontsize=tamanho_fonte)
-
+            plt.ylabel('Accuracy', fontsize=tamanho_fonte)
+            plt.xlabel('Round', fontsize=tamanho_fonte)
+            # plt.xlabel('# Round', fontsize=tamanho_fonte, labelpad=20)
+            # plt.ylabel('Loss', fontsize=tamanho_fonte, labelpad=10)
             plt.grid(color='k', linestyle='--', linewidth=0.5, axis='both', alpha=0.1)
             # plt.legend(
             #     loc='best',
@@ -87,7 +91,7 @@ for arquivos in lista:
             plt.savefig(arquivo_accuracy, dpi=100)
             plt.close()
 
-            plt.figure(figsize=(9, 5))
+            plt.figure(figsize=(10, 7))
             for i, arquivo in enumerate(arquivos):
                 data = pd.read_csv(arquivo, header=None)
                 data.columns = ['server_round', 'cid', 'accuracy', 'loss']
@@ -101,7 +105,10 @@ for arquivos in lista:
             plt.xticks(xticks, fontsize=tamanho_fonte)
             plt.xticks(fontsize=tamanho_fonte)
             plt.yticks(fontsize=tamanho_fonte)
-            
+            plt.ylabel('Loss', fontsize=tamanho_fonte)
+            plt.xlabel('Round', fontsize=tamanho_fonte)
+            # plt.xlabel('# Round', fontsize=tamanho_fonte, labelpad=20)
+            # plt.ylabel('Loss', fontsize=tamanho_fonte, labelpad=10)
             plt.grid(color='k', linestyle='--', linewidth=0.5, axis='both', alpha=0.1)
             # plt.legend(
             #     loc='best',
