@@ -10,25 +10,25 @@ def calcular_media(lista):
 # Ler os dados do arquivo CSV
 lista = [   
             [   
-                'random_Fraction_fit_iid_mnist_dnn_2.csv',
-                'random_Fraction_fit_iid_mnist_dnn_4.csv',
-                'random_Fraction_fit_iid_mnist_dnn_6.csv',
-                'random_Fraction_fit_iid_mnist_dnn_8.csv',
-                'random_Fraction_fit_iid_mnist_dnn_10.csv',
+                'inversao_de_gradiente/random_Fraction_fit_iid_mnist_dnn_2.csv',
+                'inversao_de_gradiente/random_Fraction_fit_iid_mnist_dnn_4.csv',
+                'inversao_de_gradiente/random_Fraction_fit_iid_mnist_dnn_6.csv',
+                'inversao_de_gradiente/random_Fraction_fit_iid_mnist_dnn_8.csv',
+                'inversao_de_gradiente/random_Fraction_fit_iid_mnist_dnn_10.csv',
             ],
             [   
-                'random_Fraction_fit_iid_mnist_NOVO_2.csv',
-                'random_Fraction_fit_iid_mnist_NOVO_4.csv',
-                'random_Fraction_fit_iid_mnist_NOVO_6.csv',
-                'random_Fraction_fit_iid_mnist_NOVO_8.csv',
-                'random_Fraction_fit_iid_mnist_NOVO_10.csv',
+                'inversao_de_gradiente/random_Fraction_fit_iid_mnist_NOVO_2.csv',
+                'inversao_de_gradiente/random_Fraction_fit_iid_mnist_NOVO_4.csv',
+                'inversao_de_gradiente/random_Fraction_fit_iid_mnist_NOVO_6.csv',
+                'inversao_de_gradiente/random_Fraction_fit_iid_mnist_NOVO_8.csv',
+                'inversao_de_gradiente/random_Fraction_fit_iid_mnist_NOVO_10.csv',
             ],
             [
-                'random_Fraction_fit_iid_mnist_ntreina_2.csv',
-                'random_Fraction_fit_iid_mnist_ntreina_4.csv',
-                'random_Fraction_fit_iid_mnist_ntreina_6.csv',
-                'random_Fraction_fit_iid_mnist_ntreina_8.csv',
-                'random_Fraction_fit_iid_mnist_ntreina_10.csv',
+                'inversao_de_gradiente/random_Fraction_fit_iid_mnist_ntreina_2.csv',
+                'inversao_de_gradiente/random_Fraction_fit_iid_mnist_ntreina_4.csv',
+                'inversao_de_gradiente/random_Fraction_fit_iid_mnist_ntreina_6.csv',
+                'inversao_de_gradiente/random_Fraction_fit_iid_mnist_ntreina_8.csv',
+                'inversao_de_gradiente/random_Fraction_fit_iid_mnist_ntreina_10.csv',
             ]
         ]
 
@@ -67,7 +67,7 @@ for arquivos in lista:
             )
 
             # Salva o gráfico de Accuracy
-            plt.savefig(f'comparacao_{base[5]}_accuracy.png', dpi=300)
+            plt.savefig(f'comparacao_{base[5]}_accuracy.png', dpi=100)
             plt.close('all')
 
             # Cria um único gráfico para Loss com várias linhas
@@ -96,7 +96,7 @@ for arquivos in lista:
             )
 
             # Salva o gráfico de Loss
-            plt.savefig(f'comparacao_{base[5]}_loss.png', dpi=300)
+            plt.savefig(f'comparacao_{base[5]}_loss.png', dpi=100)
             plt.close('all')
         except Exception as e:
             print(f"Ocorreu um erro ao processar o arquivo {arquivo}: {str(e)}")

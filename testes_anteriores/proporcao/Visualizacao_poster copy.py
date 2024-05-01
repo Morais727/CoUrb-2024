@@ -26,7 +26,7 @@ arquivos = [
 estilo_linha = ['--', '--', '--', '--', '-', '-', '-', '-']
 cor_linha = ['blue', 'red', 'green', 'purple', 'blue', 'red', 'green', 'purple']
 
-rotulos = ['random_20%', 'random_40%', 'random_60%', 'random_80%', 'normal_20%', 'normal_40%', 'normal_60%', 'normal_80%']
+rotulos = ['20%', '40%', '60%', '80%', '20%', '40%', '60%', '80%']
 
 # Criar subplots para Accuracy e Loss
 fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(18, 6))

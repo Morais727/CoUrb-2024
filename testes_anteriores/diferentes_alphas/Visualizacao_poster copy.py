@@ -31,8 +31,8 @@ for arquivo in arquivos:
         
         rotulos= ['0.0','0.1','0.4','0.6','0.8','1.0' ]
         
-        plt.figure(figsize=(9, 5))
-        # plt.figure(figsize=(10, 7))
+        # plt.figure(figsize=(9, 5))
+        plt.figure(figsize=(10, 7))
         for i, arquivo_atual in enumerate(arquivos):
             data = pd.read_csv(arquivo_atual, header=None)
             data.columns = ['server_round', 'cid', 'accuracy', 'loss']
@@ -53,13 +53,13 @@ for arquivo in arquivos:
         # plt.xlabel('# Round', fontsize=tamanho_fonte, labelpad=20)
         # plt.ylabel('Loss', fontsize=tamanho_fonte, labelpad=10)
         plt.grid(color='k', linestyle='--', linewidth=0.5, axis='both', alpha=0.1)
-        # plt.legend(
-        #     loc='best',
-        #     fontsize=tamanho_fonte,
-        #     ncol=1,
-        #     title='# Round',
-        #     title_fontsize=tamanho_fonte
-        # )
+        plt.legend(
+            loc='lower right',
+            fontsize=tamanho_fonte,
+            ncol=1,
+            title='Alfa',
+            title_fontsize=tamanho_fonte
+        )
         arquivo_accuracy = f'diferentes_alphas/GRAFICOS/{arquivo}_accuracy.png'
         os.makedirs(os.path.dirname(arquivo_accuracy), exist_ok=True)
         plt.savefig(arquivo_accuracy, dpi=100)
@@ -84,13 +84,13 @@ for arquivo in arquivos:
         # plt.xlabel('# Round', fontsize=tamanho_fonte, labelpad=20)
         # plt.ylabel('Loss', fontsize=tamanho_fonte, labelpad=10)
         plt.grid(color='k', linestyle='--', linewidth=0.5, axis='both', alpha=0.1)
-        # plt.legend(
-        #     loc='best',
-        #     fontsize=tamanho_fonte,
-        #     ncol=1,
-        #     title='# Round',
-        #     title_fontsize=tamanho_fonte
-        # )
+        plt.legend(
+            loc='lower left',
+            fontsize=tamanho_fonte,
+            ncol=1,
+            title='Alfa',
+            title_fontsize=tamanho_fonte
+        )
         arquivo_loss = f'diferentes_alphas/GRAFICOS/{arquivo}_loss.png'
         os.makedirs(os.path.dirname(arquivo_loss), exist_ok=True)
         plt.savefig(arquivo_loss, dpi=100)
