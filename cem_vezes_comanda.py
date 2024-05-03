@@ -6,7 +6,7 @@ import concurrent.futures
 from itertools import product
 
 
-arquivos_teste = ['simulacao_principal.py']
+arquivos_teste = ['cem_vezes_simulacao.py']
 
 def executar_arquivo(arquivo):
     try:
