@@ -67,6 +67,6 @@ def processar_dados(arquivos):
 
 max_threads = 1
 
-for _ in 100:
+for _ in range(100):
     with concurrent.futures.ThreadPoolExecutor(max_threads) as executor:
         resultados = list(executor.map(executar_arquivo, arquivos_teste))
