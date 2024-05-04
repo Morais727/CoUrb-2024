@@ -16,7 +16,7 @@ def executar_arquivo(arquivo):
         niid_iid = ['IID']        
         ataques = ['INVERTE_CONVEGENCIA']
         data_set = ['MNIST']                        
-        alpha_dirichlet = [0.5]
+        alpha_dirichlet = [0.0]
         noise_gaussiano = [0.0]
         round_inicio = [4]
         per_cents_atacantes = [40]        
