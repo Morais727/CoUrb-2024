@@ -13,7 +13,7 @@ def executar_arquivo(arquivo):
         num_round = [20]
         total_clients = [20]
         modelos = ['DNN']
-        niid_iid = ['NIID']        
+        niid_iid = ['IID']        
         ataques = ['INVERTE_CONVEGENCIA']
         data_set = ['MNIST']                        
         alpha_dirichlet = [0.5]
