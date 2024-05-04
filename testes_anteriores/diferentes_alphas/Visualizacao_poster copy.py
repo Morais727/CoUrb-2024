@@ -13,11 +13,11 @@ tamanho_fonte = 25
 
 # Ler os dados do arquivo CSV
 arquivos =  [   
-                'diferentes_alphas/DATA/normal_Fraction_Fit_iid_mnist_dnn_0.0.csv',
-                'diferentes_alphas/DATA/random_Fraction_Fit_iid_mnist_dnn_0.4.csv',
-                'diferentes_alphas/DATA/random_Fraction_Fit_iid_mnist_dnn_0.6.csv',
-                'diferentes_alphas/DATA/random_Fraction_Fit_iid_mnist_dnn_0.8.csv',
-                'diferentes_alphas/DATA/random_Fraction_Fit_iid_mnist_dnn_1.0.csv',
+                'testes_anteriores/diferentes_alphas/DATA/normal_Fraction_Fit_iid_mnist_dnn_0.0.csv',
+                'testes_anteriores/diferentes_alphas/DATA/random_Fraction_Fit_iid_mnist_dnn_0.4.csv',
+                'testes_anteriores/diferentes_alphas/DATA/random_Fraction_Fit_iid_mnist_dnn_0.6.csv',
+                'testes_anteriores/diferentes_alphas/DATA/random_Fraction_Fit_iid_mnist_dnn_0.8.csv',
+                'testes_anteriores/diferentes_alphas/DATA/random_Fraction_Fit_iid_mnist_dnn_1.0.csv',
             ]
 
 rotulos = []
@@ -60,11 +60,11 @@ for arquivo in arquivos:
             title='Alfa',
             title_fontsize=tamanho_fonte
         )
-        arquivo_accuracy = f'diferentes_alphas/GRAFICOS/{arquivo}_accuracy.png'
-        os.makedirs(os.path.dirname(arquivo_accuracy), exist_ok=True)
-        plt.savefig(arquivo_accuracy, dpi=100)
-        plt.close()
-
+        # arquivo_accuracy = f'diferentes_alphas/GRAFICOS/{arquivo}_accuracy.png'
+        # os.makedirs(os.path.dirname(arquivo_accuracy), exist_ok=True)
+        # plt.savefig(arquivo_accuracy, dpi=100)
+        # plt.close()
+        plt.show()
         plt.figure(figsize=(10, 7))
         for i, arquivo in enumerate(arquivos):
             data = pd.read_csv(arquivo, header=None)
@@ -91,10 +91,11 @@ for arquivo in arquivos:
             title='Alfa',
             title_fontsize=tamanho_fonte
         )
-        arquivo_loss = f'diferentes_alphas/GRAFICOS/{arquivo}_loss.png'
-        os.makedirs(os.path.dirname(arquivo_loss), exist_ok=True)
-        plt.savefig(arquivo_loss, dpi=100)
-        plt.close()
+        # arquivo_loss = f'diferentes_alphas/GRAFICOS/{arquivo}_loss.png'
+        # os.makedirs(os.path.dirname(arquivo_loss), exist_ok=True)
+        # plt.savefig(arquivo_loss, dpi=100)
+        # plt.close()
+        plt.show()
     except Exception as e:
         print(f"Ocorreu um erro ao processar o arquivo {arquivo}: {str(e)}")
         a=e
