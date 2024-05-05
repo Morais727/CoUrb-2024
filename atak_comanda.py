@@ -15,10 +15,10 @@ def executar_arquivo(arquivo):
         total_clients = [20]
         modelos = ['CNN','DNN']
         niid_iid = ['NIID', 'IID']      
-        ataques = ['ZEROS', 'INVERTE_CONVEGENCIA','INVERTE_TREINANDO']
+        ataques = ['INVERTE_SEM_TREINAR']
         data_set = ['MNIST', 'CIFAR10']                        
         alpha_dirichlet = [0.0,0.5]
-        noise_gaussiano = [0.1,0.0]
+        noise_gaussiano = [0.0]
         round_inicio = [2,4,6,8,10]
         per_cents_atacantes = [40]
         
