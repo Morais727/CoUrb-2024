@@ -25,15 +25,15 @@ arquivos_teste = ['simulacao_principal.py']
 
 def executar_arquivo(arquivo):
     try:
-        num_round = [20]
-        total_clients = [20]
-        modelos = ['CNN','DNN']
-        niid_iid = ['NIID', 'IID']      
-        ataques = ['INVERTE_SEM_TREINAR']
-        data_set = ['MNIST', 'CIFAR10']                        
-        alpha_dirichlet = [0.0,0.5]
+        num_round = [2]
+        total_clients = [10]
+        modelos = ['DNN']
+        niid_iid = ['IID']      
+        ataques = ['INVERTE_TREINANDO']
+        data_set = ['MNIST']                        
+        alpha_dirichlet = [0.0]
         noise_gaussiano = [0.0]
-        round_inicio = [2,4,6,8,10]
+        round_inicio = [1]
         per_cents_atacantes = [40]
         
 
@@ -103,4 +103,4 @@ def processar_graficos(arquivos):
 
 gera_graficos = ['ferramentas/retira_caracter_nome.py','ferramentas/matriz_confusao.py', 'ferramentas/Visualizacao_em_grupo.py','ferramentas/gera_grafico_niid.py','ferramentas/gera_tabela.py','ferramentas/mede_similaridade.py']
 
-processar_dados(gera_graficos)
+# processar_dados(gera_graficos)

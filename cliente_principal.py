@@ -6,6 +6,7 @@ import random
 import pickle
 import flwr as fl
 import numpy as np
+import matplotlib.pyplot as plt
 import tensorflow as tf
 from dataset_utils import ManageDatasets
 from scipy.stats import dirichlet, multinomial, beta
@@ -188,6 +189,15 @@ class ClienteFlower(fl.client.NumPyClient):
 
         elif modo=='INVERTE_TREINANDO' and server_round >= self.round_inicio and self.cid <= self.per_cents_atacantes: 
             situacao = 1
+            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+            images_folder = "imagens_pre_treinamento"
+            os.makedirs(images_folder, exist_ok=True)
+            for i in range(3):
+                plt.imshow(self.x_treino[i])
+                plt.title(f'Classe: {self.y_treino[i]}')
+                plt.axis('off')
+                plt.savefig(os.path.join(images_folder, f"imagem_{i}.png"))  # Salvar a imagem
+                plt.close() 
 
             a = parameters                
             pesos_invertidos = [np.flipud(peso) for peso in a]                
@@ -195,7 +205,14 @@ class ClienteFlower(fl.client.NumPyClient):
             history = self.modelo.fit(self.x_treino, self.y_treino, epochs=1, verbose=0)
             accuracy = history.history["accuracy"][0]  
             loss = history.history["loss"][0] 
-            
+            images_folder = "imagens_pos_treinamento"
+            os.makedirs(images_folder, exist_ok=True)
+            for i in range(3):
+                plt.imshow(self.x_treino[i])
+                plt.title(f'Classe: {self.y_treino[i]}')
+                plt.axis('off')
+                plt.savefig(os.path.join(images_folder, f"imagem_{i}.png"))  # Salvar a imagem
+                plt.close() 
             return self.modelo.get_weights(), len(self.x_treino),{"accuracy": accuracy, "loss": loss, "situacao":situacao,'camada_alvo':camada_alvo,'porcentagem_ataque': int(self.atacantes),'modelo':self.modelo_definido,"ataque":self.modo_ataque,'iid_niid':self.iid_niid, 
                                             'dataset':self.dataset,'alpha_dirichlet':self.alpha_dirichlet,'ruido_gaussiano':self.noise_gaussiano, 'round_inicio':self.round_inicio, 'conjunto_de_dados':self.dataset}
 
